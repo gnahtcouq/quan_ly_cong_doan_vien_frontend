@@ -1,0 +1,30 @@
+import {ConfigProvider, Divider} from 'antd'
+import styles from 'styles/client.module.scss'
+import SearchClient from '@/components/client/search.client'
+import PostCard from '@/components/client/card/post.card'
+import DepartmentCard from '@/components/client/card/department.card'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import en_US from 'antd/locale/en_US'
+
+dayjs.extend(relativeTime)
+dayjs.locale('en')
+
+const HomePage = () => {
+  return (
+    <ConfigProvider locale={en_US}>
+      <div className={`${styles['container']} ${styles['home-section']}`}>
+        <div className="search-content" style={{marginTop: 20}}>
+          <SearchClient />
+        </div>
+        {/* <Divider /> */}
+        <PostCard />
+        <div style={{margin: 50}}></div>
+        <Divider />
+        <DepartmentCard />
+      </div>
+    </ConfigProvider>
+  )
+}
+
+export default HomePage
