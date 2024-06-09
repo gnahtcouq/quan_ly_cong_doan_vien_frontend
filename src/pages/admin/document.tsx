@@ -1,7 +1,13 @@
 import DataTable from '@/components/client/data-table'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {IDocument} from '@/types/backend'
-import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons'
+import {
+  CopyOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  ExportOutlined,
+  PlusOutlined
+} from '@ant-design/icons'
 import {ActionType, ProColumns, ProFormSelect} from '@ant-design/pro-components'
 import {
   Button,
@@ -16,13 +22,14 @@ import {useState, useRef} from 'react'
 import dayjs from 'dayjs'
 import {callDeleteDocument} from '@/config/api'
 import queryString from 'query-string'
-import {useNavigate} from 'react-router-dom'
 import {fetchDocument} from '@/redux/slice/documentSlide'
 import ViewDetailDocument from '@/components/admin/document/view.document'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 import Access from '@/components/share/access'
+import ApplyModal from '@/components/client/modal/apply.modal'
 
 const DocumentPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const tableRef = useRef<ActionType>()
 
   const isFetching = useAppSelector((state) => state.document.isFetching)
@@ -33,21 +40,6 @@ const DocumentPage = () => {
   const [dataInit, setDataInit] = useState<IDocument | null>(null)
   const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
 
-  // const handleDeleteDocument = async (_id: string | undefined) => {
-  //   if (_id) {
-  //     const res = await callDeleteDocument(_id)
-  //     if (res && res.data) {
-  //       message.success('Xóa văn bản thành công!')
-  //       reloadTable()
-  //     } else {
-  //       notification.error({
-  //         message: 'Có lỗi xảy ra',
-  //         description: res.message
-  //       })
-  //     }
-  //   }
-  // }
-
   const reloadTable = () => {
     tableRef?.current?.reload()
   }
@@ -56,7 +48,7 @@ const DocumentPage = () => {
     {
       title: 'ID',
       dataIndex: '_id',
-      width: 250,
+      width: 200,
       render: (text, record, index, action) => {
         return (
           <a
@@ -73,6 +65,11 @@ const DocumentPage = () => {
       hideInSearch: true
     },
     {
+      title: 'Tên văn bản',
+      dataIndex: ['name'],
+      hideInSearch: false
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'status',
       width: 100,
@@ -83,27 +80,22 @@ const DocumentPage = () => {
           mode="multiple"
           allowClear
           valueEnum={{
-            PENDING: 'PENDING',
-            REVIEWING: 'REVIEWING',
-            APPROVED: 'APPROVED',
-            REJECTED: 'REJECTED'
+            ACTIVE: 'ACTIVE',
+            INACTIVE: 'INACTIVE'
           }}
           placeholder="Chọn trạng thái"
         />
-      )
+      ),
+      render(value, record, index) {
+        return (
+          <>
+            <Tag color={record.status === 'ACTIVE' ? 'lime' : 'red'}>
+              {record.status === 'ACTIVE' ? 'ACTIVE' : 'INACTIVE'}
+            </Tag>
+          </>
+        )
+      }
     },
-
-    {
-      title: 'Tên văn bản',
-      dataIndex: ['postId', 'name'],
-      hideInSearch: true
-    },
-    {
-      title: 'Đơn vị',
-      dataIndex: ['departmentId', 'name'],
-      hideInSearch: true
-    },
-
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
@@ -123,51 +115,52 @@ const DocumentPage = () => {
         return <>{dayjs(record.updatedAt).format('DD-MM-YYYY HH:mm:ss')}</>
       },
       hideInSearch: true
+    },
+    {
+      title: 'Hành động',
+      dataIndex: '',
+      hideInSearch: true,
+      width: 100,
+      render: (value, record, index) => (
+        <Space>
+          <CopyOutlined
+            style={{
+              fontSize: 20,
+              color: '#85b970'
+            }}
+            type=""
+            onClick={() => {
+              navigator.clipboard.writeText(
+                `${import.meta.env.VITE_BACKEND_URL}/files/document/${
+                  record?.url
+                }`
+              )
+              message.success('Đã lưu đường dẫn vào bảng nhớ tạm!')
+            }}
+          />
+
+          <a
+            href={`${import.meta.env.VITE_BACKEND_URL}/files/document/${
+              record?.url
+            }`}
+            target="_blank"
+          >
+            <ExportOutlined
+              style={{
+                fontSize: 20,
+                color: '#ffa500'
+              }}
+              type=""
+            />
+          </a>
+        </Space>
+      )
     }
-    // {
-
-    //     title: 'Actions',
-    //     hideInSearch: true,
-    //     width: 50,
-    //     render: (_value, entity, _index, _action) => (
-    //         <Space>
-    //             <EditOutlined
-    //                 style={{
-    //                     fontSize: 20,
-    //                     color: '#ffa500',
-    //                 }}
-    //                 type=""
-    //                 onClick={() => {
-    //                     navigate(`/admin/post/upsert?id=${entity._id}`)
-    //                 }}
-    //             />
-
-    //             <Popconfirm
-    //                 placement="leftTop"
-    //                 title={"Xác nhận xóa văn bản"}
-    //                 description={"Bạn có chắc chắn muốn xóa văn bản này?"}
-    //                 onConfirm={() => handleDeleteDocument(entity._id)}
-    //                 okText="Xác nhận"
-    //                 cancelText="Hủy"
-    //             >
-    //                 <span style={{ cursor: "pointer", margin: "0 10px" }}>
-    //                     <DeleteOutlined
-    //                         style={{
-    //                             fontSize: 20,
-    //                             color: '#ff4d4f',
-    //                         }}
-    //                     />
-    //                 </span>
-    //             </Popconfirm>
-    //         </Space>
-    //     ),
-
-    // },
   ]
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
-    // if (clone.name) clone.name = `/${clone.name}/i`;
+    if (clone.name) clone.name = `/${clone.name}/i`
     if (clone?.status?.length) {
       clone.status = clone.status.join(',')
     }
@@ -194,9 +187,6 @@ const DocumentPage = () => {
     } else {
       temp = `${temp}&${sortBy}`
     }
-
-    temp +=
-      '&populate=departmentId,postId&fields=departmentId._id, departmentId.name, departmentId.logo, postId._id, postId.name'
     return temp
   }
 
@@ -231,10 +221,19 @@ const DocumentPage = () => {
           }}
           rowSelection={false}
           toolBarRender={(_action, _rows): any => {
-            return <></>
+            return (
+              <Button
+                icon={<PlusOutlined />}
+                type="primary"
+                onClick={() => setIsModalOpen(true)}
+              >
+                Thêm mới
+              </Button>
+            )
           }}
         />
       </Access>
+      <ApplyModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <ViewDetailDocument
         open={openViewDetail}
         onClose={setOpenViewDetail}

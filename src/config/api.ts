@@ -162,15 +162,10 @@ export const callFetchPostById = (id: string) => {
  * 
 Module Document
  */
-export const callCreateDocument = (
-  url: string,
-  departmentId: any,
-  postId: any
-) => {
+export const callCreateDocument = (url: string, name: string) => {
   return axios.post<IBackendRes<IDocument>>('/api/v1/documents', {
     url,
-    departmentId,
-    postId
+    name
   })
 }
 

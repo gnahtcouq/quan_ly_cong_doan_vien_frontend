@@ -5,11 +5,7 @@ import {callFetchPostById} from '@/config/api'
 import styles from 'styles/client.module.scss'
 import parse from 'html-react-parser'
 import {Col, ConfigProvider, Divider, Row, Skeleton, Tag} from 'antd'
-import {
-  DollarOutlined,
-  EnvironmentOutlined,
-  HistoryOutlined
-} from '@ant-design/icons'
+import {HistoryOutlined} from '@ant-design/icons'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import ApplyModal from '@/components/client/modal/apply.modal'
@@ -54,15 +50,6 @@ const ClientPostDetailPage = (props: any) => {
               <>
                 <Col span={24} md={16}>
                   <div className={styles['header']}>{postDetail.name}</div>
-                  {/* <div>
-                    <button
-                      onClick={() => setIsModalOpen(true)}
-                      className={styles['btn-apply']}
-                    >
-                      Upload file Văn Bản
-                    </button>
-                  </div> */}
-                  {/* <Divider /> */}
                   <div className={styles['threads']}>
                     {postDetail?.threads?.map((item, index) => {
                       return (
@@ -79,7 +66,7 @@ const ClientPostDetailPage = (props: any) => {
                   {parse(postDetail.description)}
                 </Col>
 
-                <Col span={24} md={8}>
+                {/* <Col span={24} md={8}>
                   <div className={styles['department']}>
                     <div>
                       <img
@@ -96,16 +83,16 @@ const ClientPostDetailPage = (props: any) => {
                     </div>
                     <div>{postDetail.department?.name}</div>
                   </div>
-                </Col>
+                </Col> */}
               </>
             )}
           </Row>
         )}
-        <ApplyModal
+        {/* <ApplyModal
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           postDetail={postDetail}
-        />
+        /> */}
       </div>
     </ConfigProvider>
   )

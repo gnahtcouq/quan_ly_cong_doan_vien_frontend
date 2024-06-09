@@ -202,7 +202,7 @@ const ModalDepartment = (props: IProps) => {
       {openModal && (
         <>
           <ModalForm
-            title={<>{dataInit?._id ? 'Cập nhật đơn vị' : 'Tạo mới đơn vị'}</>}
+            title={<>{dataInit?._id ? 'Cập nhật đơn vị' : 'Thêm mới đơn vị'}</>}
             open={openModal}
             modalProps={{
               onCancel: () => {
@@ -231,7 +231,7 @@ const ModalDepartment = (props: IProps) => {
               },
               searchConfig: {
                 resetText: 'Hủy',
-                submitText: <>{dataInit?._id ? 'Cập nhật' : 'Tạo mới'}</>
+                submitText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>
               }
             }}
           >

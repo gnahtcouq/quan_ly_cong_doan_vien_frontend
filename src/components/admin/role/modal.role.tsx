@@ -147,7 +147,7 @@ const ModalRole = (props: IProps) => {
   return (
     <>
       <ModalForm
-        title={<>{singleRole?._id ? 'Cập nhật vai trò' : 'Tạo mới vai trò'}</>}
+        title={<>{singleRole?._id ? 'Cập nhật vai trò' : 'Thêm mới vai trò'}</>}
         open={openModal}
         modalProps={{
           onCancel: () => {
@@ -170,7 +170,7 @@ const ModalRole = (props: IProps) => {
           },
           searchConfig: {
             resetText: 'Hủy',
-            submitText: <>{singleRole?._id ? 'Cập nhật' : 'Tạo mới'}</>
+            submitText: <>{singleRole?._id ? 'Cập nhật' : 'Thêm mới'}</>
           }
         }}
       >

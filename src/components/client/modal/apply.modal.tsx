@@ -12,7 +12,6 @@ import {
   message,
   notification
 } from 'antd'
-import {useNavigate} from 'react-router-dom'
 import en_US from 'antd/lib/locale/en_US'
 import {UploadOutlined} from '@ant-design/icons'
 import type {UploadProps} from 'antd'
@@ -22,53 +21,36 @@ import {useState} from 'react'
 interface IProps {
   isModalOpen: boolean
   setIsModalOpen: (v: boolean) => void
-  postDetail: IPost | null
 }
 
 const ApplyModal = (props: IProps) => {
-  const {isModalOpen, setIsModalOpen, postDetail} = props
-  const isAuthenticated = useAppSelector(
-    (state) => state.account.isAuthenticated
-  )
+  const {isModalOpen, setIsModalOpen} = props
   const user = useAppSelector((state) => state.account.user)
   const [urlDoc, setUrlDoc] = useState<string>('')
-
-  const navigate = useNavigate()
+  const [documentName, setDocumentName] = useState<string>('')
 
   const handleOkButton = async () => {
-    if (!urlDoc && isAuthenticated) {
+    if (!urlDoc) {
       message.error('Vui lòng upload file văn bản!')
       return
     }
 
-    if (!isAuthenticated) {
+    const res = await callCreateDocument(urlDoc, documentName)
+    if (res.data) {
+      message.success('Upload file văn bản thành công!')
       setIsModalOpen(false)
-      navigate(`/login?callback=${window.location.href}`)
     } else {
-      //todo
-      if (postDetail) {
-        const res = await callCreateDocument(
-          urlDoc,
-          postDetail?.department?._id,
-          postDetail?._id
-        )
-        if (res.data) {
-          message.success('Upload file văn bản thành công!')
-          setIsModalOpen(false)
-        } else {
-          notification.error({
-            message: 'Có lỗi xảy ra',
-            description: res.message
-          })
-        }
-      }
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: res.message
+      })
     }
   }
 
   const propsUpload: UploadProps = {
     maxCount: 1,
     multiple: false,
-    accept: 'application/pdf,application/msword, .doc, .docx, .pdf',
+    accept: 'application/pdf, .pdf',
     async customRequest({file, onSuccess, onError}: any) {
       const res = await callUploadSingleFile(file, 'document')
       if (res && res.data) {
@@ -100,17 +82,17 @@ const ApplyModal = (props: IProps) => {
   return (
     <>
       <Modal
-        title="Upload file Văn Bản"
+        title="Thêm mới văn bản"
         open={isModalOpen}
         onOk={() => handleOkButton()}
         onCancel={() => setIsModalOpen(false)}
         maskClosable={false}
-        okText={isAuthenticated ? 'Gửi' : 'Đăng Nhập'}
+        okText={'Thêm mới'}
         cancelButtonProps={{style: {display: 'none'}}}
         destroyOnClose={true}
       >
         <Divider />
-        {isAuthenticated ? (
+        {
           <div>
             <ConfigProvider locale={en_US}>
               <ProForm
@@ -120,34 +102,32 @@ const ApplyModal = (props: IProps) => {
               >
                 <Row gutter={[10, 10]}>
                   <Col span={24}>
-                    <div>
-                      Bạn đang upload văn bản <b>{postDetail?.name} </b>tại{' '}
-                      <b>{postDetail?.department?.name}</b>
-                    </div>
-                  </Col>
-                  <Col span={24}>
                     <ProFormText
+                      label="Tên văn bản"
+                      name="name"
+                      rules={[
+                        {required: true, message: 'Vui lòng không để trống!'}
+                      ]}
+                      placeholder="Nhập tên văn bản"
                       fieldProps={{
-                        type: 'email'
+                        onChange: (e) => setDocumentName(e.target.value)
                       }}
-                      label="Email"
-                      name={'email'}
-                      labelAlign="right"
-                      disabled
-                      initialValue={user?.email}
                     />
                   </Col>
+
                   <Col span={24}>
                     <ProForm.Item
                       label={'Upload file văn bản'}
                       rules={[
-                        {required: true, message: 'Vui lòng upload file!'}
+                        {
+                          required: true,
+                          message: 'Vui lòng upload file văn bản!'
+                        }
                       ]}
                     >
                       <Upload {...propsUpload}>
                         <Button icon={<UploadOutlined />}>
-                          Tải lên văn bản của bạn ( Hỗ trợ *.doc, *.docx, *.pdf,
-                          and &lt; 5MB )
+                          Upload file văn bản (Hỗ trợ *.pdf và nhỏ hơn 5MB)
                         </Button>
                       </Upload>
                     </ProForm.Item>
@@ -156,9 +136,7 @@ const ApplyModal = (props: IProps) => {
               </ProForm>
             </ConfigProvider>
           </div>
-        ) : (
-          <div>Bạn chưa đăng nhập hệ thống. Vui lòng đăng nhập!</div>
-        )}
+        }
         <Divider />
       </Modal>
     </>

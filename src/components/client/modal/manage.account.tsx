@@ -5,8 +5,10 @@ import {
   Modal,
   Row,
   Select,
+  Space,
   Table,
   Tabs,
+  Tag,
   message,
   notification
 } from 'antd'
@@ -21,7 +23,7 @@ import {
 } from '@/config/api'
 import type {ColumnsType} from 'antd/es/table'
 import dayjs from 'dayjs'
-import {MonitorOutlined} from '@ant-design/icons'
+import {CopyOutlined, ExportOutlined, MonitorOutlined} from '@ant-design/icons'
 import {THREADS_LIST} from '@/config/utils'
 import {useAppSelector} from '@/redux/hooks'
 
@@ -57,20 +59,25 @@ const UserDocument = (props: any) => {
       }
     },
     {
-      title: 'Đơn vị',
-      dataIndex: ['departmentId', 'name']
-    },
-    {
       title: 'Tên văn bản',
-      dataIndex: ['postId', 'name']
+      dataIndex: 'name'
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
-      width: 100
+      width: 100,
+      render(value, record, index) {
+        return (
+          <>
+            <Tag color={record.status === 'ACTIVE' ? 'lime' : 'red'}>
+              {record.status === 'ACTIVE' ? 'ACTIVE' : 'INACTIVE'}
+            </Tag>
+          </>
+        )
+      }
     },
     {
-      title: 'Ngày đăng tải',
+      title: 'Ngày tạo',
       dataIndex: 'createdAt',
       render(value, record, index) {
         return <>{dayjs(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</>
@@ -80,18 +87,40 @@ const UserDocument = (props: any) => {
       title: 'Đường dẫn',
       dataIndex: '',
       width: 120,
-      render(value, record, index) {
-        return (
+      render: (value, record, index) => (
+        <Space>
+          <CopyOutlined
+            style={{
+              fontSize: 20,
+              color: '#85b970'
+            }}
+            type=""
+            onClick={() => {
+              navigator.clipboard.writeText(
+                `${import.meta.env.VITE_BACKEND_URL}/files/document/${
+                  record?.url
+                }`
+              )
+              message.success('Đã lưu đường dẫn vào bảng nhớ tạm!')
+            }}
+          />
+
           <a
             href={`${import.meta.env.VITE_BACKEND_URL}/files/document/${
               record?.url
             }`}
             target="_blank"
           >
-            Chi tiết
+            <ExportOutlined
+              style={{
+                fontSize: 20,
+                color: '#ffa500'
+              }}
+              type=""
+            />
           </a>
-        )
-      }
+        </Space>
+      )
     }
   ]
 

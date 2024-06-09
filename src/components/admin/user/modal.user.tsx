@@ -186,7 +186,7 @@ const ModalUser = (props: IProps) => {
             <>
               {dataInit?._id
                 ? 'Cập nhật thông tin thành viên'
-                : 'Tạo mới thành viên'}
+                : 'Thêm mới thành viên'}
             </>
           }
           open={openModal}
@@ -199,7 +199,7 @@ const ModalUser = (props: IProps) => {
             width: isMobile ? '100%' : 900,
             keyboard: false,
             maskClosable: false,
-            okText: <>{dataInit?._id ? 'Cập nhật' : 'Tạo mới'}</>,
+            okText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>,
             cancelText: 'Hủy'
           }}
           scrollToFirstError={true}

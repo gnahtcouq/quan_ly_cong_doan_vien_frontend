@@ -71,7 +71,7 @@ const ModalPermission = (props: IProps) => {
     <>
       <ModalForm
         title={
-          <>{dataInit?._id ? 'Cập nhật quyền hạn' : 'Tạo mới quyền hạn'}</>
+          <>{dataInit?._id ? 'Cập nhật quyền hạn' : 'Thêm mới quyền hạn'}</>
         }
         open={openModal}
         modalProps={{
@@ -83,7 +83,7 @@ const ModalPermission = (props: IProps) => {
           width: isMobile ? '100%' : 900,
           keyboard: false,
           maskClosable: false,
-          okText: <>{dataInit?._id ? 'Cập nhật' : 'Tạo mới'}</>,
+          okText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>,
           cancelText: 'Hủy'
         }}
         scrollToFirstError={true}

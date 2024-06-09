@@ -81,11 +81,6 @@ export interface IPost {
   _id?: string
   name: string
   threads: string[]
-  department?: {
-    _id: string
-    name: string
-    logo?: string
-  }
   description: string
   startDate: Date
   endDate: Date
@@ -104,19 +99,6 @@ export interface IDocument {
   userId: string
   url: string
   status: string
-  departmentId:
-    | string
-    | {
-        _id: string
-        name: string
-        logo: string
-      }
-  postId:
-    | string
-    | {
-        _id: string
-        name: string
-      }
   history?: {
     status: string
     updatedAt: Date
