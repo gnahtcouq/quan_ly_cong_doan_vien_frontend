@@ -23,7 +23,7 @@ const ViewDetailUser = (props: IProps) => {
           setDataInit(null)
         }}
         open={open}
-        width={'50vw'}
+        width={'40vw'}
         maskClosable={true}
       >
         <Descriptions title="" bordered column={2} layout="vertical">

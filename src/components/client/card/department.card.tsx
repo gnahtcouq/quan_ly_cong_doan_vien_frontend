@@ -79,7 +79,7 @@ const DepartmentCard = (props: IProps) => {
                   isMobile ? styles['dflex-mobile'] : styles['dflex-pc']
                 }
               >
-                <span className={styles['title']}>Các Đơn Vị Nổi Bật</span>
+                <h2 className={styles['title']}>Các Đơn Vị Nổi Bật</h2>
                 {!showPagination && <Link to="department">Xem tất cả</Link>}
               </div>
             </Col>

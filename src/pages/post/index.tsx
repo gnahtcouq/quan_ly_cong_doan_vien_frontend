@@ -15,10 +15,10 @@ const ClientPostPage = (props: any) => {
     <ConfigProvider locale={en_US}>
       <div className={styles['container']} style={{marginTop: 20}}>
         <Row gutter={[20, 20]}>
-          <Col span={24}>
+          {/* <Col span={24}>
             <SearchClient />
           </Col>
-          <Divider />
+          <Divider /> */}
 
           <Col span={24}>
             <PostCard showPagination={true} />

@@ -10,6 +10,7 @@ import styles from 'styles/client.module.scss'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 // import en_US from 'antd/locale/en_US'
+import logo_sv from '@/assets/logo-sv.png'
 
 dayjs.extend(relativeTime)
 // dayjs.locale('en')
@@ -83,7 +84,7 @@ const PostCard = (props: IProps) => {
                   isMobile ? styles['dflex-mobile'] : styles['dflex-pc']
                 }
               >
-                <span className={styles['title']}>Bài Đăng Mới Nhất</span>
+                <h2 className={styles['title']}>Bài Đăng Mới Nhất</h2>
                 {!showPagination && <Link to="post">Xem tất cả</Link>}
               </div>
             </Col>
@@ -100,17 +101,12 @@ const PostCard = (props: IProps) => {
                   >
                     <div className={styles['card-post-content']}>
                       <div className={styles['card-post-left']}>
-                        <img
-                          alt="example"
-                          src={`${
-                            import.meta.env.VITE_BACKEND_URL
-                          }/files/department/${item?.department?.logo}`}
-                        />
+                        <img alt="example" src={logo_sv} />
                       </div>
                       <div className={styles['card-post-right']}>
                         <div className={styles['post-title']}>{item.name}</div>
                         <div className={styles['post-updatedAt']}>
-                          {dayjs(item.updatedAt).fromNow()}
+                          {dayjs(item.updatedAt).format('DD/MM/YYYY')}
                         </div>
                       </div>
                     </div>

@@ -8,16 +8,14 @@ import {Col, ConfigProvider, Divider, Row, Skeleton, Tag} from 'antd'
 import {HistoryOutlined} from '@ant-design/icons'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import ApplyModal from '@/components/client/modal/apply.modal'
 import en_US from 'antd/locale/en_US'
+import logo_sv from '@/assets/logo-sv.png'
 dayjs.extend(relativeTime)
 dayjs.locale('en')
 
 const ClientPostDetailPage = (props: any) => {
   const [postDetail, setPostDetail] = useState<IPost | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   let location = useLocation()
   let params = new URLSearchParams(location.search)
@@ -60,20 +58,19 @@ const ClientPostDetailPage = (props: any) => {
                     })}
                   </div>
                   <div>
-                    <HistoryOutlined /> {dayjs(postDetail.updatedAt).fromNow()}
+                    <HistoryOutlined />{' '}
+                    {dayjs(postDetail.updatedAt).format('DD/MM/YYYY HH:mm:ss')}
                   </div>
                   <Divider />
                   {parse(postDetail.description)}
                 </Col>
 
-                {/* <Col span={24} md={8}>
+                <Col span={24} md={8}>
                   <div className={styles['department']}>
                     <div>
                       <img
                         alt="example"
-                        src={`${
-                          import.meta.env.VITE_BACKEND_URL
-                        }/files/department/${postDetail.department?.logo}`}
+                        src={logo_sv}
                         style={{
                           height: 250,
                           width: '100%',
@@ -81,18 +78,13 @@ const ClientPostDetailPage = (props: any) => {
                         }}
                       />
                     </div>
-                    <div>{postDetail.department?.name}</div>
+                    {/* <div>{postDetail.department?.name}</div> */}
                   </div>
-                </Col> */}
+                </Col>
               </>
             )}
           </Row>
         )}
-        {/* <ApplyModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          postDetail={postDetail}
-        /> */}
       </div>
     </ConfigProvider>
   )
