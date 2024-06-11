@@ -114,6 +114,10 @@ export const callFetchDepartmentById = (id: string) => {
   return axios.get<IBackendRes<IDepartment>>(`/api/v1/departments/${id}`)
 }
 
+export const callFetchNumberOfDepartments = () => {
+  return axios.post<IBackendRes<number>>('/api/v1/departments/count')
+}
+
 /**
  * 
 Module User
@@ -132,6 +136,10 @@ export const callDeleteUser = (id: string) => {
 
 export const callFetchUser = (query: string) => {
   return axios.get<IBackendRes<IModelPaginate<IUser>>>(`/api/v1/users?${query}`)
+}
+
+export const callFetchNumberOfUsers = () => {
+  return axios.post<IBackendRes<number>>('/api/v1/users/count')
 }
 
 /**
@@ -156,6 +164,10 @@ export const callFetchPost = (query: string) => {
 
 export const callFetchPostById = (id: string) => {
   return axios.get<IBackendRes<IPost>>(`/api/v1/posts/${id}`)
+}
+
+export const callFetchNumberOfPosts = () => {
+  return axios.post<IBackendRes<number>>('/api/v1/posts/count')
 }
 
 /**
@@ -191,6 +203,10 @@ export const callFetchDocumentById = (id: string) => {
 
 export const callFetchDocumentByUser = () => {
   return axios.post<IBackendRes<IDocument[]>>(`/api/v1/documents/by-user`)
+}
+
+export const callFetchNumberOfDocuments = () => {
+  return axios.post<IBackendRes<number>>('/api/v1/documents/count')
 }
 
 /**

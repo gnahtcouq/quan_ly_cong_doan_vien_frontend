@@ -35,7 +35,7 @@ const ViewDetailUser = (props: IProps) => {
 
           <Descriptions.Item label="Ngày sinh">
             {dataInit && dataInit.dateOfBirth
-              ? dayjs(dataInit.dateOfBirth).format('DD-MM-YYYY')
+              ? dayjs(dataInit.dateOfBirth).format('DD/MM/YYYY')
               : ''}
           </Descriptions.Item>
 
@@ -77,28 +77,28 @@ const ViewDetailUser = (props: IProps) => {
 
           {/* <Descriptions.Item label="Ngày vào công đoàn">
             {dataInit && dataInit.unionEntryDate
-              ? dayjs(dataInit.unionEntryDate).format('DD-MM-YYYY')
+              ? dayjs(dataInit.unionEntryDate).format('DD/MM/YYYY')
               : ''}
           </Descriptions.Item>
           <Descriptions.Item label="Ngày chuyển đến">
             {dataInit && dataInit.joiningDate
-              ? dayjs(dataInit.joiningDate).format('DD-MM-YYYY')
+              ? dayjs(dataInit.joiningDate).format('DD/MM/YYYY')
               : ''}
           </Descriptions.Item>
           <Descriptions.Item label="Ngày chuyển đi">
             {dataInit && dataInit.leavingDate
-              ? dayjs(dataInit.leavingDate).format('DD-MM-YYYY')
+              ? dayjs(dataInit.leavingDate).format('DD/MM/YYYY')
               : ''}
           </Descriptions.Item> */}
 
           <Descriptions.Item label="Ngày tạo">
             {dataInit && dataInit.createdAt
-              ? dayjs(dataInit.createdAt).format('DD-MM-YYYY HH:mm:ss')
+              ? dayjs(dataInit.createdAt).format('DD/MM/YYYY HH:mm:ss')
               : ''}
           </Descriptions.Item>
           <Descriptions.Item label="Ngày sửa">
             {dataInit && dataInit.updatedAt
-              ? dayjs(dataInit.updatedAt).format('DD-MM-YYYY HH:mm:ss')
+              ? dayjs(dataInit.updatedAt).format('DD/MM/YYYY HH:mm:ss')
               : ''}
           </Descriptions.Item>
         </Descriptions>

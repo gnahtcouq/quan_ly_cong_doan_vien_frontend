@@ -12,7 +12,6 @@ import {Avatar, Drawer, Dropdown, MenuProps, Space, message} from 'antd'
 import {Menu, ConfigProvider} from 'antd'
 import styles from '@/styles/client.module.scss'
 import {isMobile} from 'react-device-detect'
-import {FaReact} from 'react-icons/fa'
 import {useLocation, useNavigate} from 'react-router-dom'
 import {Link} from 'react-router-dom'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
@@ -82,7 +81,7 @@ const Header = (props: any) => {
         </label>
       ),
       key: 'manage-account',
-      icon: <UserOutlined />
+      icon: <UserOutlined onClick={() => setOpenManageAccount(true)} />
     },
     {
       label: <Link to={'/admin'}>Trang quản trị</Link>,
@@ -96,7 +95,7 @@ const Header = (props: any) => {
         </label>
       ),
       key: 'logout',
-      icon: <LogoutOutlined />
+      icon: <LogoutOutlined onClick={() => handleLogout()} />
     }
   ]
 
@@ -139,7 +138,16 @@ const Header = (props: any) => {
                   {isAuthenticated === false ? (
                     <Link to={'/login'}>Đăng Nhập</Link>
                   ) : (
-                    <Dropdown menu={{items: itemsDropdown}} trigger={['click']}>
+                    <Dropdown
+                      menu={{items: itemsDropdown}}
+                      trigger={['click']}
+                      // overlayStyle={{
+                      //   width: '200px',
+                      //   display: 'flex',
+                      //   flexDirection: 'column',
+                      //   alignItems: 'center'
+                      // }}
+                    >
                       <Space style={{cursor: 'pointer'}}>
                         <span>Xin chào, {user?.name}</span>
                         <Avatar>

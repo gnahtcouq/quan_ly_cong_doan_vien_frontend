@@ -80,7 +80,7 @@ const UserDocument = (props: any) => {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       render(value, record, index) {
-        return <>{dayjs(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</>
+        return <>{dayjs(record.createdAt).format('DD/MM/YYYY HH:mm:ss')}</>
       }
     },
     {

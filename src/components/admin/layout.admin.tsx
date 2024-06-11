@@ -11,7 +11,8 @@ import {
   LogoutOutlined,
   HeartTwoTone,
   ScheduleOutlined,
-  TeamOutlined
+  TeamOutlined,
+  HomeOutlined
 } from '@ant-design/icons'
 import {Layout, Menu, Dropdown, Space, message, Avatar, Button} from 'antd'
 import {Outlet, useLocation, useNavigate} from 'react-router-dom'
@@ -184,7 +185,8 @@ const LayoutAdmin = () => {
   const itemsDropdown = [
     {
       label: <Link to={'/'}>Trang chủ</Link>,
-      key: 'home'
+      key: 'home',
+      icon: <HomeOutlined />
     },
     {
       label: (
@@ -192,7 +194,8 @@ const LayoutAdmin = () => {
           Đăng xuất
         </label>
       ),
-      key: 'logout'
+      key: 'logout',
+      icon: <LogoutOutlined onClick={() => handleLogout()} />
     }
   ]
 

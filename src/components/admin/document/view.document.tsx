@@ -80,10 +80,10 @@ const ViewDetailDocument = (props: IProps) => {
           <Descriptions.Item label="Tên văn bản">
             {dataInit?.name}
           </Descriptions.Item>
-          <Descriptions.Item label="Trạng thái">
+          <Descriptions.Item label="Trạng thái" style={{width: '50%'}}>
             <Form form={form}>
               <Form.Item name={'status'}>
-                <Select style={{width: '100%'}} defaultValue={dataInit?.status}>
+                <Select style={{width: '50%'}} defaultValue={dataInit?.status}>
                   <Option value="ACTIVE">ACTIVE</Option>
                   <Option value="INACTIVE">INACTIVE</Option>
                 </Select>
@@ -94,12 +94,12 @@ const ViewDetailDocument = (props: IProps) => {
           <Descriptions.Item label="Email">{dataInit?.email}</Descriptions.Item>
           <Descriptions.Item label="Ngày tạo">
             {dataInit && dataInit.createdAt
-              ? dayjs(dataInit.createdAt).format('DD-MM-YYYY HH:mm:ss')
+              ? dayjs(dataInit.createdAt).format('DD/MM/YYYY HH:mm:ss')
               : ''}
           </Descriptions.Item>
           <Descriptions.Item label="Ngày sửa">
             {dataInit && dataInit.updatedAt
-              ? dayjs(dataInit.updatedAt).format('DD-MM-YYYY HH:mm:ss')
+              ? dayjs(dataInit.updatedAt).format('DD/MM/YYYY HH:mm:ss')
               : ''}
           </Descriptions.Item>
         </Descriptions>

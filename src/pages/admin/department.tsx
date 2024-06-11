@@ -74,7 +74,7 @@ const DepartmentPage = () => {
       width: 200,
       sorter: true,
       render: (text, record, index, action) => {
-        return <>{dayjs(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</>
+        return <>{dayjs(record.createdAt).format('DD/MM/YYYY HH:mm:ss')}</>
       },
       hideInSearch: true
     },
@@ -84,7 +84,7 @@ const DepartmentPage = () => {
       width: 200,
       sorter: true,
       render: (text, record, index, action) => {
-        return <>{dayjs(record.updatedAt).format('DD-MM-YYYY HH:mm:ss')}</>
+        return <>{dayjs(record.updatedAt).format('DD/MM/YYYY HH:mm:ss')}</>
       },
       hideInSearch: true
     },

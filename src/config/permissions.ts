@@ -19,13 +19,23 @@ export const ALL_PERMISSIONS = {
       method: 'DELETE',
       apiPath: '/api/v1/departments/:id',
       module: 'DEPARTMENTS'
+    },
+    GET_NUMBER_OF_DEPARTMENTS: {
+      method: 'POST',
+      apiPath: '/api/v1/departments/count',
+      module: 'DEPARTMENTS'
     }
   },
   POSTS: {
     GET_PAGINATE: {method: 'GET', apiPath: '/api/v1/posts', module: 'POSTS'},
     CREATE: {method: 'POST', apiPath: '/api/v1/posts', module: 'POSTS'},
     UPDATE: {method: 'PATCH', apiPath: '/api/v1/posts/:id', module: 'POSTS'},
-    DELETE: {method: 'DELETE', apiPath: '/api/v1/posts/:id', module: 'POSTS'}
+    DELETE: {method: 'DELETE', apiPath: '/api/v1/posts/:id', module: 'POSTS'},
+    GET_NUMBER_OF_POSTS: {
+      method: 'POST',
+      apiPath: '/api/v1/posts/count',
+      module: 'POSTS'
+    }
   },
   PERMISSIONS: {
     GET_PAGINATE: {
@@ -65,6 +75,11 @@ export const ALL_PERMISSIONS = {
       method: 'DELETE',
       apiPath: '/api/v1/documents/:id',
       module: 'DOCUMENTS'
+    },
+    GET_NUMBER_OF_DOCUMENTS: {
+      method: 'POST',
+      apiPath: '/api/v1/documents/count',
+      module: 'DOCUMENTS'
     }
   },
   ROLES: {
@@ -77,7 +92,12 @@ export const ALL_PERMISSIONS = {
     GET_PAGINATE: {method: 'GET', apiPath: '/api/v1/users', module: 'USERS'},
     CREATE: {method: 'POST', apiPath: '/api/v1/users', module: 'USERS'},
     UPDATE: {method: 'PATCH', apiPath: '/api/v1/users/:id', module: 'USERS'},
-    DELETE: {method: 'DELETE', apiPath: '/api/v1/users/:id', module: 'USERS'}
+    DELETE: {method: 'DELETE', apiPath: '/api/v1/users/:id', module: 'USERS'},
+    GET_NUMBER_OF_USERS: {
+      method: 'POST',
+      apiPath: '/api/v1/users/count',
+      module: 'USERS'
+    }
   }
 }
 
