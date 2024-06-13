@@ -21,7 +21,7 @@ export const callRegister = (
   name: string,
   email: string,
   password: string,
-  age: number,
+  dateOfBirth: string,
   gender: string,
   address: string
 ) => {
@@ -29,7 +29,7 @@ export const callRegister = (
     name,
     email,
     password,
-    age,
+    dateOfBirth,
     gender,
     address
   })
