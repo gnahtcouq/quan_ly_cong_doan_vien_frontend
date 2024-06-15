@@ -71,19 +71,17 @@ const ModalDepartment = (props: IProps) => {
   const submitDepartment = async (valuesForm: IDepartmentForm) => {
     const {name} = valuesForm
 
-    if (dataLogo.length === 0) {
+    // Nếu dataInit đã có logo, giữ nguyên giá trị này
+    const logo = dataLogo.length > 0 ? dataLogo[0].name : dataInit?.logo
+
+    if (!logo) {
       message.error('Vui lòng tải lên ảnh Logo!')
       return
     }
 
     if (dataInit?._id) {
       //update
-      const res = await callUpdateDepartment(
-        dataInit._id,
-        name,
-        value,
-        dataLogo[0].name
-      )
+      const res = await callUpdateDepartment(dataInit._id, name, value, logo)
       if (res.data) {
         message.success('Cập nhật đơn vị thành công!')
         handleReset()
@@ -96,7 +94,7 @@ const ModalDepartment = (props: IProps) => {
       }
     } else {
       //create
-      const res = await callCreateDepartment(name, value, dataLogo[0].name)
+      const res = await callCreateDepartment(name, value, logo)
       if (res.data) {
         message.success('Thêm mới đơn vị thành công!')
         handleReset()
@@ -124,6 +122,16 @@ const ModalDepartment = (props: IProps) => {
 
   const handleRemoveFile = (file: any) => {
     setDataLogo([])
+    // Cập nhật state của dataInit để xóa logo
+    setDataInit((prevDataInit: IDepartment | null) => {
+      if (prevDataInit) {
+        return {
+          ...prevDataInit,
+          logo: ''
+        }
+      }
+      return null
+    })
   }
 
   const handlePreview = async (file: any) => {
@@ -246,8 +254,9 @@ const ModalDepartment = (props: IProps) => {
                       required: true,
                       message: 'Vui lòng không để trống!',
                       validator: () => {
-                        if (dataLogo.length > 0) return Promise.resolve()
-                        else return Promise.reject(false)
+                        if (dataLogo.length > 0 || dataInit?.logo)
+                          return Promise.resolve()
+                        return Promise.reject('Vui lòng tải lên ảnh Logo!')
                       }
                     }
                   ]}
@@ -265,7 +274,7 @@ const ModalDepartment = (props: IProps) => {
                       onRemove={(file) => handleRemoveFile(file)}
                       onPreview={handlePreview}
                       defaultFileList={
-                        dataInit?._id
+                        dataInit?._id && dataLogo.length === 0
                           ? [
                               {
                                 uid: uuidv4(),
