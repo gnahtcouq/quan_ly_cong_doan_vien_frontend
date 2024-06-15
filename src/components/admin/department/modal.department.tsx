@@ -223,25 +223,27 @@ const ModalDepartment = (props: IProps) => {
               keyboard: false,
               maskClosable: false,
               className: `modal-department ${animation}`,
-              rootClassName: `modal-department-root ${animation}`
+              rootClassName: `modal-department-root ${animation}`,
+              okText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>,
+              cancelText: 'Hủy'
             }}
             scrollToFirstError={true}
             preserve={false}
             form={form}
             onFinish={submitDepartment}
             initialValues={dataInit?._id ? dataInit : {}}
-            submitter={{
-              render: (_: any, dom: any) => (
-                <FooterToolbar>{dom}</FooterToolbar>
-              ),
-              submitButtonProps: {
-                icon: <EditOutlined />
-              },
-              searchConfig: {
-                resetText: 'Hủy',
-                submitText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>
-              }
-            }}
+            // submitter={{
+            //   render: (_: any, dom: any) => (
+            //     <FooterToolbar>{dom}</FooterToolbar>
+            //   ),
+            //   submitButtonProps: {
+            //     icon: <EditOutlined />
+            //   },
+            //   searchConfig: {
+            //     resetText: 'Hủy',
+            //     submitText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>
+            //   }
+            // }}
           >
             <Row gutter={16}>
               <Col span={8}>
@@ -308,7 +310,7 @@ const ModalDepartment = (props: IProps) => {
               </Col>
 
               <ProCard
-                title="Mô tả"
+                title="Mô tả đơn vị"
                 // subTitle="mô tả đơn vị"
                 headStyle={{color: '#d81921'}}
                 style={{marginBottom: 20}}
@@ -329,7 +331,7 @@ const ModalDepartment = (props: IProps) => {
             onCancel={() => setPreviewOpen(false)}
             style={{zIndex: 1500}}
           >
-            <img alt="example" style={{width: '100%'}} src={previewImage} />
+            <img alt="logo" style={{width: '100%'}} src={previewImage} />
           </Modal>
         </>
       )}
