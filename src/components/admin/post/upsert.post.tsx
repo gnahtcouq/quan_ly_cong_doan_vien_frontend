@@ -271,7 +271,7 @@ const ViewUpsertPost = (props: any) => {
                   placeholder="dd/mm/yyyy"
                 />
               </Col>
-              <Col span={24} md={6}>
+              {/* <Col span={24} md={6}>
                 <ProFormDatePicker
                   label="Ngày kết thúc"
                   name="endDate"
@@ -285,7 +285,7 @@ const ViewUpsertPost = (props: any) => {
                   ]}
                   placeholder="dd/mm/yyyy"
                 />
-              </Col>
+              </Col> */}
               <Col span={24} md={6}>
                 <ProFormSwitch
                   label="Trạng thái"

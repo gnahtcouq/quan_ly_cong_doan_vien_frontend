@@ -69,7 +69,7 @@ const ClientPostDetailPage = (props: any) => {
                   <div className={styles['department']}>
                     <div>
                       <img
-                        alt="example"
+                        alt="logo_sv"
                         src={logo_sv}
                         style={{
                           height: 250,

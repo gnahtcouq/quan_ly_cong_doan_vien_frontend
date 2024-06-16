@@ -83,7 +83,7 @@ export interface IPost {
   threads: string[]
   description: string
   startDate: Date
-  endDate: Date
+  // endDate: Date
   isActive: boolean
 
   createdBy?: string

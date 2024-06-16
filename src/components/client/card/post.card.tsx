@@ -1,19 +1,16 @@
 import {callFetchPost} from '@/config/api'
 import {convertSlug} from '@/config/utils'
 import {IPost} from '@/types/backend'
-import {EnvironmentOutlined, ThunderboltOutlined} from '@ant-design/icons'
-import {Card, Col, ConfigProvider, Empty, Pagination, Row, Spin} from 'antd'
+import {Card, Col, Empty, Pagination, Row, Spin} from 'antd'
 import {useState, useEffect} from 'react'
 import {isMobile} from 'react-device-detect'
 import {Link, useNavigate} from 'react-router-dom'
 import styles from 'styles/client.module.scss'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-// import en_US from 'antd/locale/en_US'
 import logo_sv from '@/assets/logo-sv.png'
 
 dayjs.extend(relativeTime)
-// dayjs.locale('en')
 
 interface IProps {
   showPagination?: boolean
@@ -26,7 +23,7 @@ const PostCard = (props: IProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const [current, setCurrent] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
+  const [pageSize, setPageSize] = useState(6)
   const [total, setTotal] = useState(0)
   const [filter, setFilter] = useState('')
   const [sortQuery, setSortQuery] = useState('sort=-updatedAt')
@@ -73,7 +70,6 @@ const PostCard = (props: IProps) => {
   }
 
   return (
-    // <ConfigProvider locale={en_US}>
     <div className={`${styles['card-post-section']}`}>
       <div className={`${styles['post-content']}`}>
         <Spin spinning={isLoading} tip="Loading...">
@@ -101,7 +97,7 @@ const PostCard = (props: IProps) => {
                   >
                     <div className={styles['card-post-content']}>
                       <div className={styles['card-post-left']}>
-                        <img alt="example" src={logo_sv} />
+                        <img alt="logo_sv" src={logo_sv} />
                       </div>
                       <div className={styles['card-post-right']}>
                         <div className={styles['post-title']}>{item.name}</div>
@@ -141,7 +137,6 @@ const PostCard = (props: IProps) => {
         </Spin>
       </div>
     </div>
-    // </ConfigProvider>
   )
 }
 

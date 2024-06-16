@@ -257,8 +257,14 @@
         color      : #3a3a3a;
         font-size  : 16px;
         line-height: 1.7em;
-        width      : 100%;
+        max-width  : 100%;
         line-height: 2em;
+        text-align : justify;
+    }
+
+    img {
+        width : 100%;
+        height: auto;
     }
 
     .department {
