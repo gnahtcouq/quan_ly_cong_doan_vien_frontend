@@ -62,6 +62,38 @@ const ModalDepartment = (props: IProps) => {
   const [value, setValue] = useState<string>('')
   const [form] = Form.useForm()
 
+  const modules = {
+    toolbar: [
+      [{header: '1'}, {header: '2'}],
+      [{list: 'ordered'}, {list: 'bullet'}],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      // [{script: 'sub'}, {script: 'super'}], // Các định dạng script
+      // [{indent: '-1'}, {indent: '+1'}, {direction: 'rtl'}], // Định dạng indent và direction
+      [{color: []}, {background: []}], // Định dạng màu sắc
+      // [{align: []}], // Định dạng căn chỉnh
+      ['link', 'image', 'video'], // Các định dạng media
+      ['clean'] // Nút clear định dạng
+    ]
+  }
+
+  const formats = [
+    'header',
+    'font',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'link',
+    'image',
+    'video',
+    'color',
+    'background',
+    'table'
+  ]
+
   useEffect(() => {
     if (dataInit?._id && dataInit?.description) {
       setValue(dataInit.description)
@@ -70,8 +102,6 @@ const ModalDepartment = (props: IProps) => {
 
   const submitDepartment = async (valuesForm: IDepartmentForm) => {
     const {name} = valuesForm
-
-    // Nếu dataInit đã có logo, giữ nguyên giá trị này
     const logo = dataLogo.length > 0 ? dataLogo[0].name : dataInit?.logo
 
     if (!logo) {
@@ -79,32 +109,21 @@ const ModalDepartment = (props: IProps) => {
       return
     }
 
-    if (dataInit?._id) {
-      //update
-      const res = await callUpdateDepartment(dataInit._id, name, value, logo)
-      if (res.data) {
-        message.success('Cập nhật đơn vị thành công!')
-        handleReset()
-        reloadTable()
-      } else {
-        notification.error({
-          message: 'Có lỗi xảy ra',
-          description: res.message
-        })
-      }
+    const res = dataInit?._id
+      ? await callUpdateDepartment(dataInit._id, name, value, logo)
+      : await callCreateDepartment(name, value, logo)
+
+    if (res.data) {
+      message.success(
+        `${dataInit?._id ? 'Cập nhật' : 'Thêm mới'} đơn vị thành công!`
+      )
+      handleReset()
+      reloadTable()
     } else {
-      //create
-      const res = await callCreateDepartment(name, value, logo)
-      if (res.data) {
-        message.success('Thêm mới đơn vị thành công!')
-        handleReset()
-        reloadTable()
-      } else {
-        notification.error({
-          message: 'Có lỗi xảy ra',
-          description: res.message
-        })
-      }
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: res.message
+      })
     }
   }
 
@@ -319,7 +338,13 @@ const ModalDepartment = (props: IProps) => {
                 bordered
               >
                 <Col span={24}>
-                  <ReactQuill theme="snow" value={value} onChange={setValue} />
+                  <ReactQuill
+                    theme="snow"
+                    value={value}
+                    onChange={setValue}
+                    modules={modules}
+                    formats={formats}
+                  />
                 </Col>
               </ProCard>
             </Row>

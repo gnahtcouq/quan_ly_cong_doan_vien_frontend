@@ -3,6 +3,7 @@ import {
   IDepartment,
   IAccount,
   IUser,
+  IUnionist,
   IModelPaginate,
   IGetAccount,
   IPost,
@@ -140,6 +141,34 @@ export const callFetchUser = (query: string) => {
 
 export const callFetchNumberOfUsers = () => {
   return axios.post<IBackendRes<number>>('/api/v1/users/count')
+}
+
+/**
+ * 
+Module Unionist
+ */
+export const callCreateUnionist = (unionist: IUnionist) => {
+  return axios.post<IBackendRes<IUnionist>>('/api/v1/unionists', {...unionist})
+}
+
+export const callUpdateUnionist = (unionist: IUnionist, id: string) => {
+  return axios.patch<IBackendRes<IUnionist>>(`/api/v1/unionists/${id}`, {
+    ...unionist
+  })
+}
+
+export const callDeleteUnionist = (id: string) => {
+  return axios.delete<IBackendRes<IUnionist>>(`/api/v1/unionists/${id}`)
+}
+
+export const callFetchUnionist = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IUnionist>>>(
+    `/api/v1/unionists?${query}`
+  )
+}
+
+export const callFetchNumberOfUnionists = () => {
+  return axios.post<IBackendRes<number>>('/api/v1/unionists/count')
 }
 
 /**

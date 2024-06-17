@@ -9,12 +9,12 @@ import {Col, ConfigProvider, Form, Row, message, notification} from 'antd'
 import {isMobile} from 'react-device-detect'
 import {useState, useEffect} from 'react'
 import {
-  callCreateUser,
+  callCreateUnionist,
   callFetchDepartment,
   callFetchRole,
-  callUpdateUser
+  callUpdateUnionist
 } from '@/config/api'
-import {IUser} from '@/types/backend'
+import {IUnionist} from '@/types/backend'
 import {DebounceSelect} from './debouce.select'
 import dayjs from 'dayjs'
 import en_US from 'antd/lib/locale/en_US'
@@ -22,7 +22,7 @@ import en_US from 'antd/lib/locale/en_US'
 interface IProps {
   openModal: boolean
   setOpenModal: (v: boolean) => void
-  dataInit?: IUser | null
+  dataInit?: IUnionist | null
   setDataInit: (v: any) => void
   reloadTable: () => void
 }
@@ -33,24 +33,30 @@ export interface IRoleSelect {
   key?: string
 }
 
-const ModalUser = (props: IProps) => {
+export interface IDepartmentSelect {
+  label: string
+  value: string
+  key?: string
+}
+
+const ModalUnionist = (props: IProps) => {
   const {openModal, setOpenModal, reloadTable, dataInit, setDataInit} = props
-  // const [departments, setDepartments] = useState<IDepartmentSelect[]>([])
+  const [departments, setDepartments] = useState<IDepartmentSelect[]>([])
   const [roles, setRoles] = useState<IRoleSelect[]>([])
 
   const [form] = Form.useForm()
 
   useEffect(() => {
     if (dataInit?._id) {
-      // if (dataInit.department) {
-      //   setDepartments([
-      //     {
-      //       label: dataInit.department.name,
-      //       value: dataInit.department._id,
-      //       key: dataInit.department._id
-      //     }
-      //   ])
-      // }
+      if (dataInit.department) {
+        setDepartments([
+          {
+            label: dataInit.department?.name,
+            value: dataInit.department?._id,
+            key: dataInit.department?._id
+          }
+        ])
+      }
       if (dataInit.role) {
         setRoles([
           {
@@ -63,7 +69,7 @@ const ModalUser = (props: IProps) => {
     }
   }, [dataInit])
 
-  const submitUser = async (valuesForm: any) => {
+  const submitUnionist = async (valuesForm: any) => {
     const {
       name,
       email,
@@ -72,13 +78,16 @@ const ModalUser = (props: IProps) => {
       gender,
       address,
       CCCD,
+      joiningDate,
+      leavingDate,
+      unionEntryDate,
       note,
-      role
-      // department
+      role,
+      department
     } = valuesForm
     if (dataInit?._id) {
       //update
-      const user = {
+      const unionist = {
         _id: dataInit._id,
         name,
         email,
@@ -87,17 +96,26 @@ const ModalUser = (props: IProps) => {
         gender,
         address,
         CCCD: CCCD ? CCCD : null,
+        joiningDate,
+        leavingDate,
+        unionEntryDate,
         note,
-        role: role ? role.value : dataInit.role?._id // Giữ nguyên vai trò nếu đã có
-        // department: {
-        //   _id: department.value,
-        //   name: department.label
-        // }
+        role: role ? role.value : dataInit.role?._id, // Giữ nguyên vai trò nếu đã có
+        department:
+          department && department.value
+            ? {
+                _id: department.value,
+                name: department.label
+              }
+            : {
+                _id: dataInit.department?._id,
+                name: dataInit.department?.name
+              } // Giữ nguyên đơn vị nếu đã có
       }
 
-      const res = await callUpdateUser(user, dataInit._id)
+      const res = await callUpdateUnionist(unionist, dataInit._id)
       if (res.data) {
-        message.success('Cập nhật thành viên thành công!')
+        message.success('Cập nhật công đoàn viên thành công!')
         handleReset()
         reloadTable()
       } else {
@@ -108,7 +126,7 @@ const ModalUser = (props: IProps) => {
       }
     } else {
       //create
-      const user = {
+      const unionist = {
         name,
         email,
         password,
@@ -116,16 +134,19 @@ const ModalUser = (props: IProps) => {
         gender,
         address,
         CCCD,
+        joiningDate,
+        leavingDate,
+        unionEntryDate,
         note,
-        role: role.value
-        // department: {
-        //   _id: department.value,
-        //   name: department.label
-        // }
+        role: role.value,
+        department: {
+          _id: department.value,
+          name: department.label
+        }
       }
-      const res = await callCreateUser(user)
+      const res = await callCreateUnionist(unionist)
       if (res.data) {
-        message.success('Thêm mới thành viên thành công!')
+        message.success('Thêm mới công đoàn viên thành công!')
         handleReset()
         reloadTable()
       } else {
@@ -140,29 +161,29 @@ const ModalUser = (props: IProps) => {
   const handleReset = async () => {
     form.resetFields()
     setDataInit(null)
-    // setDepartments([])
+    setDepartments([])
     setRoles([])
     setOpenModal(false)
   }
 
-  // // Usage of DebounceSelect
-  // async function fetchDepartmentList(
-  //   name: string
-  // ): Promise<IDepartmentSelect[]> {
-  //   const res = await callFetchDepartment(
-  //     `current=1&pageSize=100&name=/${name}/i`
-  //   )
-  //   if (res && res.data) {
-  //     const list = res.data.result
-  //     const temp = list.map((item) => {
-  //       return {
-  //         label: item.name as string,
-  //         value: item._id as string
-  //       }
-  //     })
-  //     return temp
-  //   } else return []
-  // }
+  // Usage of DebounceSelect
+  async function fetchDepartmentList(
+    name: string
+  ): Promise<IDepartmentSelect[]> {
+    const res = await callFetchDepartment(
+      `current=1&pageSize=100&name=/${name}/i`
+    )
+    if (res && res.data) {
+      const list = res.data.result
+      const temp = list.map((item) => {
+        return {
+          label: item.name as string,
+          value: item._id as string
+        }
+      })
+      return temp
+    } else return []
+  }
 
   async function fetchRoleList(name: string): Promise<IRoleSelect[]> {
     const res = await callFetchRole(`current=1&pageSize=100&name=/${name}/i`)
@@ -185,8 +206,8 @@ const ModalUser = (props: IProps) => {
           title={
             <>
               {dataInit?._id
-                ? 'Cập nhật thông tin thành viên'
-                : 'Thêm mới thành viên'}
+                ? 'Cập nhật thông tin công đoàn viên'
+                : 'Thêm mới công đoàn viên'}
             </>
           }
           open={openModal}
@@ -205,7 +226,7 @@ const ModalUser = (props: IProps) => {
           scrollToFirstError={true}
           preserve={false}
           form={form}
-          onFinish={submitUser}
+          onFinish={submitUnionist}
           initialValues={dataInit?._id ? dataInit : {}}
         >
           <Row gutter={16}>
@@ -256,6 +277,42 @@ const ModalUser = (props: IProps) => {
               />
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
+              <ProFormDatePicker
+                label="Ngày sinh"
+                name="dateOfBirth"
+                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
+                fieldProps={{
+                  format: 'DD/MM/YYYY'
+                }}
+                // width="auto"
+                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                placeholder="dd/mm/yyyy"
+              />
+            </Col>
+            <Col lg={6} md={6} sm={24} xs={24}>
+              <ProFormDatePicker
+                label="Ngày vào công đoàn"
+                name="unionEntryDate"
+                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
+                fieldProps={{
+                  format: 'DD/MM/YYYY'
+                }}
+                // width="auto"
+                rules={[
+                  {required: true, message: 'Vui lòng chọn không để trống!'}
+                ]}
+                placeholder="dd/mm/yyyy"
+              />
+            </Col>
+            <Col lg={6} md={6} sm={24} xs={24}>
+              <ProFormText
+                label="Căn cước công dân"
+                name="CCCD"
+                rules={[{required: false}]}
+                placeholder="Nhập căn cước công dân"
+              />
+            </Col>
+            <Col lg={6} md={6} sm={24} xs={24}>
               <ProForm.Item
                 name="role"
                 label="Vai trò"
@@ -278,42 +335,6 @@ const ModalUser = (props: IProps) => {
               </ProForm.Item>
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormText
-                label="Căn cước công dân"
-                name="CCCD"
-                rules={[{required: false}]}
-                placeholder="Nhập căn cước công dân"
-              />
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormDatePicker
-                label="Ngày sinh"
-                name="dateOfBirth"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="dd/mm/yyyy"
-              />
-            </Col>
-            {/* <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormDatePicker
-                label="Ngày vào công đoàn"
-                name="unionEntryDate"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
-                rules={[
-                  {required: true, message: 'Vui lòng chọn không để trống!'}
-                ]}
-                placeholder="dd/mm/yyyy"
-              />
-            </Col> */}
-            {/* <Col lg={6} md={6} sm={24} xs={24}>
               <ProFormDatePicker
                 label="Ngày chuyển đến"
                 name="joiningDate"
@@ -338,8 +359,8 @@ const ModalUser = (props: IProps) => {
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
                 placeholder="dd/mm/yyyy"
               />
-            </Col> */}
-            {/* <Col lg={12} md={12} sm={24} xs={24}>
+            </Col>
+            <Col lg={12} md={12} sm={24} xs={24}>
               <ProForm.Item
                 name="department"
                 label="Thuộc đơn vị"
@@ -360,9 +381,8 @@ const ModalUser = (props: IProps) => {
                   style={{width: '100%'}}
                 />
               </ProForm.Item>
-            </Col> */}
-
-            <Col lg={18} md={12} sm={24} xs={24}>
+            </Col>
+            <Col lg={12} md={12} sm={24} xs={24}>
               <ProFormText
                 label="Địa chỉ"
                 name="address"
@@ -385,4 +405,4 @@ const ModalUser = (props: IProps) => {
   )
 }
 
-export default ModalUser
+export default ModalUnionist

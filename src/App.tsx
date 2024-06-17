@@ -22,6 +22,7 @@ import PermissionPage from './pages/admin/permission'
 import DocumentPage from './pages/admin/document'
 import RolePage from './pages/admin/role'
 import UserPage from './pages/admin/user'
+import UnionistPage from './pages/admin/unionist'
 import {fetchAccount} from './redux/slice/accountSlide'
 import LayoutApp from './components/share/layout.app'
 import PostPage from './pages/admin/post'
@@ -117,7 +118,14 @@ export default function App() {
             </ProtectedRoute>
           )
         },
-
+        {
+          path: 'unionist',
+          element: (
+            <ProtectedRoute>
+              <UnionistPage />
+            </ProtectedRoute>
+          )
+        },
         {
           path: 'post',
           children: [
@@ -140,7 +148,6 @@ export default function App() {
             }
           ]
         },
-
         {
           path: 'document',
           element: (

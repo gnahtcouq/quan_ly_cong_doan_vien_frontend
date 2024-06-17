@@ -3,6 +3,7 @@ import CountUp from 'react-countup'
 import {useEffect, useState} from 'react'
 import {
   callFetchNumberOfUsers,
+  callFetchNumberOfUnionists,
   callFetchNumberOfDepartments,
   callFetchNumberOfPosts,
   callFetchNumberOfDocuments
@@ -14,6 +15,7 @@ const DashboardPage = () => {
   }
 
   const [userCount, setUserCount] = useState(0)
+  const [unionistCount, setUnionistCount] = useState(0)
   const [departmentCount, setDepartmentCount] = useState(0)
   const [postCount, setPostCount] = useState(0)
   const [documentCount, setDocumentCount] = useState(0)
@@ -22,10 +24,12 @@ const DashboardPage = () => {
     // Fetch the data from the database and update the state
     const fetchCounts = async () => {
       const userCountResponse = await callFetchNumberOfUsers()
+      const unionistCountResponse = await callFetchNumberOfUnionists()
       const departmentCountResponse = await callFetchNumberOfDepartments()
       const postCountResponse = await callFetchNumberOfPosts()
       const documentCountResponse = await callFetchNumberOfDocuments()
       setUserCount(userCountResponse.data || 0)
+      setUnionistCount(unionistCountResponse.data || 0)
       setDepartmentCount(departmentCountResponse.data || 0)
       setPostCount(postCountResponse.data || 0)
       setDocumentCount(documentCountResponse.data || 0)
@@ -43,7 +47,11 @@ const DashboardPage = () => {
       </Col>
       <Col span={24} md={8}>
         <Card title="Công đoàn viên" bordered={false}>
-          <Statistic title="Số lượng" value={0} formatter={formatter} />
+          <Statistic
+            title="Số lượng"
+            value={unionistCount}
+            formatter={formatter}
+          />
         </Card>
       </Col>
       <Col span={24} md={8}>

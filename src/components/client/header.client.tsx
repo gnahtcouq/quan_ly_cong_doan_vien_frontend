@@ -42,18 +42,18 @@ const Header = (props: any) => {
   const items: MenuProps['items'] = [
     {
       label: <Link to={'/'}>Trang Chủ</Link>,
-      key: '/'
-      // icon: <HomeOutlined />
+      key: '/',
+      icon: <HomeOutlined />
     },
     {
       label: <Link to={'/post'}>Bài Đăng</Link>,
-      key: '/post'
-      // icon: <ScheduleOutlined />
+      key: '/post',
+      icon: <ScheduleOutlined />
     },
     {
       label: <Link to={'/department'}>Đơn Vị</Link>,
-      key: '/department'
-      // icon: <BankOutlined />
+      key: '/department',
+      icon: <BankOutlined />
     }
   ]
 

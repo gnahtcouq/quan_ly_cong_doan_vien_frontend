@@ -1,22 +1,19 @@
-import {IUser} from '@/types/backend'
+import {IUnionist} from '@/types/backend'
 import {Badge, Descriptions, Drawer} from 'antd'
 import dayjs from 'dayjs'
 
 interface IProps {
   onClose: (v: boolean) => void
   open: boolean
-  dataInit: IUser | null
+  dataInit: IUnionist | null
   setDataInit: (v: any) => void
 }
-const ViewDetailUser = (props: IProps) => {
+const ViewDetailUnionist = (props: IProps) => {
   const {onClose, open, dataInit, setDataInit} = props
-
-  console.log('Props:', props) // Add this line
-
   return (
     <>
       <Drawer
-        title="Thông tin thành viên"
+        title="Thông tin công đoàn viên"
         placement="right"
         onClose={() => {
           onClose(false)
@@ -39,14 +36,6 @@ const ViewDetailUser = (props: IProps) => {
               : ''}
           </Descriptions.Item>
 
-          <Descriptions.Item label="Căn cước công dân">
-            {dataInit?.CCCD ?? ''}
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Vai trò">
-            <Badge status="processing" text={<>{dataInit?.role?.name}</>} />
-          </Descriptions.Item>
-
           <Descriptions.Item label="Giới Tính">
             {(() => {
               switch (dataInit?.gender) {
@@ -60,12 +49,42 @@ const ViewDetailUser = (props: IProps) => {
             })()}
           </Descriptions.Item>
 
+          <Descriptions.Item label="Vai trò">
+            <Badge status="processing" text={<>{dataInit?.role?.name}</>} />
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Căn cước công dân">
+            {dataInit?.CCCD ?? ''}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Thuộc đơn vị">
+            {dataInit?.department?.name ?? ''}
+          </Descriptions.Item>
+
           <Descriptions.Item label="Địa chỉ">
             {dataInit?.address ?? ''}
           </Descriptions.Item>
 
           <Descriptions.Item label="Ghi chú">
             {dataInit?.note ?? ''}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Ngày vào công đoàn">
+            {dataInit && dataInit.unionEntryDate
+              ? dayjs(dataInit.unionEntryDate).format('DD/MM/YYYY')
+              : ''}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Ngày chuyển đến">
+            {dataInit && dataInit.joiningDate
+              ? dayjs(dataInit.joiningDate).format('DD/MM/YYYY')
+              : ''}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Ngày chuyển đi">
+            {dataInit && dataInit.leavingDate
+              ? dayjs(dataInit.leavingDate).format('DD/MM/YYYY')
+              : ''}
           </Descriptions.Item>
 
           <Descriptions.Item label="Ngày tạo">
@@ -85,4 +104,4 @@ const ViewDetailUser = (props: IProps) => {
   )
 }
 
-export default ViewDetailUser
+export default ViewDetailUnionist

@@ -33,6 +33,22 @@ export interface IAccount {
       module: string
     }[]
   }
+  unionist: {
+    _id: string
+    email: string
+    name: string
+    role: {
+      _id: string
+      name: string
+    }
+    permissions: {
+      _id: string
+      name: string
+      apiPath: string
+      method: string
+      module: string
+    }[]
+  }
 }
 
 export interface IGetAccount extends Omit<IAccount, 'access_token'> {}
@@ -70,6 +86,34 @@ export interface IUser {
   //   _id: string
   //   name: string
   // }
+  createdBy?: string
+  isDeleted?: boolean
+  deletedAt?: boolean | null
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface IUnionist {
+  _id?: string
+  name: string
+  email: string
+  password?: string
+  dateOfBirth: string
+  gender: string
+  address: string
+  CCCD?: string
+  joiningDate?: string
+  leavingDate?: string
+  unionEntryDate?: string
+  note?: string
+  role?: {
+    _id: string
+    name: string
+  }
+  department?: {
+    _id: string
+    name: string
+  }
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null

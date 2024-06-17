@@ -47,6 +47,38 @@ const ViewUpsertPost = (props: any) => {
   const [dataUpdate, setDataUpdate] = useState<IPost | null>(null)
   const [form] = Form.useForm()
 
+  const modules = {
+    toolbar: [
+      [{header: '1'}, {header: '2'}],
+      [{list: 'ordered'}, {list: 'bullet'}],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      // [{script: 'sub'}, {script: 'super'}], // Các định dạng script
+      // [{indent: '-1'}, {indent: '+1'}, {direction: 'rtl'}], // Định dạng indent và direction
+      [{color: []}, {background: []}], // Định dạng màu sắc
+      // [{align: []}], // Định dạng căn chỉnh
+      ['link', 'image', 'video'], // Các định dạng media
+      ['clean'] // Nút clear định dạng
+    ]
+  }
+
+  const formats = [
+    'header',
+    'font',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'link',
+    'image',
+    'video',
+    'color',
+    'background',
+    'table'
+  ]
+
   useEffect(() => {
     const init = async () => {
       if (id) {
@@ -306,7 +338,13 @@ const ViewUpsertPost = (props: any) => {
                     {required: true, message: 'Vui lòng nhập mô tả bài đăng!'}
                   ]}
                 >
-                  <ReactQuill theme="snow" value={value} onChange={setValue} />
+                  <ReactQuill
+                    theme="snow"
+                    value={value}
+                    onChange={setValue}
+                    modules={modules}
+                    formats={formats}
+                  />
                 </ProForm.Item>
               </Col>
             </Row>

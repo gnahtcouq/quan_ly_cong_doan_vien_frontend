@@ -54,6 +54,12 @@ const LayoutAdmin = () => {
           item.method === ALL_PERMISSIONS.USERS.GET_PAGINATE.method
       )
 
+      const viewUnionist = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.UNIONISTS.GET_PAGINATE.apiPath &&
+          item.method === ALL_PERMISSIONS.UNIONISTS.GET_PAGINATE.method
+      )
+
       const viewPost = permissions.find(
         (item) =>
           item.apiPath === ALL_PERMISSIONS.POSTS.GET_PAGINATE.apiPath &&
@@ -104,7 +110,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewUser
+        ...(viewUnionist
           ? [
               {
                 label: <Link to="/admin/unionist">Công đoàn viên</Link>,

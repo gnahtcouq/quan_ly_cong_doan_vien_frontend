@@ -98,6 +98,29 @@ export const ALL_PERMISSIONS = {
       apiPath: '/api/v1/users/count',
       module: 'USERS'
     }
+  },
+  UNIONISTS: {
+    GET_PAGINATE: {
+      method: 'GET',
+      apiPath: '/api/v1/unionists',
+      module: 'UNIONISTS'
+    },
+    CREATE: {method: 'POST', apiPath: '/api/v1/unionists', module: 'UNIONISTS'},
+    UPDATE: {
+      method: 'PATCH',
+      apiPath: '/api/v1/unionists/:id',
+      module: 'UNIONISTS'
+    },
+    DELETE: {
+      method: 'DELETE',
+      apiPath: '/api/v1/unionists/:id',
+      module: 'UNIONISTS'
+    },
+    GET_NUMBER_OF_UNIONISTS: {
+      method: 'POST',
+      apiPath: '/api/v1/unionists/count',
+      module: 'UNIONISTS'
+    }
   }
 }
 
@@ -110,5 +133,6 @@ export const ALL_MODULES = {
   DOCUMENTS: 'DOCUMENTS',
   ROLES: 'ROLES',
   USERS: 'USERS',
+  UNIONISTS: 'UNIONISTS',
   SUBSCRIBERS: 'SUBSCRIBERS'
 }
