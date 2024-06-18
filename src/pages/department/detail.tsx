@@ -39,7 +39,9 @@ const ClientDepartmentDetailPage = (props: any) => {
           {departmentDetail && departmentDetail._id && (
             <>
               <Col span={24} md={16}>
-                <div className={styles['header']}>{departmentDetail.name}</div>
+                <div className={styles['header']}>
+                  Giới thiệu {departmentDetail.name}
+                </div>
 
                 <Divider />
                 {parse(departmentDetail?.description ?? '')}

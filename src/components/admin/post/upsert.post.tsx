@@ -58,7 +58,10 @@ const ViewUpsertPost = (props: any) => {
       // [{align: []}], // Định dạng căn chỉnh
       ['link', 'image', 'video'], // Các định dạng media
       ['clean'] // Nút clear định dạng
-    ]
+    ],
+    clipboard: {
+      matchVisual: false // Vô hiệu hóa việc tối ưu định dạng khi dán
+    }
   }
 
   const formats = [
