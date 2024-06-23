@@ -28,12 +28,16 @@ import {
   callFetchPostById,
   callUpdatePost
 } from '@/config/api'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
+import {useQuill} from 'react-quilljs'
+import 'quill/dist/quill.snow.css'
+import ImageResize from 'quill-image-resize-module-react'
 import {EditOutlined} from '@ant-design/icons'
 import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
 import {IPost} from '@/types/backend'
+import Quill from 'quill'
+
+Quill.register('modules/imageResize', ImageResize)
 
 const ViewUpsertPost = (props: any) => {
   // const [departments, setDepartments] = useState<IDepartmentSelect[]>([])
@@ -47,40 +51,25 @@ const ViewUpsertPost = (props: any) => {
   const [dataUpdate, setDataUpdate] = useState<IPost | null>(null)
   const [form] = Form.useForm()
 
+  // Custom toolbar options
   const modules = {
     toolbar: [
-      [{header: '1'}, {header: '2'}],
-      [{list: 'ordered'}, {list: 'bullet'}],
+      [{header: '1'}, {header: '2'}, {font: []}],
+      [{size: []}],
       ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      // [{script: 'sub'}, {script: 'super'}], // Các định dạng script
-      // [{indent: '-1'}, {indent: '+1'}, {direction: 'rtl'}], // Định dạng indent và direction
-      [{color: []}, {background: []}], // Định dạng màu sắc
-      // [{align: []}], // Định dạng căn chỉnh
-      ['link', 'image', 'video'], // Các định dạng media
-      ['clean'] // Nút clear định dạng
+      [{list: 'ordered'}, {list: 'bullet'}, {indent: '-1'}, {indent: '+1'}],
+      [{color: []}, {background: []}],
+      ['link', 'image'],
+      ['clean']
     ],
-    clipboard: {
-      matchVisual: false // Vô hiệu hóa việc tối ưu định dạng khi dán
+    // Include the ImageResize module
+    imageResize: {
+      modules: ['Resize', 'Toolbar']
     }
   }
 
-  const formats = [
-    'header',
-    'font',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'link',
-    'image',
-    'video',
-    'color',
-    'background',
-    'table'
-  ]
+  // Quill configuration
+  const {quill, quillRef} = useQuill({modules}) // Quill instance and ref
 
   useEffect(() => {
     const init = async () => {
@@ -115,6 +104,34 @@ const ViewUpsertPost = (props: any) => {
     return () => form.resetFields()
   }, [id])
 
+  useEffect(() => {
+    if (quill && dataUpdate?.description) {
+      // Giả sử `dataUpdate.description` là một chuỗi Delta từ CSDL
+      // Chuyển đổi chuỗi Delta thành object Delta
+      const delta = JSON.parse(dataUpdate.description)
+      // Sử dụng Quill để chuyển đổi Delta sang HTML và hiển thị nó
+      quill.setContents(delta)
+    }
+  }, [quill, dataUpdate?.description])
+
+  useEffect(() => {
+    if (quill) {
+      const handleChange = () => {
+        const delta = quill.getContents() // Get Delta from Quill
+        const deltaString = JSON.stringify(delta)
+        setValue(deltaString) // Assuming `setValue` updates some state. Ensure this function is defined or remove this line if unnecessary.
+        form.setFieldsValue({description: deltaString}) // Update form value
+      }
+
+      quill.on('text-change', handleChange)
+
+      // Cleanup function to remove event listener
+      return () => {
+        quill.off('text-change', handleChange)
+      }
+    }
+  }, [quill, form])
+
   // // Usage of DebounceSelect
   // async function fetchDepartmentList(
   //   name: string
@@ -135,6 +152,8 @@ const ViewUpsertPost = (props: any) => {
   // }
 
   const onFinish = async (values: any) => {
+    const delta = JSON.parse(values.description)
+
     if (dataUpdate?._id) {
       //update
       // const cp = values?.department?.value?.split('@#$')
@@ -146,7 +165,7 @@ const ViewUpsertPost = (props: any) => {
         //   name: values.department.label,
         //   logo: cp && cp.length > 1 ? cp[1] : ''
         // },
-        description: value,
+        description: JSON.stringify(delta),
         startDate: /[0-9]{2}[/][0-9]{2}[/][0-9]{4}$/.test(values.startDate)
           ? dayjs(values.startDate, 'DD/MM/YYYY').toDate()
           : values.startDate,
@@ -341,13 +360,7 @@ const ViewUpsertPost = (props: any) => {
                     {required: true, message: 'Vui lòng nhập mô tả bài đăng!'}
                   ]}
                 >
-                  <ReactQuill
-                    theme="snow"
-                    value={value}
-                    onChange={setValue}
-                    modules={modules}
-                    formats={formats}
-                  />
+                  <div ref={quillRef} style={{minHeight: 200}} />
                 </ProForm.Item>
               </Col>
             </Row>

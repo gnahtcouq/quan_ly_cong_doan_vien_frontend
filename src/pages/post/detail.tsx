@@ -10,6 +10,8 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import en_US from 'antd/locale/en_US'
 import logo_sv from '@/assets/logo-sv.png'
+import Quill from 'quill'
+
 dayjs.extend(relativeTime)
 dayjs.locale('en')
 
@@ -27,7 +29,13 @@ const ClientPostDetailPage = (props: any) => {
         setIsLoading(true)
         const res = await callFetchPostById(id)
         if (res?.data) {
-          setPostDetail(res.data)
+          const deltaOps = JSON.parse(res.data.description)
+          const quillHtml = () => {
+            const temp = new Quill(document.createElement('div'))
+            temp.setContents(deltaOps)
+            return temp.root.innerHTML
+          }
+          setPostDetail({...res.data, description: quillHtml()})
         }
         setIsLoading(false)
       }
@@ -59,10 +67,14 @@ const ClientPostDetailPage = (props: any) => {
                   </div>
                   <div>
                     <HistoryOutlined />{' '}
-                    {dayjs(postDetail.updatedAt).format('DD/MM/YYYY HH:mm:ss')}
+                    {dayjs(postDetail.updatedAt).format(
+                      'DD/MM/YYYY - HH:mm:ss'
+                    )}
                   </div>
                   <Divider />
-                  {parse(postDetail.description)}
+                  <div
+                    dangerouslySetInnerHTML={{__html: postDetail.description}}
+                  ></div>
                 </Col>
 
                 <Col span={24} md={8}>
