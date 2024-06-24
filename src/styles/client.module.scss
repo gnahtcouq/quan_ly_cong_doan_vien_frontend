@@ -80,6 +80,7 @@
         align-items    : center;
         width          : 100%;
         margin         : 5px;
+        font-weight    : 600;
 
         .extra {
             display    : flex;
@@ -156,7 +157,8 @@
             }
 
             .card-post-right {
-                width: 100%;
+                width   : 100%;
+                position: relative;
 
                 .post-title {
                     overflow          : hidden;
@@ -174,9 +176,10 @@
                 }
 
                 .post-updatedAt {
-                    display: block;
-                    float  : right;
-                    color  : #919191;
+                    position: absolute;
+                    right   : 0;
+                    bottom  : -18px;
+                    color   : #919191;
                 }
             }
         }
