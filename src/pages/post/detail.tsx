@@ -3,7 +3,6 @@ import {useState, useEffect} from 'react'
 import {IPost} from '@/types/backend'
 import {callFetchPostById} from '@/config/api'
 import styles from 'styles/client.module.scss'
-import parse from 'html-react-parser'
 import {Col, ConfigProvider, Divider, Row, Skeleton, Tag} from 'antd'
 import {HistoryOutlined} from '@ant-design/icons'
 import dayjs from 'dayjs'
@@ -65,7 +64,7 @@ const ClientPostDetailPage = (props: any) => {
                       )
                     })}
                   </div>
-                  <div>
+                  <div className={styles['post-updatedAt']}>
                     <HistoryOutlined />{' '}
                     {dayjs(postDetail.updatedAt).format(
                       'DD/MM/YYYY - HH:mm:ss'
