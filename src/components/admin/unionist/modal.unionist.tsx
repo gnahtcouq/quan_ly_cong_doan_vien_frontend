@@ -5,7 +5,15 @@ import {
   ProFormSelect,
   ProFormText
 } from '@ant-design/pro-components'
-import {Col, ConfigProvider, Form, Row, message, notification} from 'antd'
+import {
+  Col,
+  ConfigProvider,
+  DatePicker,
+  Form,
+  Row,
+  message,
+  notification
+} from 'antd'
 import {isMobile} from 'react-device-detect'
 import {useState, useEffect} from 'react'
 import {
@@ -92,13 +100,13 @@ const ModalUnionist = (props: IProps) => {
         name,
         email,
         password,
-        dateOfBirth,
+        dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : null,
         gender,
         address,
         CCCD: CCCD ? CCCD : null,
-        joiningDate,
-        leavingDate,
-        unionEntryDate,
+        joiningDate: joiningDate ? joiningDate.toISOString() : null,
+        leavingDate: leavingDate ? leavingDate.toISOString() : null,
+        unionEntryDate: unionEntryDate ? unionEntryDate.toISOString() : null,
         note,
         role: role ? role.value : dataInit.role?._id, // Giữ nguyên vai trò nếu đã có
         department:
@@ -199,6 +207,18 @@ const ModalUnionist = (props: IProps) => {
     } else return []
   }
 
+  const initialValues = dataInit
+    ? {
+        ...dataInit,
+        dateOfBirth: dataInit.dateOfBirth ? dayjs(dataInit.dateOfBirth) : null,
+        joiningDate: dataInit.joiningDate ? dayjs(dataInit.joiningDate) : null,
+        leavingDate: dataInit.leavingDate ? dayjs(dataInit.leavingDate) : null,
+        unionEntryDate: dataInit.unionEntryDate
+          ? dayjs(dataInit.unionEntryDate)
+          : null
+      }
+    : {}
+
   return (
     <>
       <ConfigProvider locale={en_US}>
@@ -227,7 +247,7 @@ const ModalUnionist = (props: IProps) => {
           preserve={false}
           form={form}
           onFinish={submitUnionist}
-          initialValues={dataInit?._id ? dataInit : {}}
+          initialValues={initialValues}
         >
           <Row gutter={16}>
             <Col lg={12} md={12} sm={24} xs={24}>
@@ -277,32 +297,22 @@ const ModalUnionist = (props: IProps) => {
               />
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormDatePicker
+              <ProForm.Item
                 label="Ngày sinh"
                 name="dateOfBirth"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="dd/mm/yyyy"
-              />
+              >
+                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+              </ProForm.Item>
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormDatePicker
+              <ProForm.Item
                 label="Ngày vào công đoàn"
                 name="unionEntryDate"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
-                rules={[
-                  {required: true, message: 'Vui lòng chọn không để trống!'}
-                ]}
-                placeholder="dd/mm/yyyy"
-              />
+                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+              >
+                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+              </ProForm.Item>
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
               <ProFormText
@@ -335,30 +345,22 @@ const ModalUnionist = (props: IProps) => {
               </ProForm.Item>
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormDatePicker
+              <ProForm.Item
                 label="Ngày chuyển đến"
                 name="joiningDate"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="dd/mm/yyyy"
-              />
+              >
+                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+              </ProForm.Item>
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormDatePicker
+              <ProForm.Item
                 label="Ngày chuyển đi"
                 name="leavingDate"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="dd/mm/yyyy"
-              />
+              >
+                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+              </ProForm.Item>
             </Col>
             <Col lg={12} md={12} sm={24} xs={24}>
               <ProForm.Item

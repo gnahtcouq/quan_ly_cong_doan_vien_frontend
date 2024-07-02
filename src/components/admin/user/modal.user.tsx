@@ -1,11 +1,18 @@
 import {
   ModalForm,
   ProForm,
-  ProFormDatePicker,
   ProFormSelect,
   ProFormText
 } from '@ant-design/pro-components'
-import {Col, ConfigProvider, Form, Row, message, notification} from 'antd'
+import {
+  Col,
+  ConfigProvider,
+  DatePicker,
+  Form,
+  Row,
+  message,
+  notification
+} from 'antd'
 import {isMobile} from 'react-device-detect'
 import {useState, useEffect} from 'react'
 import {
@@ -16,8 +23,8 @@ import {
 } from '@/config/api'
 import {IUser} from '@/types/backend'
 import {DebounceSelect} from './debouce.select'
-import dayjs from 'dayjs'
 import en_US from 'antd/lib/locale/en_US'
+import dayjs from 'dayjs'
 
 interface IProps {
   openModal: boolean
@@ -76,6 +83,7 @@ const ModalUser = (props: IProps) => {
       role
       // department
     } = valuesForm
+
     if (dataInit?._id) {
       //update
       const user = {
@@ -83,7 +91,7 @@ const ModalUser = (props: IProps) => {
         name,
         email,
         password,
-        dateOfBirth,
+        dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : null,
         gender,
         address,
         CCCD: CCCD ? CCCD : null,
@@ -178,6 +186,13 @@ const ModalUser = (props: IProps) => {
     } else return []
   }
 
+  const initialValues = dataInit
+    ? {
+        ...dataInit,
+        dateOfBirth: dataInit.dateOfBirth ? dayjs(dataInit.dateOfBirth) : null
+      }
+    : {}
+
   return (
     <>
       <ConfigProvider locale={en_US}>
@@ -206,7 +221,7 @@ const ModalUser = (props: IProps) => {
           preserve={false}
           form={form}
           onFinish={submitUser}
-          initialValues={dataInit?._id ? dataInit : {}}
+          initialValues={initialValues}
         >
           <Row gutter={16}>
             <Col lg={12} md={12} sm={24} xs={24}>
@@ -286,17 +301,14 @@ const ModalUser = (props: IProps) => {
               />
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormDatePicker
+              <ProForm.Item
                 label="Ngày sinh"
                 name="dateOfBirth"
                 normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="dd/mm/yyyy"
-              />
+              >
+                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+              </ProForm.Item>
             </Col>
             {/* <Col lg={6} md={6} sm={24} xs={24}>
               <ProFormDatePicker

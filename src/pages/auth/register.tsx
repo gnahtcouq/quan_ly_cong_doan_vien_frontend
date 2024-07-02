@@ -1,5 +1,6 @@
 import {
   Button,
+  Col,
   Divider,
   Form,
   Input,
@@ -13,8 +14,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import {callRegister} from 'config/api'
 import styles from 'styles/auth.module.scss'
 import {IUser} from '@/types/backend'
-import {ProFormDatePicker} from '@ant-design/pro-components'
-import dayjs from 'dayjs'
+import {DatePicker} from 'antd'
 import logo from '@/assets/logo.webp'
 
 const {Option} = Select
@@ -109,32 +109,37 @@ const RegisterPage = () => {
               >
                 <Input />
               </Form.Item>
-              <ProFormDatePicker
-                label="Ngày sinh"
-                name="dateOfBirth"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="dd/mm/yyyy"
-              />
-              <Form.Item
-                labelCol={{span: 24}} //whole column
-                name="gender"
-                label="Giới tính"
-                rules={[
-                  {required: true, message: 'Giới tính không được để trống!'}
-                ]}
-              >
-                <Select allowClear>
-                  <Option value="MALE">Nam</Option>
-                  <Option value="FEMALE">Nữ</Option>
-                  <Option value="OTHER">Khác</Option>
-                </Select>
-              </Form.Item>
-
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    label="Ngày sinh"
+                    name="dateOfBirth"
+                    rules={[
+                      {required: true, message: 'Vui lòng không để trống!'}
+                    ]}
+                  >
+                    <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Giới tính"
+                    name="gender"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Giới tính không được để trống!'
+                      }
+                    ]}
+                  >
+                    <Select allowClear>
+                      <Option value="MALE">Nam</Option>
+                      <Option value="FEMALE">Nữ</Option>
+                      <Option value="OTHER">Khác</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
               <Form.Item
                 labelCol={{span: 24}} //whole column
                 label="Địa chỉ"

@@ -68,13 +68,13 @@ const ViewDetailUser = (props: IProps) => {
 
           <Descriptions.Item label="Ngày tạo">
             {dataInit && dataInit.createdAt
-              ? dayjs(dataInit.createdAt).format('DD/MM/YYYY HH:mm:ss')
+              ? dayjs(dataInit.createdAt).format('DD/MM/YYYY - HH:mm:ss')
               : ''}
           </Descriptions.Item>
 
           <Descriptions.Item label="Ngày sửa">
             {dataInit && dataInit.updatedAt
-              ? dayjs(dataInit.updatedAt).format('DD/MM/YYYY HH:mm:ss')
+              ? dayjs(dataInit.updatedAt).format('DD/MM/YYYY - HH:mm:ss')
               : ''}
           </Descriptions.Item>
         </Descriptions>
