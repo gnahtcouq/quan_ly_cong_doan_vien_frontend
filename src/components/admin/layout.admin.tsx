@@ -208,7 +208,7 @@ const LayoutAdmin = () => {
   return (
     <>
       <Layout style={{minHeight: '100vh'}} className="layout-admin">
-        {!isMobile ? (
+        {
           <Sider
             theme="light"
             collapsible
@@ -229,17 +229,10 @@ const LayoutAdmin = () => {
               onClick={(e) => setActiveMenu(e.key)}
             />
           </Sider>
-        ) : (
-          <Menu
-            selectedKeys={[activeMenu]}
-            items={menuItems}
-            onClick={(e) => setActiveMenu(e.key)}
-            mode="horizontal"
-          />
-        )}
+        }
 
         <Layout>
-          {!isMobile && (
+          {
             <div
               className="admin-header"
               style={{
@@ -277,7 +270,7 @@ const LayoutAdmin = () => {
                 </Space>
               </Dropdown>
             </div>
-          )}
+          }
           <Content style={{padding: '15px'}}>
             <Outlet />
           </Content>

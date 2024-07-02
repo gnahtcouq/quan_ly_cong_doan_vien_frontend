@@ -43,17 +43,32 @@ const Header = (props: any) => {
     {
       label: <Link to={'/'}>Trang Chủ</Link>,
       key: '/'
-      // icon: <HomeOutlined />
     },
     {
       label: <Link to={'/post'}>Bài Đăng</Link>,
       key: '/post'
-      // icon: <ScheduleOutlined />
     },
     {
       label: <Link to={'/department'}>Đơn Vị</Link>,
       key: '/department'
-      // icon: <BankOutlined />
+    }
+  ]
+
+  const itemsWithIcons: MenuProps['items'] = [
+    {
+      label: <Link to={'/'}>Trang Chủ</Link>,
+      key: '/',
+      icon: <HomeOutlined />
+    },
+    {
+      label: <Link to={'/post'}>Bài Đăng</Link>,
+      key: '/post',
+      icon: <ScheduleOutlined />
+    },
+    {
+      label: <Link to={'/department'}>Đơn Vị</Link>,
+      key: '/department',
+      icon: <BankOutlined />
     }
   ]
 
@@ -99,7 +114,7 @@ const Header = (props: any) => {
     }
   ]
 
-  const itemsMobiles = [...items, ...itemsDropdown]
+  const itemsMobiles = [...itemsWithIcons, ...itemsDropdown]
 
   return (
     <>

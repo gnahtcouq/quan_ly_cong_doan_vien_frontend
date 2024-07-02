@@ -11,8 +11,6 @@ interface IProps {
 const ViewDetailUser = (props: IProps) => {
   const {onClose, open, dataInit, setDataInit} = props
 
-  console.log('Props:', props) // Add this line
-
   return (
     <>
       <Drawer

@@ -49,7 +49,6 @@ const ViewUpsertDepartment = (props: any) => {
     const init = async () => {
       if (id) {
         const res = await callFetchDepartmentById(id)
-        console.log(res)
         if (res && res.data) {
           setDataUpdate(res.data)
           setValue(res.data.description as string)

@@ -5,8 +5,7 @@ export const THREADS_LIST = [
   {label: 'Quyết Định', value: 'QUYẾT ĐỊNH'},
   {label: 'Công Đoàn Phí', value: 'CÔNG ĐOÀN PHÍ'},
   {label: 'Tuyển Dụng', value: 'TUYỂN DỤNG'},
-  {label: 'Sổ Tay', value: 'SỔ TAY'},
-  {label: 'Lịch Thi', value: 'LỊCH THI'}
+  {label: 'Sổ Tay', value: 'SỔ TAY'}
 ]
 
 export const nonAccentVietnamese = (str: string) => {
