@@ -29,15 +29,12 @@ import {
   callUpdatePost
 } from '@/config/api'
 import {useQuill} from 'react-quilljs'
+import {quillModules} from '@/config/quill'
 import 'quill/dist/quill.snow.css'
-import ImageResize from 'quill-image-resize-module-react'
 import {EditOutlined} from '@ant-design/icons'
 import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
 import {IPost} from '@/types/backend'
-import Quill from 'quill'
-
-Quill.register('modules/imageResize', ImageResize)
 
 const ViewUpsertPost = (props: any) => {
   // const [departments, setDepartments] = useState<IDepartmentSelect[]>([])
@@ -51,24 +48,7 @@ const ViewUpsertPost = (props: any) => {
   const [dataUpdate, setDataUpdate] = useState<IPost | null>(null)
   const [form] = Form.useForm()
 
-  // Custom toolbar options
-  const modules = {
-    toolbar: [
-      [{header: '1'}, {header: '2'}, {font: []}],
-      [{size: []}],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{list: 'ordered'}, {list: 'bullet'}, {indent: '-1'}, {indent: '+1'}],
-      [{color: []}, {background: []}],
-      ['link', 'image', 'video'],
-      ['clean']
-    ],
-    imageResize: {
-      modules: ['Resize', 'Toolbar']
-    }
-  }
-
-  // Quill configuration
-  const {quill, quillRef} = useQuill({modules}) // Quill instance and ref
+  const {quill, quillRef} = useQuill({modules: quillModules})
 
   useEffect(() => {
     const init = async () => {
@@ -105,10 +85,7 @@ const ViewUpsertPost = (props: any) => {
 
   useEffect(() => {
     if (quill && dataUpdate?.description) {
-      // Giả sử `dataUpdate.description` là một chuỗi Delta từ CSDL
-      // Chuyển đổi chuỗi Delta thành object Delta
       const delta = JSON.parse(dataUpdate.description)
-      // Sử dụng Quill để chuyển đổi Delta sang HTML và hiển thị nó
       quill.setContents(delta)
     }
   }, [quill, dataUpdate?.description])
@@ -116,15 +93,12 @@ const ViewUpsertPost = (props: any) => {
   useEffect(() => {
     if (quill) {
       const handleChange = () => {
-        const delta = quill.getContents() // Get Delta from Quill
+        const delta = quill.getContents()
         const deltaString = JSON.stringify(delta)
-        setValue(deltaString) // Assuming `setValue` updates some state. Ensure this function is defined or remove this line if unnecessary.
-        form.setFieldsValue({description: deltaString}) // Update form value
+        setValue(deltaString)
+        form.setFieldsValue({description: deltaString})
       }
-
       quill.on('text-change', handleChange)
-
-      // Cleanup function to remove event listener
       return () => {
         quill.off('text-change', handleChange)
       }

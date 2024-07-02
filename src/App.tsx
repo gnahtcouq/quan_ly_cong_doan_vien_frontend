@@ -27,6 +27,7 @@ import {fetchAccount} from './redux/slice/accountSlide'
 import LayoutApp from './components/share/layout.app'
 import PostPage from './pages/admin/post'
 import ViewUpsertPost from './components/admin/post/upsert.post'
+import ViewUpsertDepartment from '@/components/admin/department/upsert.department'
 import ClientPostPage from './pages/post'
 import ClientPostDetailPage from './pages/post/detail'
 import ClientDepartmentPage from './pages/department'
@@ -104,11 +105,24 @@ export default function App() {
         },
         {
           path: 'department',
-          element: (
-            <ProtectedRoute>
-              <DepartmentPage />
-            </ProtectedRoute>
-          )
+          children: [
+            {
+              index: true,
+              element: (
+                <ProtectedRoute>
+                  <DepartmentPage />
+                </ProtectedRoute>
+              )
+            },
+            {
+              path: 'upsert',
+              element: (
+                <ProtectedRoute>
+                  <ViewUpsertDepartment />
+                </ProtectedRoute>
+              )
+            }
+          ]
         },
         {
           path: 'user',
@@ -133,7 +147,6 @@ export default function App() {
               index: true,
               element: (
                 <ProtectedRoute>
-                  {' '}
                   <PostPage />
                 </ProtectedRoute>
               )

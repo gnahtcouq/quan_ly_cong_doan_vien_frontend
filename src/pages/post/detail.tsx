@@ -8,8 +8,8 @@ import {HistoryOutlined} from '@ant-design/icons'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import en_US from 'antd/locale/en_US'
-import logo_sv from '@/assets/logo-sv.png'
 import Quill from 'quill'
+import logo_sv from '@/assets/logo-sv.png'
 
 dayjs.extend(relativeTime)
 dayjs.locale('en')

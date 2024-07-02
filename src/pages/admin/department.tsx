@@ -10,19 +10,18 @@ import {useState, useRef} from 'react'
 import dayjs from 'dayjs'
 import {callDeleteDepartment} from '@/config/api'
 import queryString from 'query-string'
+import {useNavigate} from 'react-router-dom'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 
 const DepartmentPage = () => {
-  const [openModal, setOpenModal] = useState<boolean>(false)
-  const [dataInit, setDataInit] = useState<IDepartment | null>(null)
-
   const tableRef = useRef<ActionType>()
 
   const isFetching = useAppSelector((state) => state.department.isFetching)
   const meta = useAppSelector((state) => state.department.meta)
   const departments = useAppSelector((state) => state.department.result)
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const handleDeleteDepartment = async (_id: string | undefined) => {
     if (_id) {
@@ -102,8 +101,7 @@ const DepartmentPage = () => {
               }}
               type=""
               onClick={() => {
-                setOpenModal(true)
-                setDataInit(entity)
+                navigate(`/admin/department/upsert?id=${entity._id}`)
               }}
             />
           </Access>
@@ -203,7 +201,7 @@ const DepartmentPage = () => {
                 <Button
                   icon={<PlusOutlined />}
                   type="primary"
-                  onClick={() => setOpenModal(true)}
+                  onClick={() => navigate('upsert')}
                 >
                   Thêm mới
                 </Button>
@@ -212,13 +210,6 @@ const DepartmentPage = () => {
           }}
         />
       </Access>
-      <ModalDepartment
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        reloadTable={reloadTable}
-        dataInit={dataInit}
-        setDataInit={setDataInit}
-      />
     </div>
   )
 }

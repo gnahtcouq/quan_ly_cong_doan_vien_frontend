@@ -3,8 +3,8 @@ import {useState, useEffect} from 'react'
 import {IDepartment} from '@/types/backend'
 import {callFetchDepartmentById} from '@/config/api'
 import styles from 'styles/client.module.scss'
-import parse from 'html-react-parser'
 import {Col, Divider, Row, Skeleton} from 'antd'
+import Quill from 'quill'
 
 const ClientDepartmentDetailPage = (props: any) => {
   const [departmentDetail, setDepartmentDetail] = useState<IDepartment | null>(
@@ -14,7 +14,7 @@ const ClientDepartmentDetailPage = (props: any) => {
 
   let location = useLocation()
   let params = new URLSearchParams(location.search)
-  const id = params?.get('id') // post id
+  const id = params?.get('id') // department id
 
   useEffect(() => {
     const init = async () => {
@@ -22,7 +22,13 @@ const ClientDepartmentDetailPage = (props: any) => {
         setIsLoading(true)
         const res = await callFetchDepartmentById(id)
         if (res?.data) {
-          setDepartmentDetail(res.data)
+          const deltaOps = JSON.parse(res.data.description)
+          const quillHtml = () => {
+            const temp = new Quill(document.createElement('div'))
+            temp.setContents(deltaOps)
+            return temp.root.innerHTML
+          }
+          setDepartmentDetail({...res.data, description: quillHtml()})
         }
         setIsLoading(false)
       }
@@ -44,7 +50,11 @@ const ClientDepartmentDetailPage = (props: any) => {
                 </div>
 
                 <Divider />
-                {parse(departmentDetail?.description ?? '')}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: departmentDetail.description
+                  }}
+                ></div>
               </Col>
 
               <Col span={24} md={8}>

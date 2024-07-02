@@ -192,12 +192,23 @@
         padding-top: 80px;
 
         .card-customize {
-            height: 200px;
-            width : 200px;
-            margin: 20px auto;
+            height            : 200px;
+            max-width         : 200px;
+            // margin         : 20px auto;
+            margin            : 45px auto 0;
+            display           : flex;
+            align-items       : center;
+            justify-content   : center;
+            overflow          : hidden;
+
+            img {
+                max-width : calc(100% - 10px);
+                max-height: calc(100% - 10px);
+                margin    : 0 5px;
+                object-fit: contain;
+            }
         }
     }
-
 }
 
 
