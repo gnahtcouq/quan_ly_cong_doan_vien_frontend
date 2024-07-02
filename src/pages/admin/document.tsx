@@ -46,9 +46,38 @@ const DocumentPage = () => {
 
   const columns: ProColumns<IDocument>[] = [
     {
-      title: 'ID',
-      dataIndex: '_id',
-      width: 200,
+      title: 'STT',
+      key: 'index',
+      width: 50,
+      align: 'center',
+      render: (text, record, index) => {
+        return <>{index + 1 + (meta.current - 1) * meta.pageSize}</>
+      },
+      hideInSearch: true
+    },
+    // {
+    //   title: 'ID',
+    //   dataIndex: '_id',
+    //   width: 200,
+    //   render: (text, record, index, action) => {
+    //     return (
+    //       <a
+    //         href="#"
+    //         onClick={() => {
+    //           setOpenViewDetail(true)
+    //           setDataInit(record)
+    //         }}
+    //       >
+    //         {record._id}
+    //       </a>
+    //     )
+    //   },
+    //   hideInSearch: true
+    // },
+    {
+      title: 'Tên văn bản',
+      dataIndex: ['name'],
+      hideInSearch: false,
       render: (text, record, index, action) => {
         return (
           <a
@@ -58,16 +87,10 @@ const DocumentPage = () => {
               setDataInit(record)
             }}
           >
-            {record._id}
+            {record.name}
           </a>
         )
-      },
-      hideInSearch: true
-    },
-    {
-      title: 'Tên văn bản',
-      dataIndex: ['name'],
-      hideInSearch: false
+      }
     },
     {
       title: 'Trạng thái',

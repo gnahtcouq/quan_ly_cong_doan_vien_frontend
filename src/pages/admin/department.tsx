@@ -1,4 +1,3 @@
-import ModalDepartment from '@/components/admin/department/modal.department'
 import DataTable from '@/components/client/data-table'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {fetchDepartment} from '@/redux/slice/departmentSlide'
