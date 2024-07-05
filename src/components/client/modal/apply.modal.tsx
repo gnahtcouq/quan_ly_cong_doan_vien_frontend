@@ -21,7 +21,7 @@ import {
   callUpdateDocumentName,
   callUploadSingleFile
 } from '@/config/api'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {isMobile} from 'react-device-detect'
 
 interface IProps {
@@ -46,9 +46,11 @@ const ApplyModal = (props: IProps) => {
 
     const {name} = valuesForm
     const status = dataInit?.status || ''
+    const currentName = dataInit?.name || ''
 
     if (dataInit?._id) {
-      const res = await callUpdateDocumentName(dataInit._id, name, status)
+      const newName = name !== currentName ? name : currentName
+      const res = await callUpdateDocumentName(dataInit._id, newName, status)
       if (res.data) {
         message.success('Cập nhật thông tin văn bản thành công!')
         handleReset()
@@ -132,7 +134,7 @@ const ApplyModal = (props: IProps) => {
             },
             afterClose: () => handleReset(),
             destroyOnClose: true,
-            width: isMobile ? '100%' : 900,
+            width: isMobile ? '100%' : 600,
             keyboard: false,
             maskClosable: false,
             okText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>,
@@ -153,29 +155,23 @@ const ApplyModal = (props: IProps) => {
                 placeholder="Nhập tên văn bản"
               />
             </Col>
-            <Col span={24}>
-              <ProForm.Item
-                label={'Upload file văn bản'}
-                rules={[
-                  {
-                    required: dataInit?._id ? true : false,
-                    message: 'Vui lòng upload file văn bản!'
-                  }
-                ]}
-              >
-                <Upload
-                  {...propsUpload}
-                  disabled={dataInit?._id ? true : false}
+            {!dataInit?._id && (
+              <Col span={24}>
+                <ProForm.Item
+                  label={'Upload file văn bản'}
+                  rules={[
+                    {
+                      required: dataInit?._id ? true : false,
+                      message: 'Vui lòng upload file văn bản!'
+                    }
+                  ]}
                 >
-                  <Button
-                    icon={<UploadOutlined />}
-                    disabled={dataInit?._id ? true : false}
-                  >
-                    Upload file văn bản (Hỗ trợ *.pdf và nhỏ hơn 10MB)
-                  </Button>
-                </Upload>
-              </ProForm.Item>
-            </Col>
+                  <Upload {...propsUpload}>
+                    <Button icon={<UploadOutlined />}>Chọn tệp</Button>
+                  </Upload>
+                </ProForm.Item>
+              </Col>
+            )}
           </Row>
         </ModalForm>
       </ConfigProvider>

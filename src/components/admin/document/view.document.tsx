@@ -90,8 +90,12 @@ const ViewDetailDocument = (props: IProps) => {
               </Form.Item>
             </Form>
           </Descriptions.Item>
-          <Descriptions.Item label="Người tạo">//todo</Descriptions.Item>
-          <Descriptions.Item label="Email">{dataInit?.email}</Descriptions.Item>
+          <Descriptions.Item label="Tên file">
+            {dataInit?.url}
+          </Descriptions.Item>
+          <Descriptions.Item label="Người tạo">
+            {dataInit?.email ?? ''}
+          </Descriptions.Item>
           <Descriptions.Item label="Ngày tạo">
             {dataInit && dataInit.createdAt
               ? dayjs(dataInit.createdAt).format('DD/MM/YYYY - HH:mm:ss')

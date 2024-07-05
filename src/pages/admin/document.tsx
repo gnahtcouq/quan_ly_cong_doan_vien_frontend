@@ -6,6 +6,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExportOutlined,
+  HistoryOutlined,
   PlusOutlined
 } from '@ant-design/icons'
 import {ActionType, ProColumns, ProFormSelect} from '@ant-design/pro-components'
@@ -26,10 +27,10 @@ import ViewDetailDocument from '@/components/admin/document/view.document'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 import Access from '@/components/share/access'
 import ApplyModal from '@/components/client/modal/apply.modal'
+import ViewDetailDocumentHistory from '@/components/admin/document/view.history'
 
 const DocumentPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-  const [openModal, setOpenModal] = useState<boolean>(false)
   const tableRef = useRef<ActionType>()
 
   const isFetching = useAppSelector((state) => state.document.isFetching)
@@ -39,6 +40,8 @@ const DocumentPage = () => {
 
   const [dataInit, setDataInit] = useState<IDocument | null>(null)
   const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
+  const [openViewDetailHistory, setOpenViewDetailHistory] =
+    useState<boolean>(false)
 
   const reloadTable = () => {
     tableRef?.current?.reload()
@@ -182,7 +185,23 @@ const DocumentPage = () => {
             <ExportOutlined
               style={{
                 fontSize: 20,
-                color: '#ffa500'
+                color: '#f5849c'
+              }}
+              type=""
+            />
+          </a>
+
+          <a
+            href="#"
+            onClick={() => {
+              setOpenViewDetailHistory(true)
+              setDataInit(entity)
+            }}
+          >
+            <HistoryOutlined
+              style={{
+                fontSize: 20,
+                color: '#000'
               }}
               type=""
             />
@@ -277,6 +296,13 @@ const DocumentPage = () => {
       <ViewDetailDocument
         open={openViewDetail}
         onClose={setOpenViewDetail}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+        reloadTable={reloadTable}
+      />
+      <ViewDetailDocumentHistory
+        open={openViewDetailHistory}
+        onClose={setOpenViewDetailHistory}
         dataInit={dataInit}
         setDataInit={setDataInit}
         reloadTable={reloadTable}
