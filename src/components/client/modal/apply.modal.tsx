@@ -1,11 +1,12 @@
 import {useAppSelector} from '@/redux/hooks'
-import {IPost} from '@/types/backend'
-import {ProForm, ProFormText} from '@ant-design/pro-components'
+import {IDocument, IPost} from '@/types/backend'
+import {ModalForm, ProForm, ProFormText} from '@ant-design/pro-components'
 import {
   Button,
   Col,
   ConfigProvider,
   Divider,
+  Form,
   Modal,
   Row,
   Upload,
@@ -15,35 +16,61 @@ import {
 import en_US from 'antd/lib/locale/en_US'
 import {UploadOutlined} from '@ant-design/icons'
 import type {UploadProps} from 'antd'
-import {callCreateDocument, callUploadSingleFile} from '@/config/api'
-import {useState} from 'react'
+import {
+  callCreateDocument,
+  callUpdateDocumentName,
+  callUploadSingleFile
+} from '@/config/api'
+import {useEffect, useState} from 'react'
+import {isMobile} from 'react-device-detect'
 
 interface IProps {
   isModalOpen: boolean
   setIsModalOpen: (v: boolean) => void
+  dataInit?: IDocument | null
+  setDataInit: (v: any) => void
+  reloadTable: () => void
 }
 
 const ApplyModal = (props: IProps) => {
-  const {isModalOpen, setIsModalOpen} = props
-  const user = useAppSelector((state) => state.account.user)
+  const {isModalOpen, setIsModalOpen, reloadTable, dataInit, setDataInit} =
+    props
   const [urlDoc, setUrlDoc] = useState<string>('')
-  const [documentName, setDocumentName] = useState<string>('')
+  const [form] = Form.useForm()
 
-  const handleOkButton = async () => {
-    if (!urlDoc) {
+  const handleOkButton = async (valuesForm: any) => {
+    if (!urlDoc && !dataInit) {
       message.error('Vui lòng upload file văn bản!')
       return
     }
 
-    const res = await callCreateDocument(urlDoc, documentName)
-    if (res.data) {
-      message.success('Upload file văn bản thành công!')
-      setIsModalOpen(false)
+    const {name} = valuesForm
+    const status = dataInit?.status || ''
+
+    if (dataInit?._id) {
+      const res = await callUpdateDocumentName(dataInit._id, name, status)
+      if (res.data) {
+        message.success('Cập nhật thông tin văn bản thành công!')
+        handleReset()
+        reloadTable()
+      } else {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: res.message
+        })
+      }
     } else {
-      notification.error({
-        message: 'Có lỗi xảy ra',
-        description: res.message
-      })
+      const res = await callCreateDocument(urlDoc, name)
+      if (res.data) {
+        message.success('Upload file văn bản thành công!')
+        handleReset()
+        reloadTable()
+      } else {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: res.message
+        })
+      }
     }
   }
 
@@ -79,66 +106,79 @@ const ApplyModal = (props: IProps) => {
     }
   }
 
+  const handleReset = async () => {
+    form.resetFields()
+    setDataInit(null)
+    setIsModalOpen(false)
+  }
+
+  const initialValues = dataInit ? {...dataInit} : {}
+
   return (
     <>
-      <Modal
-        title="Thêm mới văn bản"
-        open={isModalOpen}
-        onOk={() => handleOkButton()}
-        onCancel={() => setIsModalOpen(false)}
-        maskClosable={false}
-        okText={'Thêm mới'}
-        cancelButtonProps={{style: {display: 'none'}}}
-        destroyOnClose={true}
-      >
-        <Divider />
-        {
-          <div>
-            <ConfigProvider locale={en_US}>
-              <ProForm
-                submitter={{
-                  render: () => <></>
-                }}
+      <ConfigProvider locale={en_US}>
+        <ModalForm
+          title={
+            <>
+              {dataInit?._id
+                ? 'Cập nhật thông tin văn bản'
+                : 'Thêm mới văn bản'}
+            </>
+          }
+          open={isModalOpen}
+          modalProps={{
+            onCancel: () => {
+              handleReset()
+            },
+            afterClose: () => handleReset(),
+            destroyOnClose: true,
+            width: isMobile ? '100%' : 900,
+            keyboard: false,
+            maskClosable: false,
+            okText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>,
+            cancelText: 'Hủy'
+          }}
+          scrollToFirstError={true}
+          preserve={false}
+          form={form}
+          onFinish={handleOkButton}
+          initialValues={initialValues}
+        >
+          <Row gutter={[10, 10]}>
+            <Col span={24}>
+              <ProFormText
+                label="Tên văn bản"
+                name="name"
+                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                placeholder="Nhập tên văn bản"
+              />
+            </Col>
+            <Col span={24}>
+              <ProForm.Item
+                label={'Upload file văn bản'}
+                rules={[
+                  {
+                    required: dataInit?._id ? true : false,
+                    message: 'Vui lòng upload file văn bản!'
+                  }
+                ]}
               >
-                <Row gutter={[10, 10]}>
-                  <Col span={24}>
-                    <ProFormText
-                      label="Tên văn bản"
-                      name="name"
-                      rules={[
-                        {required: true, message: 'Vui lòng không để trống!'}
-                      ]}
-                      placeholder="Nhập tên văn bản"
-                      fieldProps={{
-                        onChange: (e) => setDocumentName(e.target.value)
-                      }}
-                    />
-                  </Col>
-
-                  <Col span={24}>
-                    <ProForm.Item
-                      label={'Upload file văn bản'}
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Vui lòng upload file văn bản!'
-                        }
-                      ]}
-                    >
-                      <Upload {...propsUpload}>
-                        <Button icon={<UploadOutlined />}>
-                          Upload file văn bản (Hỗ trợ *.pdf và nhỏ hơn 10MB)
-                        </Button>
-                      </Upload>
-                    </ProForm.Item>
-                  </Col>
-                </Row>
-              </ProForm>
-            </ConfigProvider>
-          </div>
-        }
-        <Divider />
-      </Modal>
+                <Upload
+                  {...propsUpload}
+                  disabled={dataInit?._id ? true : false}
+                >
+                  <Button
+                    icon={<UploadOutlined />}
+                    disabled={dataInit?._id ? true : false}
+                  >
+                    Upload file văn bản (Hỗ trợ *.pdf và nhỏ hơn 10MB)
+                  </Button>
+                </Upload>
+              </ProForm.Item>
+            </Col>
+          </Row>
+        </ModalForm>
+      </ConfigProvider>
     </>
   )
 }

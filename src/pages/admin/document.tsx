@@ -20,7 +20,6 @@ import {
 } from 'antd'
 import {useState, useRef} from 'react'
 import dayjs from 'dayjs'
-import {callDeleteDocument} from '@/config/api'
 import queryString from 'query-string'
 import {fetchDocument} from '@/redux/slice/documentSlide'
 import ViewDetailDocument from '@/components/admin/document/view.document'
@@ -30,6 +29,7 @@ import ApplyModal from '@/components/client/modal/apply.modal'
 
 const DocumentPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [openModal, setOpenModal] = useState<boolean>(false)
   const tableRef = useRef<ActionType>()
 
   const isFetching = useAppSelector((state) => state.document.isFetching)
@@ -122,7 +122,6 @@ const DocumentPage = () => {
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
-      width: 150,
       sorter: true,
       render: (text, record, index, action) => {
         return <>{dayjs(record.createdAt).format('DD/MM/YYYY - HH:mm:ss')}</>
@@ -132,7 +131,6 @@ const DocumentPage = () => {
     {
       title: 'Ngày sửa',
       dataIndex: 'updatedAt',
-      width: 150,
       sorter: true,
       render: (text, record, index, action) => {
         return <>{dayjs(record.updatedAt).format('DD/MM/YYYY - HH:mm:ss')}</>
@@ -144,8 +142,21 @@ const DocumentPage = () => {
       dataIndex: '',
       hideInSearch: true,
       width: 100,
-      render: (value, record, index) => (
+      render: (_value, entity, _index, _action) => (
         <Space>
+          <Access permission={ALL_PERMISSIONS.DOCUMENTS.UPDATE} hideChildren>
+            <EditOutlined
+              style={{
+                fontSize: 20,
+                color: '#ffa500'
+              }}
+              type=""
+              onClick={() => {
+                setIsModalOpen(true)
+                setDataInit(entity)
+              }}
+            />
+          </Access>
           <CopyOutlined
             style={{
               fontSize: 20,
@@ -155,7 +166,7 @@ const DocumentPage = () => {
             onClick={() => {
               navigator.clipboard.writeText(
                 `${import.meta.env.VITE_BACKEND_URL}/files/document/${
-                  record?.url
+                  entity?.url
                 }`
               )
               message.success('Đã lưu đường dẫn vào bảng nhớ tạm!')
@@ -164,7 +175,7 @@ const DocumentPage = () => {
 
           <a
             href={`${import.meta.env.VITE_BACKEND_URL}/files/document/${
-              record?.url
+              entity?.url
             }`}
             target="_blank"
           >
@@ -256,7 +267,13 @@ const DocumentPage = () => {
           }}
         />
       </Access>
-      <ApplyModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <ApplyModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        reloadTable={reloadTable}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+      />
       <ViewDetailDocument
         open={openViewDetail}
         onClose={setOpenViewDetail}

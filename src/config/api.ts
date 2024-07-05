@@ -210,6 +210,17 @@ export const callCreateDocument = (url: string, name: string) => {
   })
 }
 
+export const callUpdateDocumentName = (
+  id: any,
+  name: string,
+  status: string
+) => {
+  return axios.put<IBackendRes<IDocument>>(`/api/v1/documents/${id}`, {
+    name,
+    status
+  })
+}
+
 export const callUpdateDocumentStatus = (id: any, status: string) => {
   return axios.patch<IBackendRes<IDocument>>(`/api/v1/documents/${id}`, {
     status
