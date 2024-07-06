@@ -15,12 +15,7 @@ import {
 } from 'antd'
 import {isMobile} from 'react-device-detect'
 import {useState, useEffect} from 'react'
-import {
-  callCreateUser,
-  callFetchDepartment,
-  callFetchRole,
-  callUpdateUser
-} from '@/config/api'
+import {callCreateUser, callFetchRole, callUpdateUser} from '@/config/api'
 import {IUser} from '@/types/backend'
 import {DebounceSelect} from './debouce.select'
 import en_US from 'antd/lib/locale/en_US'
@@ -42,22 +37,12 @@ export interface IRoleSelect {
 
 const ModalUser = (props: IProps) => {
   const {openModal, setOpenModal, reloadTable, dataInit, setDataInit} = props
-  // const [departments, setDepartments] = useState<IDepartmentSelect[]>([])
   const [roles, setRoles] = useState<IRoleSelect[]>([])
 
   const [form] = Form.useForm()
 
   useEffect(() => {
     if (dataInit?._id) {
-      // if (dataInit.department) {
-      //   setDepartments([
-      //     {
-      //       label: dataInit.department.name,
-      //       value: dataInit.department._id,
-      //       key: dataInit.department._id
-      //     }
-      //   ])
-      // }
       if (dataInit.role) {
         setRoles([
           {
@@ -97,10 +82,6 @@ const ModalUser = (props: IProps) => {
         CCCD: CCCD ? CCCD : null,
         note,
         role: role ? role.value : dataInit.role?._id // Giữ nguyên vai trò nếu đã có
-        // department: {
-        //   _id: department.value,
-        //   name: department.label
-        // }
       }
 
       const res = await callUpdateUser(user, dataInit._id)
@@ -126,10 +107,6 @@ const ModalUser = (props: IProps) => {
         CCCD,
         note,
         role: role.value
-        // department: {
-        //   _id: department.value,
-        //   name: department.label
-        // }
       }
       const res = await callCreateUser(user)
       if (res.data) {
@@ -152,25 +129,6 @@ const ModalUser = (props: IProps) => {
     setRoles([])
     setOpenModal(false)
   }
-
-  // // Usage of DebounceSelect
-  // async function fetchDepartmentList(
-  //   name: string
-  // ): Promise<IDepartmentSelect[]> {
-  //   const res = await callFetchDepartment(
-  //     `current=1&pageSize=100&name=/${name}/i`
-  //   )
-  //   if (res && res.data) {
-  //     const list = res.data.result
-  //     const temp = list.map((item) => {
-  //       return {
-  //         label: item.name as string,
-  //         value: item._id as string
-  //       }
-  //     })
-  //     return temp
-  //   } else return []
-  // }
 
   async function fetchRoleList(name: string): Promise<IRoleSelect[]> {
     const res = await callFetchRole(`current=1&pageSize=100&name=/${name}/i`)
@@ -310,70 +268,6 @@ const ModalUser = (props: IProps) => {
                 <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
               </ProForm.Item>
             </Col>
-            {/* <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormDatePicker
-                label="Ngày vào công đoàn"
-                name="unionEntryDate"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
-                rules={[
-                  {required: true, message: 'Vui lòng chọn không để trống!'}
-                ]}
-                placeholder="dd/mm/yyyy"
-              />
-            </Col> */}
-            {/* <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormDatePicker
-                label="Ngày chuyển đến"
-                name="joiningDate"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="dd/mm/yyyy"
-              />
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormDatePicker
-                label="Ngày chuyển đi"
-                name="leavingDate"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                fieldProps={{
-                  format: 'DD/MM/YYYY'
-                }}
-                // width="auto"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="dd/mm/yyyy"
-              />
-            </Col> */}
-            {/* <Col lg={12} md={12} sm={24} xs={24}>
-              <ProForm.Item
-                name="department"
-                label="Thuộc đơn vị"
-                rules={[{required: true, message: 'Vui lòng chọn đơn vị!'}]}
-              >
-                <DebounceSelect
-                  allowClear
-                  showSearch
-                  defaultValue={departments}
-                  value={departments}
-                  placeholder="Chọn đơn vị"
-                  fetchOptions={fetchDepartmentList}
-                  onChange={(newValue: any) => {
-                    if (newValue?.length === 0 || newValue?.length === 1) {
-                      setDepartments(newValue as IDepartmentSelect[])
-                    }
-                  }}
-                  style={{width: '100%'}}
-                />
-              </ProForm.Item>
-            </Col> */}
-
             <Col lg={18} md={12} sm={24} xs={24}>
               <ProFormText
                 label="Địa chỉ"

@@ -35,19 +35,36 @@ const PostCard = (props: IProps) => {
 
   const fetchPost = async () => {
     setIsLoading(true)
-    let query = `current=${current}&pageSize=${pageSize}`
-    if (filter) {
-      query += `&${filter}`
-    }
-    if (sortQuery) {
-      query += `&${sortQuery}`
+    let accumulatedPosts: IPost[] = []
+    let queryPage = current
+    let shouldFetchMore = true
+    let res: any // Declare the 'res' variable
+
+    while (shouldFetchMore) {
+      let query = `current=${queryPage}&pageSize=${pageSize}`
+      if (filter) {
+        query += `&${filter}`
+      }
+      if (sortQuery) {
+        query += `&${sortQuery}`
+      }
+
+      res = await callFetchPost(query) // Assign the value to 'res'
+      if (res && res.data) {
+        const activePosts = res.data.result.filter(
+          (post: IPost) => post.isActive
+        )
+        accumulatedPosts = [...accumulatedPosts, ...activePosts]
+        shouldFetchMore =
+          activePosts.length > 0 && accumulatedPosts.length < pageSize
+        queryPage += 1
+      } else {
+        shouldFetchMore = false
+      }
     }
 
-    const res = await callFetchPost(query)
-    if (res && res.data) {
-      setDisplayPost(res.data.result)
-      setTotal(res.data.meta.total)
-    }
+    setDisplayPost(accumulatedPosts.slice(0, pageSize))
+    setTotal(res.data.meta.total)
     setIsLoading(false)
   }
 
@@ -72,7 +89,7 @@ const PostCard = (props: IProps) => {
   return (
     <div className={`${styles['card-post-section']}`}>
       <div className={`${styles['post-content']}`}>
-        <Spin spinning={isLoading} tip="Loading...">
+        <Spin spinning={isLoading}>
           <Row gutter={[20, 20]}>
             <Col span={24}>
               <div

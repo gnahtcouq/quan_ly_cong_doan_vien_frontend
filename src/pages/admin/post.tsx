@@ -68,16 +68,29 @@ const PostPage = () => {
     {
       title: 'Trạng thái',
       dataIndex: 'isActive',
-      render(dom, entity, index, action, schema) {
+      width: 100,
+      sorter: true,
+      renderFormItem: (item, props, form) => (
+        <ProFormSelect
+          showSearch
+          mode="multiple"
+          allowClear
+          valueEnum={{
+            true: 'ACTIVE',
+            false: 'INACTIVE'
+          }}
+          placeholder="Chọn trạng thái"
+        />
+      ),
+      render(value, record, index) {
         return (
           <>
-            <Tag color={entity.isActive ? 'lime' : 'red'}>
-              {entity.isActive ? 'ACTIVE' : 'INACTIVE'}
+            <Tag color={value ? 'lime' : 'red'}>
+              {value ? 'ACTIVE' : 'INACTIVE'}
             </Tag>
           </>
         )
-      },
-      hideInSearch: true
+      }
     },
     {
       title: 'Ngày tạo',

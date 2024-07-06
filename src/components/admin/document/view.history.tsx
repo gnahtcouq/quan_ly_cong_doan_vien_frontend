@@ -32,7 +32,7 @@ const ViewDetailDocumentHistory = (props: IProps) => {
         destroyOnClose={true}
       >
         <Descriptions
-          title="5 cập nhật mới nhất"
+          title="5 cập nhật gần nhất"
           bordered
           column={1}
           layout="vertical"

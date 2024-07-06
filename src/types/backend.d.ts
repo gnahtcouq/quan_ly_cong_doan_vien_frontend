@@ -74,18 +74,11 @@ export interface IUser {
   gender: string
   address: string
   CCCD?: string
-  // joiningDate?: string
-  // leavingDate?: string
-  // unionEntryDate?: string
   note?: string
   role?: {
     _id: string
     name: string
   }
-  // department?: {
-  //   _id: string
-  //   name: string
-  // }
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null

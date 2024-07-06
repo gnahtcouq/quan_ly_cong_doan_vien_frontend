@@ -131,12 +131,34 @@ export const callUpdateUser = (user: IUser, id: string) => {
   return axios.patch<IBackendRes<IUser>>(`/api/v1/users/${id}`, {...user})
 }
 
+export const callUpdateUserEmail = (id: string, newEmail: string) => {
+  return axios.post<IBackendRes<IUser>>(
+    `/api/v1/users/request-email-change/${id}`,
+    {newEmail}
+  )
+}
+
+export const callConfirmUpdateUserEmail = (
+  id: string,
+  verificationCode: string,
+  newEmail: string
+) => {
+  return axios.post<IBackendRes<IUser>>(
+    `/api/v1/users/confirm-email-change/${id}`,
+    {verificationCode, newEmail}
+  )
+}
+
 export const callDeleteUser = (id: string) => {
   return axios.delete<IBackendRes<IUser>>(`/api/v1/users/${id}`)
 }
 
 export const callFetchUser = (query: string) => {
   return axios.get<IBackendRes<IModelPaginate<IUser>>>(`/api/v1/users?${query}`)
+}
+
+export const callFetchUserById = (id: string) => {
+  return axios.get<IBackendRes<IUser>>(`/api/v1/users/${id}`)
 }
 
 export const callFetchNumberOfUsers = () => {

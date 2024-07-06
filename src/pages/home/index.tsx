@@ -14,9 +14,9 @@ const HomePage = () => {
   return (
     <ConfigProvider locale={en_US}>
       <div className={`${styles['container']} ${styles['home-section']}`}>
-        <div className="search-content" style={{marginTop: 20}}>
+        {/* <div className="search-content" style={{marginTop: 20}}>
           <SearchClient />
-        </div>
+        </div> */}
         {/* <Divider /> */}
         <PostCard />
         <div style={{margin: 50}}></div>

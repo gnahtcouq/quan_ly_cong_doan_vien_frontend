@@ -71,7 +71,7 @@ const DepartmentCard = (props: IProps) => {
   return (
     <div className={`${styles['department-section']}`}>
       <div className={styles['department-content']}>
-        <Spin spinning={isLoading} tip="Loading...">
+        <Spin spinning={isLoading}>
           <Row gutter={[20, 20]}>
             <Col span={24}>
               <div
