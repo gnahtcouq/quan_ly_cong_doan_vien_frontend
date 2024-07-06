@@ -119,7 +119,7 @@ export interface IPost {
   name: string
   threads: string[]
   description: string
-  startDate: Date
+  // startDate: Date
   // endDate: Date
   isActive: boolean
 

@@ -5,7 +5,7 @@ import {IDepartment} from '@/types/backend'
 import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
 import {Button, Popconfirm, Space, message, notification} from 'antd'
-import {useState, useRef} from 'react'
+import {useState, useRef, forwardRef} from 'react'
 import dayjs from 'dayjs'
 import {callDeleteDepartment} from '@/config/api'
 import queryString from 'query-string'
@@ -13,7 +13,7 @@ import {useNavigate} from 'react-router-dom'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 
-const DepartmentPage = () => {
+const DepartmentPage = forwardRef<any>((props, ref) => {
   const tableRef = useRef<ActionType>()
 
   const isFetching = useAppSelector((state) => state.department.isFetching)
@@ -165,7 +165,7 @@ const DepartmentPage = () => {
     <div>
       <Access permission={ALL_PERMISSIONS.DEPARTMENTS.GET_PAGINATE}>
         <DataTable<IDepartment>
-          actionRef={tableRef}
+          actionRef={ref}
           headerTitle="Danh sách đơn vị"
           rowKey="_id"
           loading={isFetching}
@@ -211,6 +211,6 @@ const DepartmentPage = () => {
       </Access>
     </div>
   )
-}
+})
 
 export default DepartmentPage

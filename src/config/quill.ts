@@ -10,7 +10,7 @@ export const quillModules = {
     [{header: '1'}, {header: '2'}],
     [{size: []}],
     ['bold', 'italic', 'underline', 'strike'],
-    [{list: 'ordered'}, {list: 'bullet'}, {indent: '-1'}, {indent: '+1'}],
+    [{list: 'ordered'}, {indent: '-1'}, {indent: '+1'}],
     [{color: []}, {background: []}],
     ['link', 'image', 'video'],
     ['clean']
@@ -19,3 +19,20 @@ export const quillModules = {
     modules: ['Resize', 'Toolbar']
   }
 }
+
+export const quillFormats = [
+  'header',
+  'font',
+  'size',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'list',
+  'indent',
+  'link',
+  'image',
+  'video',
+  'color',
+  'background'
+]

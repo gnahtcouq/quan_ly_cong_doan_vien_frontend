@@ -269,18 +269,17 @@ const UserUpdateInfo = (props: any) => {
               </ProForm.Item>
             </Col>
             <Col span={12}>
-              <ProFormSelect
+              <ProForm.Item
                 name="gender"
                 label="Giới tính"
-                valueEnum={{
-                  MALE: 'Nam',
-                  FEMALE: 'Nữ',
-                  OTHER: 'Khác'
-                }}
-                placeholder="Chọn giới tính"
                 rules={[{required: true, message: 'Vui lòng chọn giới tính!'}]}
-                style={{width: '100%'}}
-              />
+              >
+                <Select placeholder="Chọn giới tính" style={{width: '100%'}}>
+                  <Select.Option value="MALE">Nam</Select.Option>
+                  <Select.Option value="FEMALE">Nữ</Select.Option>
+                  <Select.Option value="OTHER">Khác</Select.Option>
+                </Select>
+              </ProForm.Item>
             </Col>
             <Col span={12}>
               <ProFormText
@@ -378,7 +377,7 @@ const PostByEmail = (props: any) => {
                 <Select
                   mode="multiple"
                   allowClear
-                  showArrow={false}
+                  suffixIcon={null}
                   style={{width: '100%'}}
                   placeholder={
                     <>
@@ -387,6 +386,7 @@ const PostByEmail = (props: any) => {
                   }
                   optionLabelProp="label"
                   options={THREADS_LIST}
+                  variant="outlined"
                 />
               </Form.Item>
             </Col>

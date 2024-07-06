@@ -101,16 +101,15 @@ const DocumentPage = () => {
       width: 100,
       sorter: true,
       renderFormItem: (item, props, form) => (
-        <ProFormSelect
+        <Select
           showSearch
           mode="multiple"
           allowClear
-          valueEnum={{
-            ACTIVE: 'ACTIVE',
-            INACTIVE: 'INACTIVE'
-          }}
           placeholder="Chọn trạng thái"
-        />
+        >
+          <Select.Option value="true">ACTIVE</Select.Option>
+          <Select.Option value="false">INACTIVE</Select.Option>
+        </Select>
       ),
       render(value, record, index) {
         return (

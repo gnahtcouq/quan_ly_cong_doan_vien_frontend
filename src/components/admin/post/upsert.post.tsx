@@ -2,9 +2,11 @@ import {
   Breadcrumb,
   Col,
   ConfigProvider,
+  DatePicker,
   Divider,
   Form,
   Row,
+  Select,
   message,
   notification
 } from 'antd'
@@ -29,9 +31,9 @@ import {
   callUpdatePost
 } from '@/config/api'
 import {useQuill} from 'react-quilljs'
-import {quillModules} from '@/config/quill'
+import {quillFormats, quillModules} from '@/config/quill'
 import 'quill/dist/quill.snow.css'
-import {EditOutlined} from '@ant-design/icons'
+import {EditOutlined, MonitorOutlined} from '@ant-design/icons'
 import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
 import {IPost} from '@/types/backend'
@@ -48,7 +50,10 @@ const ViewUpsertPost = (props: any) => {
   const [dataUpdate, setDataUpdate] = useState<IPost | null>(null)
   const [form] = Form.useForm()
 
-  const {quill, quillRef} = useQuill({modules: quillModules})
+  const {quill, quillRef} = useQuill({
+    modules: quillModules,
+    formats: quillFormats
+  })
 
   useEffect(() => {
     const init = async () => {
@@ -127,6 +132,14 @@ const ViewUpsertPost = (props: any) => {
   const onFinish = async (values: any) => {
     const delta = JSON.parse(values.description)
 
+    if (delta.ops.length === 1 && delta.ops[0].insert === '\n') {
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: 'Vui lòng nhập mô tả bài đăng!'
+      })
+      return
+    }
+
     if (dataUpdate?._id) {
       //update
       // const cp = values?.department?.value?.split('@#$')
@@ -139,12 +152,12 @@ const ViewUpsertPost = (props: any) => {
         //   logo: cp && cp.length > 1 ? cp[1] : ''
         // },
         description: JSON.stringify(delta),
-        startDate: /[0-9]{2}[/][0-9]{2}[/][0-9]{4}$/.test(values.startDate)
-          ? dayjs(values.startDate, 'DD/MM/YYYY').toDate()
-          : values.startDate,
-        endDate: /[0-9]{2}[/][0-9]{2}[/][0-9]{4}$/.test(values.endDate)
-          ? dayjs(values.endDate, 'DD/MM/YYYY').toDate()
-          : values.endDate,
+        // startDate: /[0-9]{2}[/][0-9]{2}[/][0-9]{4}$/.test(values.startDate)
+        //   ? dayjs(values.startDate, 'DD/MM/YYYY').toDate()
+        //   : values.startDate,
+        // endDate: /[0-9]{2}[/][0-9]{2}[/][0-9]{4}$/.test(values.endDate)
+        //   ? dayjs(values.endDate, 'DD/MM/YYYY').toDate()
+        //   : values.endDate,
         isActive: values.isActive
       }
 
@@ -170,8 +183,8 @@ const ViewUpsertPost = (props: any) => {
         //   logo: cp && cp.length > 1 ? cp[1] : ''
         // },
         description: value,
-        startDate: dayjs(values.startDate, 'DD/MM/YYYY').toDate(),
-        endDate: dayjs(values.endDate, 'DD/MM/YYYY').toDate(),
+        // startDate: dayjs(values.startDate, 'DD/MM/YYYY').toDate(),
+        // endDate: dayjs(values.endDate, 'DD/MM/YYYY').toDate(),
         isActive: values.isActive
       }
 
@@ -244,76 +257,6 @@ const ViewUpsertPost = (props: any) => {
                 />
               </Col>
               <Col span={24} md={6}>
-                <ProFormSelect
-                  name="threads"
-                  label="Chủ đề"
-                  options={THREADS_LIST}
-                  placeholder="Chọn chủ đề"
-                  rules={[{required: true, message: 'Vui lòng chọn chủ đề!'}]}
-                  allowClear
-                  mode="multiple"
-                  fieldProps={{
-                    showArrow: false
-                  }}
-                />
-              </Col>
-
-              {/*{(dataUpdate?._id || !id) && (
-                <Col span={24} md={6}>
-                  <ProForm.Item
-                    name="department"
-                    label="Thuộc đơn vị"
-                    rules={[{required: true, message: 'Vui lòng chọn đơn vị!'}]}
-                  >
-                    <DebounceSelect
-                      allowClear
-                      showSearch
-                      defaultValue={departments}
-                      value={departments}
-                      placeholder="Chọn đơn vị"
-                      fetchOptions={fetchDepartmentList}
-                      onChange={(newValue: any) => {
-                        if (newValue?.length === 0 || newValue?.length === 1) {
-                          setDepartments(newValue as IDepartmentSelect[])
-                        }
-                      }}
-                      style={{width: '100%'}}
-                    />
-                  </ProForm.Item>
-                </Col>
-              )} */}
-            </Row>
-            <Row gutter={[20, 20]}>
-              <Col span={24} md={6}>
-                <ProFormDatePicker
-                  label="Ngày bắt đầu"
-                  name="startDate"
-                  normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                  fieldProps={{
-                    format: 'DD/MM/YYYY'
-                  }}
-                  rules={[
-                    {required: true, message: 'Vui lòng chọn ngày bắt đầu!'}
-                  ]}
-                  placeholder="dd/mm/yyyy"
-                />
-              </Col>
-              {/* <Col span={24} md={6}>
-                <ProFormDatePicker
-                  label="Ngày kết thúc"
-                  name="endDate"
-                  normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                  fieldProps={{
-                    format: 'DD/MM/YYYY'
-                  }}
-                  // width="auto"
-                  rules={[
-                    {required: true, message: 'Vui lòng chọn ngày kết thúc!'}
-                  ]}
-                  placeholder="dd/mm/yyyy"
-                />
-              </Col> */}
-              <Col span={24} md={6}>
                 <ProFormSwitch
                   label="Trạng thái"
                   name="isActive"
@@ -324,6 +267,30 @@ const ViewUpsertPost = (props: any) => {
                     defaultChecked: true
                   }}
                 />
+              </Col>
+            </Row>
+            <Row gutter={[20, 20]}>
+              <Col span={24} md={12}>
+                <Form.Item
+                  label={'Chủ đề'}
+                  name={'threads'}
+                  rules={[{required: true, message: 'Vui lòng chọn chủ đề!'}]}
+                >
+                  <Select
+                    mode="multiple"
+                    allowClear
+                    suffixIcon={null}
+                    style={{width: '100%'}}
+                    placeholder={
+                      <>
+                        <MonitorOutlined /> Chọn chủ đề...
+                      </>
+                    }
+                    optionLabelProp="label"
+                    options={THREADS_LIST}
+                    variant="outlined"
+                  />
+                </Form.Item>
               </Col>
               <Col span={24}>
                 <ProForm.Item

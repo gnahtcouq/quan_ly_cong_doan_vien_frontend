@@ -21,7 +21,7 @@ import {
   callUploadSingleFile
 } from '@/config/api'
 import {useQuill} from 'react-quilljs'
-import {quillModules} from '@/config/quill'
+import {quillFormats, quillModules} from '@/config/quill'
 import 'quill/dist/quill.snow.css'
 import {EditOutlined, LoadingOutlined, PlusOutlined} from '@ant-design/icons'
 import en_US from 'antd/lib/locale/en_US'
@@ -43,7 +43,10 @@ const ViewUpsertDepartment = (props: any) => {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
   const [previewTitle, setPreviewTitle] = useState('')
-  const {quill, quillRef} = useQuill({modules: quillModules})
+  const {quill, quillRef} = useQuill({
+    modules: quillModules,
+    formats: quillFormats
+  })
 
   useEffect(() => {
     const init = async () => {
