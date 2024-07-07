@@ -1,3 +1,5 @@
+$shadow:0 2px 8px rgba(0, 0, 0, 0.15);
+
 .container {
     padding-right: 15px;
     padding-left : 15px;
@@ -297,26 +299,35 @@
 }
 
 .change-email-pane {
-    .container {
-        display        : flex;
-        justify-content: center;
-        align-items    : center;
-        min-width      : 80rem;
-        min-height     : 100vh;
-        padding        : 0 2rem;
-        margin         : 0 auto;
-    }
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    height         : 100vh;
 
-    .main {
-        .wrapper {
-            max-width    : 28rem;
-            width        : 100%;
-            margin       : 2rem auto;
-            padding      : 2rem 2.5rem;
-            border       : none;
-            outline      : none;
-            border-radius: 0.5rem;
-            box-shadow   : rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    .container {
+        width           : 100%;
+        min-width       : 20rem;
+        padding         : 0.5rem 2rem;
+        background-color: #fff;
+        box-shadow      : $shadow;
+        border-radius   : 0.5rem;
+        margin-left     : -2rem;
+
+        .main {
+            display        : flex;
+            justify-content: center;
+            align-items    : center;
+            width          : 100%;
+
+            .wrapper {
+                width: 100%;
+            }
         }
+    }
+}
+
+@media (max-width: 767px) {
+    .change-email-pane {
+        height: 80vh;
     }
 }

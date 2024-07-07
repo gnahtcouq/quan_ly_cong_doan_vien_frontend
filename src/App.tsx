@@ -32,7 +32,7 @@ import ClientPostPage from './pages/post'
 import ClientPostDetailPage from './pages/post/detail'
 import ClientDepartmentPage from './pages/department'
 import ClientDepartmentDetailPage from './pages/department/detail'
-import ConfirmEmailChange from '@/pages/request/change-email'
+import ConfirmEmailChange from '@/pages/request/email-change'
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState('')

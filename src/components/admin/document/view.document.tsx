@@ -66,7 +66,7 @@ const ViewDetailDocument = (props: IProps) => {
         width={'40vw'}
         maskClosable={true}
         destroyOnClose
-        footer={
+        extra={
           <Button
             loading={isSubmit}
             type="primary"
@@ -76,16 +76,17 @@ const ViewDetailDocument = (props: IProps) => {
           </Button>
         }
       >
-        <Form form={form}>
-          {' '}
-          {/* Connect the form instance here */}
+        <Form
+          form={form}
+          initialValues={{status: dataInit?.status}} // Set initial values
+        >
           <Descriptions title="" bordered column={2} layout="vertical">
             <Descriptions.Item label="Tên văn bản">
               {dataInit?.name}
             </Descriptions.Item>
             <Descriptions.Item label="Trạng thái">
               <Form.Item name="status">
-                <Select style={{width: '50%'}} defaultValue={dataInit?.status}>
+                <Select style={{width: '100%'}}>
                   <Option value="ACTIVE">ACTIVE</Option>
                   <Option value="INACTIVE">INACTIVE</Option>
                 </Select>

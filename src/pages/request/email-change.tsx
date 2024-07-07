@@ -1,22 +1,7 @@
-import {useLocation, useNavigate} from 'react-router-dom'
-import {useState, useEffect} from 'react'
+import {useLocation} from 'react-router-dom'
+import {useState} from 'react'
 import styles from 'styles/client.module.scss'
-import {
-  Button,
-  Col,
-  ConfigProvider,
-  Divider,
-  Form,
-  Input,
-  message,
-  notification,
-  Row,
-  Skeleton,
-  Spin,
-  Tag
-} from 'antd'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
+import {Button, Divider, Form, Input, message, notification} from 'antd'
 import {useAppSelector} from '@/redux/hooks'
 import {callConfirmUpdateUserEmail} from '@/config/api'
 import validator from 'validator'
@@ -61,7 +46,7 @@ const ConfirmEmailChange = (props: any) => {
     } catch (error) {
       notification.error({
         message: 'Có lỗi xảy ra',
-        description: 'Xác nhận thay đổi email không thành công.'
+        description: 'Xác nhận thay đổi email không thành công!'
       })
     } finally {
       setIsSubmit(false)
