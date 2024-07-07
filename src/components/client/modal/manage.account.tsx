@@ -186,30 +186,30 @@ const UserUpdateInfo = (props: any) => {
         role: role ? role.value : dataInit.role?._id // Giữ nguyên vai trò nếu đã có
       }
 
-      const res = await callUpdateUser(user, dataInit._id)
-      setIsLoading(false)
-      if (res.data) {
-        message.success('Cập nhật thông tin thành công!')
-
-        // Nếu có thay đổi email, gửi yêu cầu thay đổi email qua API
-        if (email !== dataInit.email) {
-          setIsLoading(true)
-          const resChangeEmail = await callUpdateUserEmail(dataInit._id, email)
-          setIsLoading(false)
-          if (resChangeEmail.data) {
-            message.success('Yêu cầu thay đổi email đã được gửi đi.')
-          } else {
-            notification.error({
-              message: 'Có lỗi xảy ra khi gửi yêu cầu thay đổi email.',
-              description: resChangeEmail.message
-            })
-          }
+      // Nếu có thay đổi email, gửi yêu cầu thay đổi email qua API
+      if (email !== dataInit.email) {
+        setIsLoading(true)
+        const resChangeEmail = await callUpdateUserEmail(dataInit._id, email)
+        setIsLoading(false)
+        if (resChangeEmail.data) {
+          message.success('Yêu cầu thay đổi email đã được gửi đi.')
+        } else {
+          notification.error({
+            message: 'Có lỗi xảy ra',
+            description: resChangeEmail.message
+          })
         }
       } else {
-        notification.error({
-          message: 'Có lỗi xảy ra',
-          description: res.message
-        })
+        const res = await callUpdateUser(user, dataInit._id)
+        setIsLoading(false)
+        if (res.data) {
+          message.success('Cập nhật thông tin thành công!')
+        } else {
+          notification.error({
+            message: 'Có lỗi xảy ra',
+            description: res.message
+          })
+        }
       }
     }
   }
