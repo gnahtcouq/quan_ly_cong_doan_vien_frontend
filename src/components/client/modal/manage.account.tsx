@@ -34,6 +34,8 @@ import {THREADS_LIST} from '@/config/utils'
 import {useAppSelector} from '@/redux/hooks'
 import {ProForm, ProFormSelect, ProFormText} from '@ant-design/pro-components'
 import en_US from 'antd/locale/en_US'
+import {useDispatch} from 'react-redux'
+import {updateUserInfo} from '@/redux/slice/accountSlide'
 
 interface IProps {
   open: boolean
@@ -149,6 +151,7 @@ const UserUpdateInfo = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
   const user = useAppSelector((state) => state.account.user) // Lấy thông tin user hiện tại
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -171,9 +174,24 @@ const UserUpdateInfo = (props: any) => {
       values
 
     if (dataInit?._id) {
-      setIsLoading(true)
+      // Nếu có thay đổi email, gửi yêu cầu thay đổi email qua API trước
+      if (email !== dataInit.email) {
+        setIsLoading(true)
+        const resChangeEmail = await callUpdateUserEmail(dataInit._id, email)
+        setIsLoading(false)
+        if (resChangeEmail.data) {
+          message.success('Yêu cầu thay đổi email đã được gửi đi!')
+        } else {
+          notification.error({
+            message: 'Có lỗi xảy ra',
+            description: resChangeEmail.message
+          })
+          return // Ngừng xử lý nếu có lỗi xảy ra khi gửi yêu cầu thay đổi email
+        }
+      }
 
-      //update
+      setIsLoading(true)
+      // Tạo đối tượng user với thông tin mới nhưng giữ email hiện tại
       const user = {
         _id: dataInit._id,
         name,
@@ -186,30 +204,18 @@ const UserUpdateInfo = (props: any) => {
         role: role ? role.value : dataInit.role?._id // Giữ nguyên vai trò nếu đã có
       }
 
-      // Nếu có thay đổi email, gửi yêu cầu thay đổi email qua API
-      if (email !== dataInit.email) {
-        setIsLoading(true)
-        const resChangeEmail = await callUpdateUserEmail(dataInit._id, email)
-        setIsLoading(false)
-        if (resChangeEmail.data) {
-          message.success('Yêu cầu thay đổi email đã được gửi đi.')
-        } else {
-          notification.error({
-            message: 'Có lỗi xảy ra',
-            description: resChangeEmail.message
-          })
-        }
+      // Gửi yêu cầu cập nhật thông tin người dùng
+      const resUpdateUser = await callUpdateUser(user, dataInit._id)
+      setIsLoading(false)
+
+      if (resUpdateUser.data) {
+        message.success('Cập nhật thông tin thành công!')
+        dispatch(updateUserInfo(user))
       } else {
-        const res = await callUpdateUser(user, dataInit._id)
-        setIsLoading(false)
-        if (res.data) {
-          message.success('Cập nhật thông tin thành công!')
-        } else {
-          notification.error({
-            message: 'Có lỗi xảy ra',
-            description: res.message
-          })
-        }
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: resUpdateUser.message
+        })
       }
     }
   }

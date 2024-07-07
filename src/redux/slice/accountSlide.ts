@@ -114,6 +114,9 @@ export const accountSlide = createSlice({
     setRefreshTokenAction: (state, action) => {
       state.isRefreshToken = action.payload?.status ?? false
       state.errorRefreshToken = action.payload?.message ?? ''
+    },
+    updateUserInfo: (state, action) => {
+      state.user = {...state.user, ...action.payload}
     }
   },
   extraReducers: (builder) => {
@@ -150,7 +153,8 @@ export const {
   setActiveMenu,
   setUserLoginInfo,
   setLogoutAction,
-  setRefreshTokenAction
+  setRefreshTokenAction,
+  updateUserInfo
 } = accountSlide.actions
 
 export default accountSlide.reducer
