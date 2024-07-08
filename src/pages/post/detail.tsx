@@ -65,7 +65,8 @@ const ClientPostDetailPage = (props: any) => {
                     })}
                   </div>
                   <div className={styles['post-updatedAt']}>
-                    <HistoryOutlined />{' '}
+                    <HistoryOutlined />
+                    {' Cập nhật '}
                     {dayjs(postDetail.updatedAt).format(
                       'DD/MM/YYYY - HH:mm:ss'
                     )}

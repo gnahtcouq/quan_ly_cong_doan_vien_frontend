@@ -86,7 +86,7 @@ const ViewDetailDocument = (props: IProps) => {
             </Descriptions.Item>
             <Descriptions.Item label="Trạng thái">
               <Form.Item name="status">
-                <Select style={{width: '100%'}}>
+                <Select>
                   <Option value="ACTIVE">ACTIVE</Option>
                   <Option value="INACTIVE">INACTIVE</Option>
                 </Select>

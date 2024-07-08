@@ -26,7 +26,7 @@ const PostCard = (props: IProps) => {
   const [pageSize, setPageSize] = useState(6)
   const [total, setTotal] = useState(0)
   const [filter, setFilter] = useState('')
-  const [sortQuery, setSortQuery] = useState('sort=-updatedAt')
+  const [sortQuery, setSortQuery] = useState('sort=-createdAt')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -118,8 +118,8 @@ const PostCard = (props: IProps) => {
                       </div>
                       <div className={styles['card-post-right']}>
                         <div className={styles['post-title']}>{item.name}</div>
-                        <div className={styles['post-updatedAt']}>
-                          {dayjs(item.updatedAt).format('DD/MM/YYYY')}
+                        <div className={styles['post-createdAt']}>
+                          {dayjs(item.createdAt).format('DD/MM/YYYY')}
                         </div>
                       </div>
                     </div>
