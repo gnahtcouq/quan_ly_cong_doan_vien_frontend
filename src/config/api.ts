@@ -149,6 +149,17 @@ export const callConfirmUpdateUserEmail = (
   )
 }
 
+export const callUpdateUserPassword = (
+  id: string,
+  currentPassword: string,
+  newPassword: string
+) => {
+  return axios.post<IBackendRes<IUser>>(`/api/v1/users/change-password/${id}`, {
+    currentPassword,
+    newPassword
+  })
+}
+
 export const callDeleteUser = (id: string) => {
   return axios.delete<IBackendRes<IUser>>(`/api/v1/users/${id}`)
 }

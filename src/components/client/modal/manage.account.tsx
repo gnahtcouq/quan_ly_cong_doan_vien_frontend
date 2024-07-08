@@ -25,7 +25,8 @@ import {
   callGetSubscriberThreads,
   callUpdateSubscriber,
   callUpdateUser,
-  callUpdateUserEmail
+  callUpdateUserEmail,
+  callUpdateUserPassword
 } from '@/config/api'
 import type {ColumnsType} from 'antd/es/table'
 import dayjs from 'dayjs'
@@ -412,6 +413,104 @@ const PostByEmail = (props: any) => {
   )
 }
 
+const UserUpdatePassword = (props: any) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [form] = Form.useForm()
+  const user = useAppSelector((state) => state.account.user)
+
+  const onFinish = async (values: any) => {
+    const {currentPassword, newPassword, reNewPassword} = values
+    if (newPassword !== reNewPassword) {
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: 'Mật khẩu mới và xác nhận mật khẩu không khớp!'
+      })
+      return
+    }
+
+    setIsLoading(true)
+    const res = await callUpdateUserPassword(
+      user._id,
+      currentPassword,
+      newPassword
+    )
+    setIsLoading(false)
+
+    if (res.data) {
+      message.success('Cập nhật mật khẩu thành công!')
+      form.resetFields()
+    } else {
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: res.message
+      })
+    }
+  }
+
+  return (
+    <>
+      <Spin spinning={isLoading}>
+        <Form
+          onFinish={onFinish}
+          form={form}
+          style={{
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            width: '100%'
+          }}
+          labelCol={{span: 24}}
+          wrapperCol={{span: 24}}
+        >
+          <Row gutter={20} style={{flexGrow: 1}}>
+            <Col span={24}>
+              <ProFormText.Password
+                label="Mật khẩu hiện tại"
+                name="currentPassword"
+                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                placeholder="Nhập mật khẩu hiện tại"
+                style={{width: '100%'}}
+              />
+            </Col>
+            <Col span={24}>
+              <ProFormText.Password
+                label="Mật khẩu mới"
+                name="newPassword"
+                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                placeholder="Nhập mật khẩu mới"
+                style={{width: '100%'}}
+              />
+            </Col>
+            <Col span={24}>
+              <ProFormText.Password
+                label="Nhập lại mật khẩu mới"
+                name="reNewPassword"
+                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                placeholder="Nhập lại mật khẩu mới"
+                style={{width: '100%'}}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24} style={{textAlign: 'center'}}>
+              <Button
+                type="primary"
+                onClick={() => form.submit()}
+                style={{width: '100%'}}
+              >
+                Cập nhật
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      </Spin>
+    </>
+  )
+}
+
 const ManageAccount = (props: IProps) => {
   const {open, onClose} = props
 
@@ -438,7 +537,7 @@ const ManageAccount = (props: IProps) => {
     {
       key: 'user-password',
       label: `Thay đổi mật khẩu`,
-      children: `//todo`
+      children: <UserUpdatePassword />
     }
   ]
 
@@ -451,7 +550,7 @@ const ManageAccount = (props: IProps) => {
         maskClosable={false}
         footer={null}
         destroyOnClose={true}
-        width={isMobile ? '100%' : '1000px'}
+        width={isMobile ? '100%' : '600px'}
       >
         <div style={{minHeight: 400}}>
           <Tabs
