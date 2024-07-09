@@ -1,12 +1,15 @@
 import {useLocation} from 'react-router-dom'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import styles from 'styles/client.module.scss'
-import {Button, Divider, Form, Input, message, notification} from 'antd'
+import {Button, Divider, Form, Input, message, notification, Spin} from 'antd'
 import {useAppSelector} from '@/redux/hooks'
-import {callConfirmUpdateUserEmail} from '@/config/api'
-import validator from 'validator'
+import {callConfirmUpdateUserEmail, callFetchUserById} from '@/config/api'
 
 const ConfirmEmailChange = (props: any) => {
+  const [verificationExpires, setVerificationExpires] = useState<string | null>(
+    null
+  )
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const user = useAppSelector((state) => state.account.user)
   const [isSubmit, setIsSubmit] = useState(false)
 
@@ -15,11 +18,48 @@ const ConfirmEmailChange = (props: any) => {
   const newEmail = params?.get('newEmail')
   const userId = location.pathname.split('/').pop()
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      setIsLoading(true)
+      const res = await callFetchUserById(userId?.toString() || '')
+      console.log(res)
+      if (res && res.data) {
+        setVerificationExpires(res.data.verificationExpires?.toString() || null)
+        if (!res.data.verificationExpires) window.location.href = '/'
+      } else {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: res.message
+        })
+      }
+      setIsLoading(false)
+    }
+    fetchUserData()
+  }, [])
+
+  useEffect(() => {
+    // Kiểm tra và chuyển hướng nếu verificationExpires không hợp lệ
+    if (!verificationExpires) {
+      const expiryDate = new Date(verificationExpires?.toString() || '')
+      const currentDate = new Date()
+
+      if (expiryDate <= currentDate) {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: 'Thời gian xác nhận đã hết hạn!'
+        })
+        setTimeout(() => {
+          window.location.href = '/'
+        }, 2000)
+      }
+    }
+  }, [verificationExpires])
+
   const onFinish = async (values: any) => {
     const {verificationCode} = values
     setIsSubmit(true)
     try {
-      if (user._id === userId && validator.isEmail(newEmail)) {
+      if (user._id === userId) {
         const res = await callConfirmUpdateUserEmail(
           user._id,
           verificationCode,
@@ -30,7 +70,7 @@ const ConfirmEmailChange = (props: any) => {
           message.success('Cập nhật thông tin thành công!')
           setTimeout(() => {
             window.location.href = '/'
-          }, 1000)
+          }, 2000)
         } else {
           notification.error({
             message: 'Có lỗi xảy ra',
@@ -54,40 +94,42 @@ const ConfirmEmailChange = (props: any) => {
   }
 
   return (
-    <div className={`${styles['change-email-pane']} ${styles['container']}`}>
-      <main className={styles.main}>
-        <div className={styles.container}>
-          <section className={styles.wrapper}>
-            <Form name="basic" onFinish={onFinish} autoComplete="off">
-              <Form.Item
-                labelCol={{span: 24}} //whole column
-                label="Mã xác nhận"
-                name="verificationCode"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Mã xác nhận không được để trống!'
-                  }
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Divider></Divider>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={isSubmit}
-                  style={{width: '100%'}}
+    <Spin spinning={isLoading}>
+      <div className={`${styles['change-email-pane']} ${styles['container']}`}>
+        <main className={styles.main}>
+          <div className={styles.container}>
+            <section className={styles.wrapper}>
+              <Form name="basic" onFinish={onFinish} autoComplete="off">
+                <Form.Item
+                  labelCol={{span: 24}} //whole column
+                  label="Mã xác nhận"
+                  name="verificationCode"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Mã xác nhận không được để trống!'
+                    }
+                  ]}
                 >
-                  Gửi
-                </Button>
-              </Form.Item>
-            </Form>
-          </section>
-        </div>
-      </main>
-    </div>
+                  <Input />
+                </Form.Item>
+                <Divider></Divider>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={isSubmit}
+                    style={{width: '100%'}}
+                  >
+                    Gửi
+                  </Button>
+                </Form.Item>
+              </Form>
+            </section>
+          </div>
+        </main>
+      </div>
+    </Spin>
   )
 }
 export default ConfirmEmailChange

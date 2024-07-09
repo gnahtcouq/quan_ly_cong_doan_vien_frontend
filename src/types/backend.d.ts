@@ -79,6 +79,8 @@ export interface IUser {
     _id: string
     name: string
   }
+  verificationCode?: string
+  verificationExpires?: string
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null

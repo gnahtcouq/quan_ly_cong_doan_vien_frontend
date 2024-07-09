@@ -158,6 +158,7 @@ const UserUpdateInfo = (props: any) => {
     const fetchUserData = async () => {
       setIsLoading(true)
       const res = await callFetchUserById(user._id)
+      console.log(res)
       if (res && res.data) {
         setDataInit(res.data)
         form.setFieldsValue({
@@ -479,7 +480,14 @@ const UserUpdatePassword = (props: any) => {
               <ProFormText.Password
                 label="Mật khẩu mới"
                 name="newPassword"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                rules={[
+                  {required: true, message: 'Vui lòng không để trống!'},
+                  {
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                    message:
+                      'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.'
+                  }
+                ]}
                 placeholder="Nhập mật khẩu mới"
                 style={{width: '100%'}}
               />
