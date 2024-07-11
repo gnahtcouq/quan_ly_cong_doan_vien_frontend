@@ -8,8 +8,7 @@ $color-blue   : #1a73e8;
 $color-gray   : #80868b;
 $color-grayish: #dadce0;
 
-$shadow-normal: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
-0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-normal: 0 2px 8px rgba(0, 0, 0, 0.15);
 $shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 $shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
@@ -17,8 +16,8 @@ $shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
 
 .login-page,
 .register-page {
-    color     : $color-black;
-    background: $color-light;
+    color        : $color-black;
+    // background: $color-light;
 
 
     // Components
@@ -75,7 +74,7 @@ $shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
             border-radius: 0.5rem;
             color        : $color-black;
             background   : $color-white;
-            box-shadow   : $shadow-large;
+            box-shadow   : $shadow-normal;
 
             .form {
                 width     : 100%;
@@ -182,6 +181,34 @@ $shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
                     }
                 }
             }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+
+    .login-page,
+    .register-page {
+        .container {
+            min-width : unset;
+            width     : 100%;
+            padding   : 0 1rem;
+            min-height: 100vh;
+        }
+
+        .main .wrapper {
+            max-width: 100%;
+            padding  : 1rem;
+            margin   : 1rem auto;
+        }
+
+        .form {
+            margin-top: 1rem;
+        }
+
+        .input-field,
+        .input-submit {
+            padding: 0.5rem 1rem;
         }
     }
 }

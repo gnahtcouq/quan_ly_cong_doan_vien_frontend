@@ -63,13 +63,6 @@ const RegisterPage = () => {
                   style={{maxHeight: '100%', maxWidth: '100%'}}
                 />
               </div>
-              <h2
-                className={`${styles.text} ${styles['text-large']}`}
-                style={{textAlign: 'center'}}
-              >
-                {' '}
-                Đăng Ký{' '}
-              </h2>
               <Divider />
             </div>
             <Form<IUser>

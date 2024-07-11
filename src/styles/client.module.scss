@@ -80,7 +80,7 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
         justify-content: space-between;
         align-items    : center;
         width          : 100%;
-        margin         : 5px;
+        margin         : 5px 15px;
         font-weight    : 600;
 
         .extra {
@@ -93,10 +93,20 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
                 display        : block;
                 color          : #000;
                 text-decoration: none;
+                font-family    : "Roboto", sans-serif;
+                font-size      : 14px;
+
 
                 &:hover {
                     color: #a7a7a7;
                 }
+            }
+
+            .icon-menu {
+                font-size      : 20px;
+                cursor         : pointer;
+                color          : #000;
+                text-decoration: none;
             }
         }
     }

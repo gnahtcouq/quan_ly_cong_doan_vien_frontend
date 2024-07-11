@@ -99,17 +99,8 @@ export const accountSlide = createSlice({
     },
     setLogoutAction: (state, action) => {
       localStorage.removeItem('access_token')
+      localStorage.removeItem('user')
       state.isAuthenticated = false
-      state.user = {
-        _id: '',
-        email: '',
-        name: '',
-        role: {
-          _id: '',
-          name: ''
-        },
-        permissions: []
-      }
     },
     setRefreshTokenAction: (state, action) => {
       state.isRefreshToken = action.payload?.status ?? false

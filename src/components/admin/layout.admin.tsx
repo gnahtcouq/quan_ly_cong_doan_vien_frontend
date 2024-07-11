@@ -12,9 +12,11 @@ import {
   HeartTwoTone,
   ScheduleOutlined,
   TeamOutlined,
-  HomeOutlined
+  HomeOutlined,
+  MenuOutlined
 } from '@ant-design/icons'
-import {Layout, Menu, Dropdown, Space, message, Avatar, Button} from 'antd'
+import {Layout, Menu, Dropdown, Space, message, Button} from 'antd'
+import styles from '@/styles/admin.module.scss'
 import {Outlet, useLocation, useNavigate} from 'react-router-dom'
 import {Link} from 'react-router-dom'
 import {callLogout} from 'config/api'
@@ -164,6 +166,7 @@ const LayoutAdmin = () => {
       setMenuItems(full)
     }
   }, [permissions])
+
   useEffect(() => {
     setActiveMenu(location.pathname)
   }, [location])
@@ -207,7 +210,7 @@ const LayoutAdmin = () => {
 
   return (
     <>
-      <Layout style={{minHeight: '100vh'}} className="layout-admin">
+      <Layout className={styles['admin-layout']}>
         {
           <Sider
             theme="light"
@@ -215,12 +218,8 @@ const LayoutAdmin = () => {
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
           >
-            <div style={{height: 32, margin: 16, textAlign: 'center'}}>
-              <img
-                src={logo}
-                alt="Logo"
-                style={{maxHeight: '100%', maxWidth: '100%'}}
-              />
+            <div className={styles['admin-logo']}>
+              <img src={logo} alt="Logo" />
             </div>
             <Menu
               selectedKeys={[activeMenu]}
@@ -233,14 +232,7 @@ const LayoutAdmin = () => {
 
         <Layout>
           {
-            <div
-              className="admin-header"
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginRight: 20
-              }}
-            >
+            <div className={styles['admin-header']}>
               <Button
                 type="text"
                 icon={
@@ -249,29 +241,17 @@ const LayoutAdmin = () => {
                     : React.createElement(MenuFoldOutlined)
                 }
                 onClick={() => setCollapsed(!collapsed)}
-                style={{
-                  fontSize: '16px',
-                  width: 64,
-                  height: 64
-                }}
+                className={styles['btn-collapse']}
               />
 
               <Dropdown menu={{items: itemsDropdown}} trigger={['click']}>
-                <Space style={{cursor: 'pointer'}}>
-                  Xin chào, {user?.name?.split(' ').pop()}
-                  <Avatar>
-                    {' '}
-                    {user?.name
-                      ?.split(' ')
-                      .pop()
-                      ?.substring(0, 2)
-                      ?.toUpperCase()}{' '}
-                  </Avatar>
+                <Space>
+                  <MenuOutlined className={styles['icon-menu']} />
                 </Space>
               </Dropdown>
             </div>
           }
-          <Content style={{padding: '15px'}}>
+          <Content className={styles['admin-content']}>
             <Outlet />
           </Content>
           {/* <Footer style={{padding: 10, textAlign: 'center'}}>

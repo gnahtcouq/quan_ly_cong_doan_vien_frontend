@@ -2,8 +2,9 @@ import {useLocation} from 'react-router-dom'
 import {useEffect, useState} from 'react'
 import styles from 'styles/client.module.scss'
 import {Button, Divider, Form, Input, message, notification, Spin} from 'antd'
-import {useAppSelector} from '@/redux/hooks'
+import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {callConfirmUpdateUserEmail, callFetchUserById} from '@/config/api'
+import {updateUserInfo} from '@/redux/slice/accountSlide'
 
 const ConfirmEmailChange = (props: any) => {
   const [verificationExpires, setVerificationExpires] = useState<string | null>(
@@ -11,6 +12,7 @@ const ConfirmEmailChange = (props: any) => {
   )
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const user = useAppSelector((state) => state.account.user)
+  const dispatch = useAppDispatch()
   const [isSubmit, setIsSubmit] = useState(false)
 
   let location = useLocation()
@@ -68,6 +70,7 @@ const ConfirmEmailChange = (props: any) => {
 
         if (res.data) {
           message.success('Cập nhật thông tin thành công!')
+          dispatch(updateUserInfo({email: res.data.email}))
           setTimeout(() => {
             window.location.href = '/'
           }, 2000)

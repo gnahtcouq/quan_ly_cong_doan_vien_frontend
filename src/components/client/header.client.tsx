@@ -6,7 +6,8 @@ import {
   LogoutOutlined,
   MenuFoldOutlined,
   BankOutlined,
-  HomeOutlined
+  HomeOutlined,
+  MenuOutlined
 } from '@ant-design/icons'
 import {Avatar, Drawer, Dropdown, MenuProps, Space, message} from 'antd'
 import {Menu, ConfigProvider} from 'antd'
@@ -16,7 +17,11 @@ import {useLocation, useNavigate} from 'react-router-dom'
 import {Link} from 'react-router-dom'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {callLogout} from '@/config/api'
-import {setLogoutAction} from '@/redux/slice/accountSlide'
+import {
+  fetchAccount,
+  setLogoutAction,
+  setUserLoginInfo
+} from '@/redux/slice/accountSlide'
 import ManageAccount from './modal/manage.account'
 import logo from '@/assets/logo.webp'
 
@@ -151,28 +156,13 @@ const Header = (props: any) => {
                 </ConfigProvider>
                 <div className={styles['extra']}>
                   {isAuthenticated === false ? (
-                    <Link to={'/login'}>Đăng Nhập</Link>
+                    <Link to={'/login'}>
+                      <span>Đăng Nhập</span>
+                    </Link>
                   ) : (
-                    <Dropdown
-                      menu={{items: itemsDropdown}}
-                      trigger={['click']}
-                      // overlayStyle={{
-                      //   width: '200px',
-                      //   display: 'flex',
-                      //   flexDirection: 'column',
-                      //   alignItems: 'center'
-                      // }}
-                    >
-                      <Space style={{cursor: 'pointer'}}>
-                        <span>Xin chào, {user?.name?.split(' ').pop()}</span>
-                        <Avatar>
-                          {' '}
-                          {user?.name
-                            ?.split(' ')
-                            .pop()
-                            ?.substring(0, 2)
-                            ?.toUpperCase()}{' '}
-                        </Avatar>
+                    <Dropdown menu={{items: itemsDropdown}} trigger={['click']}>
+                      <Space>
+                        <MenuOutlined className={styles['icon-menu']} />
                       </Space>
                     </Dropdown>
                   )}

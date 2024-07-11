@@ -2,16 +2,15 @@ import {Button, Divider, Form, Input, message, notification} from 'antd'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
 import {callLogin} from 'config/api'
 import {useState, useEffect} from 'react'
-import {useDispatch} from 'react-redux'
-import {setUserLoginInfo} from '@/redux/slice/accountSlide'
+import {fetchAccount, setUserLoginInfo} from '@/redux/slice/accountSlide'
 import styles from 'styles/auth.module.scss'
-import {useAppSelector} from '@/redux/hooks'
+import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import logo from '@/assets/logo.webp'
 
 const LoginPage = () => {
   const navigate = useNavigate()
   const [isSubmit, setIsSubmit] = useState(false)
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(
     (state) => state.account.isAuthenticated
   )
@@ -21,12 +20,11 @@ const LoginPage = () => {
   const callback = params?.get('callback')
 
   useEffect(() => {
-    //đã login => redirect to '/'
+    dispatch(fetchAccount())
     if (isAuthenticated) {
-      // navigate('/');
-      window.location.href = '/'
+      navigate('/')
     }
-  }, [])
+  }, [isAuthenticated])
 
   const onFinish = async (values: any) => {
     const {username, password} = values
@@ -37,7 +35,7 @@ const LoginPage = () => {
       localStorage.setItem('access_token', res.data.access_token)
       dispatch(setUserLoginInfo(res.data.user))
       message.success('Đăng nhập tài khoản thành công!')
-      window.location.href = callback ? callback : '/'
+      navigate(callback ? callback : '/')
     } else {
       notification.error({
         message: 'Có lỗi xảy ra',
@@ -63,12 +61,6 @@ const LoginPage = () => {
                   style={{maxHeight: '100%', maxWidth: '100%'}}
                 />
               </div>
-              <h2
-                className={`${styles.text} ${styles['text-large']}`}
-                style={{textAlign: 'center'}}
-              >
-                Đăng Nhập
-              </h2>
               <Divider />
             </div>
             <Form

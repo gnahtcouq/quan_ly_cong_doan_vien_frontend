@@ -69,7 +69,6 @@ const DepartmentPage = forwardRef<any>((props, ref) => {
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
-      width: 200,
       sorter: true,
       render: (text, record, index, action) => {
         return <>{dayjs(record.createdAt).format('DD/MM/YYYY - HH:mm:ss')}</>
@@ -79,7 +78,6 @@ const DepartmentPage = forwardRef<any>((props, ref) => {
     {
       title: 'Ngày sửa',
       dataIndex: 'updatedAt',
-      width: 200,
       sorter: true,
       render: (text, record, index, action) => {
         return <>{dayjs(record.updatedAt).format('DD/MM/YYYY - HH:mm:ss')}</>
