@@ -32,10 +32,9 @@ import type {ColumnsType} from 'antd/es/table'
 import dayjs from 'dayjs'
 import {CopyOutlined, ExportOutlined, MonitorOutlined} from '@ant-design/icons'
 import {THREADS_LIST} from '@/config/utils'
-import {useAppSelector} from '@/redux/hooks'
+import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {ProForm, ProFormSelect, ProFormText} from '@ant-design/pro-components'
 import en_US from 'antd/locale/en_US'
-import {useDispatch} from 'react-redux'
 import {updateUserInfo} from '@/redux/slice/accountSlide'
 
 interface IProps {
@@ -152,13 +151,12 @@ const UserUpdateInfo = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
   const user = useAppSelector((state) => state.account.user) // Lấy thông tin user hiện tại
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     const fetchUserData = async () => {
       setIsLoading(true)
       const res = await callFetchUserById(user._id)
-      console.log(res)
       if (res && res.data) {
         setDataInit(res.data)
         form.setFieldsValue({
@@ -169,7 +167,7 @@ const UserUpdateInfo = (props: any) => {
       setIsLoading(false)
     }
     fetchUserData()
-  }, [])
+  }, [user._id])
 
   const onFinish = async (values: any) => {
     const {name, email, password, dateOfBirth, gender, address, CCCD, role} =
@@ -208,15 +206,21 @@ const UserUpdateInfo = (props: any) => {
 
       // Gửi yêu cầu cập nhật thông tin người dùng
       const resUpdateUser = await callUpdateUser(user, dataInit._id)
+      const resSubscriber = await callGetSubscriberThreads()
+      const resUpdateSubscriber = await callUpdateSubscriber({
+        email: dataInit.email,
+        name: user.name,
+        threads: resSubscriber.data ? resSubscriber.data.threads : []
+      })
       setIsLoading(false)
 
-      if (resUpdateUser.data) {
+      if (resUpdateUser.data && resUpdateSubscriber.data) {
         message.success('Cập nhật thông tin thành công!')
         dispatch(updateUserInfo(user))
       } else {
         notification.error({
           message: 'Có lỗi xảy ra',
-          description: resUpdateUser.message
+          description: resUpdateUser.message || resUpdateSubscriber.message
         })
       }
     }
@@ -378,9 +382,7 @@ const PostByEmail = (props: any) => {
               <Form.Item
                 label={'Chủ đề'}
                 name={'threads'}
-                rules={[
-                  {required: true, message: 'Vui lòng chọn ít nhất 1 chủ đề!'}
-                ]}
+                rules={[{required: false}]}
               >
                 <Select
                   mode="multiple"
