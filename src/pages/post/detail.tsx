@@ -9,6 +9,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import en_US from 'antd/locale/en_US'
 import Quill from 'quill'
+import 'quill/dist/quill.snow.css'
 import logo_sv from '@/assets/logo-sv.png'
 
 dayjs.extend(relativeTime)
@@ -73,6 +74,7 @@ const ClientPostDetailPage = (props: any) => {
                   </div>
                   <Divider />
                   <div
+                    className="ql-editor"
                     dangerouslySetInnerHTML={{__html: postDetail.description}}
                   ></div>
                 </Col>

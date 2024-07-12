@@ -133,7 +133,7 @@ const Header = (props: any) => {
                   alt="Logo"
                   onClick={() => navigate('/')}
                   title="Saigon Technology University"
-                  style={{cursor: 'pointer', maxHeight: 32}}
+                  style={{cursor: 'pointer', maxHeight: 64}}
                 />
               </div>
               <div className={styles['top-menu']}>

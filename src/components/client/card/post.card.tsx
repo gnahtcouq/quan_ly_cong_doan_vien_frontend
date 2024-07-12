@@ -103,6 +103,7 @@ const PostCard = (props: IProps) => {
             </Col>
 
             {displayPost?.map((item) => {
+              const isNew = dayjs().isSame(dayjs(item.createdAt), 'day')
               return (
                 <Col span={24} md={12} key={item._id}>
                   <Card
@@ -117,7 +118,12 @@ const PostCard = (props: IProps) => {
                         <img alt="logo_sv" src={logo_sv} />
                       </div>
                       <div className={styles['card-post-right']}>
-                        <div className={styles['post-title']}>{item.name}</div>
+                        <div className={styles['post-title']}>
+                          {item.name}{' '}
+                          {isNew && (
+                            <span className={styles['new-badge']}>mới</span>
+                          )}
+                        </div>
                         <div className={styles['post-createdAt']}>
                           {dayjs(item.createdAt).format('DD/MM/YYYY')}
                         </div>

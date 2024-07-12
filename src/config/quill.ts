@@ -1,5 +1,4 @@
 // quillSetup.ts
-
 import Quill from 'quill'
 import ImageResize from 'quill-image-resize-module-react'
 
@@ -10,9 +9,11 @@ export const quillModules = {
     [{header: '1'}, {header: '2'}],
     [{size: []}],
     ['bold', 'italic', 'underline', 'strike'],
-    [{list: 'ordered'}, {indent: '-1'}, {indent: '+1'}],
+    [{list: 'ordered'}, {list: 'bullet'}, {list: 'check'}],
+    [{indent: '-1'}, {indent: '+1'}],
     [{color: []}, {background: []}],
     ['link', 'image', 'video'],
+    [{align: []}],
     ['clean']
   ],
   imageResize: {
@@ -34,5 +35,6 @@ export const quillFormats = [
   'image',
   'video',
   'color',
-  'background'
+  'background',
+  'align'
 ]

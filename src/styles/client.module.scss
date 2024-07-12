@@ -63,7 +63,7 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
     z-index         : 1000;
     display         : block;
     width           : 100%;
-    height          : 55px;
+    height          : 70px;
     background-color: #fff;
     box-shadow      : 0 4px 6px rgba(0, 0, 0, 0.1);
     padding         : 15px;
@@ -115,7 +115,7 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
         display        : flex;
         justify-content: space-between;
         align-items    : center;
-        height         : 55px;
+        height         : 70px;
         color          : #000;
 
         .brand {
@@ -123,9 +123,7 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
             align-items    : center;
             justify-content: center;
             cursor         : pointer;
-            margin-top     : 7px;
         }
-
     }
 }
 
@@ -150,7 +148,7 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
     .post-content {
-        padding-top: 80px;
+        padding-top: 90px;
 
         .card-post-content {
             display: flex;
@@ -184,6 +182,20 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
                     display           : -webkit-box;
                     -webkit-line-clamp: 2;
                     -webkit-box-orient: vertical;
+
+                    .new-badge {
+                        display         : inline-block;
+                        padding         : 0.25em 0.4em;
+                        font-size       : 75%;
+                        font-weight     : 700;
+                        line-height     : 1;
+                        text-align      : center;
+                        white-space     : nowrap;
+                        vertical-align  : baseline;
+                        border-radius   : 0.25rem;
+                        color           : #fff;
+                        background-color: #dc3545;
+                    }
                 }
 
                 .post-createdAt {
@@ -200,7 +212,7 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
 .department-section {
 
     .department-content {
-        padding-top: 80px;
+        padding-top: 90px;
 
         .card-customize {
             height            : 200px;
@@ -258,13 +270,14 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
     padding-top: 80px;
 
     .header {
-        margin   : 20px 0;
+        margin   : 30px 0;
         color    : #353535;
         font-size: 27px;
     }
 
     .post-updatedAt {
-        color: #919191;
+        margin-top: 10px;
+        color     : #919191;
     }
 
     h2 {
@@ -287,8 +300,6 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
         font-size  : 16px;
         line-height: 1.7em;
         max-width  : 100%;
-        line-height: 2em;
-        text-align : justify;
     }
 
     img {

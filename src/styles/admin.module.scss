@@ -21,10 +21,10 @@
         img {
             max-height: 100%;
             max-width : 100%;
+            cursor    : pointer;
         }
     }
 }
-
 
 .admin-header {
     display        : flex;
@@ -42,6 +42,10 @@
         cursor         : pointer;
         color          : #000;
         text-decoration: none;
+
+        &:hover {
+            color: #a7a7a7;
+        }
     }
 }
 
