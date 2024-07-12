@@ -5,6 +5,7 @@ import {callFetchDepartmentById} from '@/config/api'
 import styles from 'styles/client.module.scss'
 import {Col, Divider, Row, Skeleton} from 'antd'
 import Quill from 'quill'
+import 'quill/dist/quill.snow.css'
 
 const ClientDepartmentDetailPage = (props: any) => {
   const [departmentDetail, setDepartmentDetail] = useState<IDepartment | null>(
@@ -22,7 +23,7 @@ const ClientDepartmentDetailPage = (props: any) => {
         setIsLoading(true)
         const res = await callFetchDepartmentById(id)
         if (res?.data) {
-          const deltaOps = JSON.parse(res.data.description)
+          const deltaOps = JSON.parse(res.data.description || '')
           const quillHtml = () => {
             const temp = new Quill(document.createElement('div'))
             temp.setContents(deltaOps)
@@ -37,7 +38,9 @@ const ClientDepartmentDetailPage = (props: any) => {
   }, [id])
 
   return (
-    <div className={`${styles['container']} ${styles['detail-post-section']}`}>
+    <div
+      className={`${styles['container']} ${styles['detail-department-section']}`}
+    >
       {isLoading ? (
         <Skeleton />
       ) : (
@@ -46,13 +49,14 @@ const ClientDepartmentDetailPage = (props: any) => {
             <>
               <Col span={24} md={16}>
                 <div className={styles['header']}>
-                  Giới thiệu {departmentDetail.name}
+                  <span>Giới thiệu {departmentDetail.name}</span>
                 </div>
 
                 <Divider />
                 <div
+                  className="ql-editor"
                   dangerouslySetInnerHTML={{
-                    __html: departmentDetail.description
+                    __html: departmentDetail.description ?? ''
                   }}
                 ></div>
               </Col>
