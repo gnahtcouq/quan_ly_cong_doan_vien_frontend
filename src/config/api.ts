@@ -133,7 +133,7 @@ export const callUpdateUser = (user: IUser, id: string) => {
 
 export const callUpdateUserEmail = (id: string, newEmail: string) => {
   return axios.post<IBackendRes<IUser>>(
-    `/api/v1/users/request-email-change/${id}`,
+    `/api/v1/users/request-change-email/${id}`,
     {newEmail}
   )
 }
@@ -144,7 +144,7 @@ export const callConfirmUpdateUserEmail = (
   newEmail: string
 ) => {
   return axios.post<IBackendRes<IUser>>(
-    `/api/v1/users/confirm-email-change/${id}`,
+    `/api/v1/users/confirm-change-email/${id}`,
     {verificationCode, newEmail}
   )
 }
