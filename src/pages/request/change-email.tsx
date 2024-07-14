@@ -6,7 +6,7 @@ import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {callConfirmUpdateUserEmail, callFetchUserById} from '@/config/api'
 import {updateUserInfo} from '@/redux/slice/accountSlide'
 
-const ConfirmEmailChange = (props: any) => {
+const ConfirmChangeEmail = (props: any) => {
   const [verificationExpires, setVerificationExpires] = useState<string | null>(
     null
   )
@@ -135,4 +135,4 @@ const ConfirmEmailChange = (props: any) => {
     </Spin>
   )
 }
-export default ConfirmEmailChange
+export default ConfirmChangeEmail

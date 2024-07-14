@@ -32,7 +32,7 @@ import ClientPostPage from './pages/post'
 import ClientPostDetailPage from './pages/post/detail'
 import ClientDepartmentPage from './pages/department'
 import ClientDepartmentDetailPage from './pages/department/detail'
-import ConfirmEmailChange from '@/pages/request/email-change'
+import ConfirmChangeEmail from '@/pages/request/change-email'
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -84,7 +84,7 @@ export default function App() {
         {path: 'post/:id', element: <ClientPostDetailPage />},
         {path: 'department', element: <ClientDepartmentPage />},
         {path: 'department/:id', element: <ClientDepartmentDetailPage />},
-        {path: 'confirm-email-change/:id', element: <ConfirmEmailChange />}
+        {path: 'confirm-change-email/:id', element: <ConfirmChangeEmail />}
       ]
     },
 
