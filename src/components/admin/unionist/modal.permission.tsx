@@ -1,8 +1,8 @@
 import {FooterToolbar, ModalForm, ProCard} from '@ant-design/pro-components'
 import {Col, Form, Row, message, notification} from 'antd'
 import {isMobile} from 'react-device-detect'
-import {callFetchPermission, callUpdateUserPermissions} from '@/config/api'
-import {IPermission, IUser} from '@/types/backend'
+import {callFetchPermission, callUpdateUnionistPermissions} from '@/config/api'
+import {IPermission, IUnionist} from '@/types/backend'
 import {EditOutlined} from '@ant-design/icons'
 import ModuleApi from '../permission/module.api'
 import {useState, useEffect} from 'react'
@@ -11,7 +11,7 @@ import _ from 'lodash'
 interface IProps {
   openModal: boolean
   setOpenModal: (v: boolean) => void
-  dataInit?: IUser | null
+  dataInit?: IUnionist | null
   setDataInit: (v: any) => void
   reloadTable: () => void
 }
@@ -49,7 +49,7 @@ const ModalPermission = (props: IProps) => {
 
   useEffect(() => {
     if (listPermissions?.length && dataInit?._id) {
-      const userPermissions = listPermissions.map((listItem) => {
+      const unionistPermissions = listPermissions.map((listItem) => {
         const matchedPermissions = dataInit.permissions.filter((permissionId) =>
           listItem.permissions.some(
             (permission) => (permission as IPermission)._id === permissionId
@@ -61,7 +61,7 @@ const ModalPermission = (props: IProps) => {
       setTimeout(() => {
         listPermissions.forEach((x) => {
           let allCheck = true
-          const temp = userPermissions.find((z) => z.module === x.module)
+          const temp = unionistPermissions.find((z) => z.module === x.module)
 
           x.permissions?.forEach((y) => {
             const isExist = temp?.permissions?.includes(y._id as string)
@@ -94,7 +94,7 @@ const ModalPermission = (props: IProps) => {
       const permissions = {
         permissions: checkedPermissions
       }
-      const res = await callUpdateUserPermissions(
+      const res = await callUpdateUnionistPermissions(
         permissions as any,
         dataInit._id
       )
@@ -153,7 +153,7 @@ const ModalPermission = (props: IProps) => {
           <Col span={24}>
             <ProCard
               title="Quyền hạn"
-              subTitle="Các quyền hạn được phép cho thành viên này"
+              subTitle="Các quyền hạn được phép cho công đoàn viên này"
               headStyle={{color: '#d81921'}}
               style={{marginBottom: 20}}
               headerBordered

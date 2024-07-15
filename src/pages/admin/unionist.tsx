@@ -3,6 +3,7 @@ import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {fetchUnionist} from '@/redux/slice/unionistSlide'
 import {IUnionist} from '@/types/backend'
 import {
+  ApiOutlined,
   CopyOutlined,
   DeleteOutlined,
   EditOutlined,
@@ -18,9 +19,12 @@ import ModalUnionist from '@/components/admin/unionist/modal.unionist'
 import ViewDetailUnionist from '@/components/admin/unionist/view.unionist'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
+import ModalPermission from '@/components/admin/unionist/modal.permission'
 
 const UnionistPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
+  const [openModalPermissions, setOpenModalPermissions] =
+    useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IUnionist | null>(null)
   const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
 
@@ -161,6 +165,20 @@ const UnionistPage = () => {
               />
             </Popconfirm>
           </Access>
+
+          <Access permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE} hideChildren>
+            <ApiOutlined
+              style={{
+                fontSize: 20,
+                color: '#85b970'
+              }}
+              type=""
+              onClick={() => {
+                setOpenModalPermissions(true)
+                setDataInit(entity)
+              }}
+            />
+          </Access>
         </Space>
       )
     }
@@ -245,6 +263,13 @@ const UnionistPage = () => {
       <ModalUnionist
         openModal={openModal}
         setOpenModal={setOpenModal}
+        reloadTable={reloadTable}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+      />
+      <ModalPermission
+        openModal={openModalPermissions}
+        setOpenModal={setOpenModalPermissions}
         reloadTable={reloadTable}
         dataInit={dataInit}
         setDataInit={setDataInit}

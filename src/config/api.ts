@@ -193,6 +193,42 @@ export const callUpdateUnionist = (unionist: IUnionist, id: string) => {
   })
 }
 
+export const callUpdateUnionistPermissions = (user: IUnionist, id: string) => {
+  return axios.put<IBackendRes<IUnionist>>(`/api/v1/unionists/${id}`, {...user})
+}
+
+export const callUpdateUnionistEmail = (id: string, newEmail: string) => {
+  return axios.post<IBackendRes<IUnionist>>(
+    `/api/v1/unionists/request-change-email/${id}`,
+    {newEmail}
+  )
+}
+
+export const callConfirmUpdateUnionistEmail = (
+  id: string,
+  verificationCode: string,
+  newEmail: string
+) => {
+  return axios.post<IBackendRes<IUnionist>>(
+    `/api/v1/unionists/confirm-change-email/${id}`,
+    {verificationCode, newEmail}
+  )
+}
+
+export const callUpdateUnionistPassword = (
+  id: string,
+  currentPassword: string,
+  newPassword: string
+) => {
+  return axios.post<IBackendRes<IUnionist>>(
+    `/api/v1/unionists/change-password/${id}`,
+    {
+      currentPassword,
+      newPassword
+    }
+  )
+}
+
 export const callDeleteUnionist = (id: string) => {
   return axios.delete<IBackendRes<IUnionist>>(`/api/v1/unionists/${id}`)
 }
@@ -201,6 +237,10 @@ export const callFetchUnionist = (query: string) => {
   return axios.get<IBackendRes<IModelPaginate<IUnionist>>>(
     `/api/v1/unionists?${query}`
   )
+}
+
+export const callFetchUnionistById = (id: string) => {
+  return axios.get<IBackendRes<IUnionist>>(`/api/v1/unionists/${id}`)
 }
 
 export const callFetchNumberOfUnionists = () => {
