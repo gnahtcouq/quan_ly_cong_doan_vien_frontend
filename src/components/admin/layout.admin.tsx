@@ -216,7 +216,7 @@ const LayoutAdmin = () => {
             onCollapse={(value) => setCollapsed(value)}
           >
             <div className={styles['admin-logo']}>
-              <img src={logo} alt="Logo" onClick={() => navigate('/')} />
+              <img src={logo} alt="Logo" onClick={() => navigate('/admin')} />
             </div>
             <Menu
               selectedKeys={[activeMenu]}
