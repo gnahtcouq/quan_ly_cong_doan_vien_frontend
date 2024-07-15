@@ -20,7 +20,6 @@ import DashboardPage from './pages/admin/dashboard'
 import DepartmentPage from './pages/admin/department'
 import PermissionPage from './pages/admin/permission'
 import DocumentPage from './pages/admin/document'
-import RolePage from './pages/admin/role'
 import UserPage from './pages/admin/user'
 import UnionistPage from './pages/admin/unionist'
 import {fetchAccount} from './redux/slice/accountSlide'
@@ -92,7 +91,7 @@ export default function App() {
       path: '/admin',
       element: (
         <LayoutApp>
-          <LayoutAdmin />{' '}
+          <LayoutAdmin />
         </LayoutApp>
       ),
       errorElement: <NotFound />,
@@ -176,14 +175,6 @@ export default function App() {
           element: (
             <ProtectedRoute>
               <PermissionPage />
-            </ProtectedRoute>
-          )
-        },
-        {
-          path: 'role',
-          element: (
-            <ProtectedRoute>
-              <RolePage />
             </ProtectedRoute>
           )
         }

@@ -41,10 +41,6 @@ const ViewDetailUser = (props: IProps) => {
             {dataInit?.CCCD ?? ''}
           </Descriptions.Item>
 
-          <Descriptions.Item label="Vai trò">
-            <Badge status="processing" text={<>{dataInit?.role?.name}</>} />
-          </Descriptions.Item>
-
           <Descriptions.Item label="Giới Tính">
             {(() => {
               switch (dataInit?.gender) {
@@ -62,7 +58,7 @@ const ViewDetailUser = (props: IProps) => {
             {dataInit?.address ?? ''}
           </Descriptions.Item>
 
-          <Descriptions.Item label="Ghi chú">
+          <Descriptions.Item label="Ghi chú" span={2}>
             {dataInit?.note ?? ''}
           </Descriptions.Item>
 

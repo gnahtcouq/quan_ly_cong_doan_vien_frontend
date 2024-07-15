@@ -3,13 +3,16 @@ import {useAppSelector} from '@/redux/hooks'
 import NotPermitted from './not-permitted'
 import Loading from '../loading'
 
-const RoleBaseRoute = (props: any) => {
+const PermissionBaseRoute = (props: any) => {
   const user = useAppSelector((state) => state.account.user)
-  const unionist = useAppSelector((state) => state.account.unionist)
-  const userRole = user.role.name
-  const unionistRole = unionist.role.name
+  // const unionist = useAppSelector((state) => state.account.unionist)
+  const userPermission = user.permissions[0].method
+  // const unionistPermission = unionist.permissions[0].method
 
-  if (userRole !== 'NORMAL_USER' || unionistRole !== 'NORMAL_USER') {
+  if (
+    userPermission === 'ACCESS_TO_ADMIN_PAGE'
+    // unionistPermission !== 'ACCESS_TO_ADMIN_PAGE'
+  ) {
     return <>{props.children}</>
   } else {
     return <NotPermitted />
@@ -30,7 +33,7 @@ const ProtectedRoute = (props: any) => {
         <>
           {isAuthenticated === true ? (
             <>
-              <RoleBaseRoute>{props.children}</RoleBaseRoute>
+              <PermissionBaseRoute>{props.children}</PermissionBaseRoute>
             </>
           ) : (
             <Navigate to="/login" replace />

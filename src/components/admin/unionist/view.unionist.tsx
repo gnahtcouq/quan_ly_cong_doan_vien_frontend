@@ -49,10 +49,6 @@ const ViewDetailUnionist = (props: IProps) => {
             })()}
           </Descriptions.Item>
 
-          <Descriptions.Item label="Vai trò">
-            <Badge status="processing" text={<>{dataInit?.role?.name}</>} />
-          </Descriptions.Item>
-
           <Descriptions.Item label="Căn cước công dân">
             {dataInit?.CCCD ?? ''}
           </Descriptions.Item>
@@ -63,10 +59,6 @@ const ViewDetailUnionist = (props: IProps) => {
 
           <Descriptions.Item label="Địa chỉ">
             {dataInit?.address ?? ''}
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Ghi chú">
-            {dataInit?.note ?? ''}
           </Descriptions.Item>
 
           <Descriptions.Item label="Ngày vào công đoàn">
@@ -85,6 +77,10 @@ const ViewDetailUnionist = (props: IProps) => {
             {dataInit && dataInit.leavingDate
               ? dayjs(dataInit.leavingDate).format('DD/MM/YYYY')
               : ''}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Ghi chú" span={2}>
+            {dataInit?.note ?? ''}
           </Descriptions.Item>
 
           <Descriptions.Item label="Ngày tạo">

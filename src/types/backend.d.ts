@@ -21,10 +21,6 @@ export interface IAccount {
     _id: string
     email: string
     name: string
-    role: {
-      _id: string
-      name: string
-    }
     permissions: {
       _id: string
       name: string
@@ -37,10 +33,6 @@ export interface IAccount {
     _id: string
     email: string
     name: string
-    role: {
-      _id: string
-      name: string
-    }
     permissions: {
       _id: string
       name: string
@@ -75,10 +67,7 @@ export interface IUser {
   address: string
   CCCD?: string
   note?: string
-  role?: {
-    _id: string
-    name: string
-  }
+  permissions: IPermission[] | string[]
   verificationCode?: string
   verificationExpires?: string
   createdBy?: string
@@ -101,10 +90,7 @@ export interface IUnionist {
   leavingDate?: string
   unionEntryDate?: string
   note?: string
-  role?: {
-    _id: string
-    name: string
-  }
+  permissions: IPermission[] | string[]
   department?: {
     _id: string
     name: string
@@ -121,8 +107,6 @@ export interface IPost {
   name: string
   threads: string[]
   description: string
-  // startDate: Date
-  // endDate: Date
   isActive: boolean
 
   createdBy?: string
@@ -164,21 +148,6 @@ export interface IPermission {
   createdAt?: string
   updatedAt?: string
 }
-
-export interface IRole {
-  _id?: string
-  name: string
-  description: string
-  isActive: boolean
-  permissions: IPermission[] | string[]
-
-  createdBy?: string
-  isDeleted?: boolean
-  deletedAt?: boolean | null
-  createdAt?: string
-  updatedAt?: string
-}
-
 export interface ISubscribers {
   _id?: string
   name?: string

@@ -57,6 +57,11 @@ export const ALL_PERMISSIONS = {
       method: 'DELETE',
       apiPath: '/api/v1/permissions/:id',
       module: 'PERMISSIONS'
+    },
+    ACCESS_TO_ADMIN_PAGE: {
+      method: 'ACCESS_TO_ADMIN_PAGE',
+      apiPath: '/admin',
+      module: 'PERMISSIONS'
     }
   },
   DOCUMENTS: {
@@ -81,12 +86,6 @@ export const ALL_PERMISSIONS = {
       apiPath: '/api/v1/documents/count',
       module: 'DOCUMENTS'
     }
-  },
-  ROLES: {
-    GET_PAGINATE: {method: 'GET', apiPath: '/api/v1/roles', module: 'ROLES'},
-    CREATE: {method: 'POST', apiPath: '/api/v1/roles', module: 'ROLES'},
-    UPDATE: {method: 'PATCH', apiPath: '/api/v1/roles/:id', module: 'ROLES'},
-    DELETE: {method: 'DELETE', apiPath: '/api/v1/roles/:id', module: 'ROLES'}
   },
   USERS: {
     GET_PAGINATE: {method: 'GET', apiPath: '/api/v1/users', module: 'USERS'},
@@ -131,7 +130,6 @@ export const ALL_MODULES = {
   POSTS: 'POSTS',
   PERMISSIONS: 'PERMISSIONS',
   DOCUMENTS: 'DOCUMENTS',
-  ROLES: 'ROLES',
   USERS: 'USERS',
   UNIONISTS: 'UNIONISTS',
   SUBSCRIBERS: 'SUBSCRIBERS'

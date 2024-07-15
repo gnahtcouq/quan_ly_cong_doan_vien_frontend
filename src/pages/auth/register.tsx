@@ -87,7 +87,12 @@ const RegisterPage = () => {
                 label="Mật khẩu"
                 name="password"
                 rules={[
-                  {required: true, message: 'Mật khẩu không được để trống!'}
+                  {required: true, message: 'Vui lòng không để trống!'},
+                  {
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                    message:
+                      'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.'
+                  }
                 ]}
               >
                 <Input.Password />

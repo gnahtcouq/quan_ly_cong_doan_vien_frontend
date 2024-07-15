@@ -3,6 +3,7 @@ import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {fetchUser} from '@/redux/slice/userSlide'
 import {IUser} from '@/types/backend'
 import {
+  ApiOutlined,
   CopyOutlined,
   DeleteOutlined,
   EditOutlined,
@@ -18,9 +19,12 @@ import ModalUser from '@/components/admin/user/modal.user'
 import ViewDetailUser from '@/components/admin/user/view.user'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
+import ModalPermission from '@/components/admin/user/modal.permission'
 
 const UserPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
+  const [openModalPermissions, setOpenModalPermissions] =
+    useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IUser | null>(null)
   const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
 
@@ -153,15 +157,27 @@ const UserPage = () => {
               okText="Xác nhận"
               cancelText="Hủy"
             >
-              <span style={{cursor: 'pointer', margin: '0 10px'}}>
-                <DeleteOutlined
-                  style={{
-                    fontSize: 20,
-                    color: '#ff4d4f'
-                  }}
-                />
-              </span>
+              <DeleteOutlined
+                style={{
+                  fontSize: 20,
+                  color: '#ff4d4f'
+                }}
+              />
             </Popconfirm>
+          </Access>
+
+          <Access permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE} hideChildren>
+            <ApiOutlined
+              style={{
+                fontSize: 20,
+                color: '#85b970'
+              }}
+              type=""
+              onClick={() => {
+                setOpenModalPermissions(true)
+                setDataInit(entity)
+              }}
+            />
           </Access>
         </Space>
       )
@@ -197,7 +213,6 @@ const UserPage = () => {
     } else {
       temp = `${temp}&${sortBy}`
     }
-    temp += '&populate=role&fields=role._id, role.name'
 
     return temp
   }
@@ -248,6 +263,13 @@ const UserPage = () => {
       <ModalUser
         openModal={openModal}
         setOpenModal={setOpenModal}
+        reloadTable={reloadTable}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+      />
+      <ModalPermission
+        openModal={openModalPermissions}
+        setOpenModal={setOpenModalPermissions}
         reloadTable={reloadTable}
         dataInit={dataInit}
         setDataInit={setDataInit}

@@ -153,14 +153,12 @@ const UnionistPage = () => {
               okText="Xác nhận"
               cancelText="Hủy"
             >
-              <span style={{cursor: 'pointer', margin: '0 10px'}}>
-                <DeleteOutlined
-                  style={{
-                    fontSize: 20,
-                    color: '#ff4d4f'
-                  }}
-                />
-              </span>
+              <DeleteOutlined
+                style={{
+                  fontSize: 20,
+                  color: '#ff4d4f'
+                }}
+              />
             </Popconfirm>
           </Access>
         </Space>
@@ -197,7 +195,6 @@ const UnionistPage = () => {
     } else {
       temp = `${temp}&${sortBy}`
     }
-    temp += '&populate=role&fields=role._id, role.name'
 
     return temp
   }

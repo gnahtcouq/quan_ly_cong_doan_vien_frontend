@@ -17,13 +17,10 @@ import {useLocation, useNavigate} from 'react-router-dom'
 import {Link} from 'react-router-dom'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {callLogout} from '@/config/api'
-import {
-  fetchAccount,
-  setLogoutAction,
-  setUserLoginInfo
-} from '@/redux/slice/accountSlide'
+import {setLogoutAction} from '@/redux/slice/accountSlide'
 import ManageAccount from './modal/manage.account'
 import logo from '@/assets/logo.webp'
+import {ALL_PERMISSIONS} from '@/config/permissions'
 
 const Header = (props: any) => {
   const navigate = useNavigate()
@@ -33,6 +30,14 @@ const Header = (props: any) => {
     (state) => state.account.isAuthenticated
   )
   const user = useAppSelector((state) => state.account.user)
+  const permissions = useAppSelector((state) => state.account.user.permissions)
+  const [menuItems, setMenuItems] = useState<MenuProps['items']>([])
+
+  // Assign a value to menuItems before using it
+  if (permissions?.length) {
+    // Your logic to populate menuItems
+  }
+
   const [openMobileMenu, setOpenMobileMenu] = useState<boolean>(false)
 
   const [current, setCurrent] = useState('home')
@@ -42,7 +47,50 @@ const Header = (props: any) => {
 
   useEffect(() => {
     setCurrent(location.pathname)
-  }, [location])
+    if (permissions?.length) {
+      const accessToAdminPage = permissions.find(
+        (item) =>
+          item.apiPath ===
+            ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_ADMIN_PAGE.apiPath &&
+          item.method ===
+            ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_ADMIN_PAGE.method
+      )
+
+      const full = [
+        {
+          label: (
+            <label
+              style={{cursor: 'pointer'}}
+              onClick={() => setOpenManageAccount(true)}
+            >
+              Quản lý tài khoản
+            </label>
+          ),
+          key: 'manage-account',
+          icon: <UserOutlined onClick={() => setOpenManageAccount(true)} />
+        },
+        ...(accessToAdminPage
+          ? [
+              {
+                label: <Link to={'/admin'}>Trang quản trị</Link>,
+                key: 'admin',
+                icon: <SettingOutlined />
+              }
+            ]
+          : []),
+        {
+          label: (
+            <label style={{cursor: 'pointer'}} onClick={() => handleLogout()}>
+              Đăng xuất
+            </label>
+          ),
+          key: 'logout',
+          icon: <LogoutOutlined onClick={() => handleLogout()} />
+        }
+      ]
+      setMenuItems(full)
+    }
+  }, [location, permissions])
 
   const items: MenuProps['items'] = [
     {
@@ -90,36 +138,7 @@ const Header = (props: any) => {
     }
   }
 
-  const itemsDropdown = [
-    {
-      label: (
-        <label
-          style={{cursor: 'pointer'}}
-          onClick={() => setOpenManageAccount(true)}
-        >
-          Quản lý tài khoản
-        </label>
-      ),
-      key: 'manage-account',
-      icon: <UserOutlined onClick={() => setOpenManageAccount(true)} />
-    },
-    {
-      label: <Link to={'/admin'}>Trang quản trị</Link>,
-      key: 'admin',
-      icon: <SettingOutlined />
-    },
-    {
-      label: (
-        <label style={{cursor: 'pointer'}} onClick={() => handleLogout()}>
-          Đăng xuất
-        </label>
-      ),
-      key: 'logout',
-      icon: <LogoutOutlined onClick={() => handleLogout()} />
-    }
-  ]
-
-  const itemsMobiles = [...itemsWithIcons, ...itemsDropdown]
+  const itemsMobiles = [...itemsWithIcons, ...(menuItems ?? [])]
 
   return (
     <>
@@ -160,7 +179,7 @@ const Header = (props: any) => {
                       <span>Đăng Nhập</span>
                     </Link>
                   ) : (
-                    <Dropdown menu={{items: itemsDropdown}} trigger={['click']}>
+                    <Dropdown menu={{items: menuItems}} trigger={['click']}>
                       <Space>
                         <MenuOutlined className={styles['icon-menu']} />
                       </Space>

@@ -170,8 +170,16 @@ const UserUpdateInfo = (props: any) => {
   }, [user._id])
 
   const onFinish = async (values: any) => {
-    const {name, email, password, dateOfBirth, gender, address, CCCD, role} =
-      values
+    const {
+      name,
+      email,
+      password,
+      dateOfBirth,
+      gender,
+      address,
+      CCCD,
+      permissions
+    } = values
 
     if (dataInit?._id) {
       // Nếu có thay đổi email, gửi yêu cầu thay đổi email qua API trước
@@ -201,7 +209,7 @@ const UserUpdateInfo = (props: any) => {
         gender,
         address,
         CCCD: CCCD ? CCCD : null,
-        role: role ? role.value : dataInit.role?._id // Giữ nguyên vai trò nếu đã có
+        permissions: dataInit.permissions
       }
 
       // Gửi yêu cầu cập nhật thông tin người dùng

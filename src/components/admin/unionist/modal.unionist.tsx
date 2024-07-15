@@ -19,7 +19,6 @@ import {useState, useEffect} from 'react'
 import {
   callCreateUnionist,
   callFetchDepartment,
-  callFetchRole,
   callUpdateUnionist
 } from '@/config/api'
 import {IUnionist} from '@/types/backend'
@@ -35,12 +34,6 @@ interface IProps {
   reloadTable: () => void
 }
 
-export interface IRoleSelect {
-  label: string
-  value: string
-  key?: string
-}
-
 export interface IDepartmentSelect {
   label: string
   value: string
@@ -50,8 +43,6 @@ export interface IDepartmentSelect {
 const ModalUnionist = (props: IProps) => {
   const {openModal, setOpenModal, reloadTable, dataInit, setDataInit} = props
   const [departments, setDepartments] = useState<IDepartmentSelect[]>([])
-  const [roles, setRoles] = useState<IRoleSelect[]>([])
-
   const [form] = Form.useForm()
 
   useEffect(() => {
@@ -62,15 +53,6 @@ const ModalUnionist = (props: IProps) => {
             label: dataInit.department?.name,
             value: dataInit.department?._id,
             key: dataInit.department?._id
-          }
-        ])
-      }
-      if (dataInit.role) {
-        setRoles([
-          {
-            label: dataInit.role?.name,
-            value: dataInit.role?._id,
-            key: dataInit.role?._id
           }
         ])
       }
@@ -90,7 +72,7 @@ const ModalUnionist = (props: IProps) => {
       leavingDate,
       unionEntryDate,
       note,
-      role,
+      permissions,
       department
     } = valuesForm
     if (dataInit?._id) {
@@ -108,7 +90,7 @@ const ModalUnionist = (props: IProps) => {
         leavingDate: leavingDate ? leavingDate.toISOString() : null,
         unionEntryDate: unionEntryDate ? unionEntryDate.toISOString() : null,
         note,
-        role: role ? role.value : dataInit.role?._id, // Giữ nguyên vai trò nếu đã có
+        permissions: dataInit.permissions,
         department:
           department && department.value
             ? {
@@ -146,7 +128,7 @@ const ModalUnionist = (props: IProps) => {
         leavingDate,
         unionEntryDate,
         note,
-        role: role.value,
+        permissions,
         department: {
           _id: department.value,
           name: department.label
@@ -170,7 +152,6 @@ const ModalUnionist = (props: IProps) => {
     form.resetFields()
     setDataInit(null)
     setDepartments([])
-    setRoles([])
     setOpenModal(false)
   }
 
@@ -181,20 +162,6 @@ const ModalUnionist = (props: IProps) => {
     const res = await callFetchDepartment(
       `current=1&pageSize=100&name=/${name}/i`
     )
-    if (res && res.data) {
-      const list = res.data.result
-      const temp = list.map((item) => {
-        return {
-          label: item.name as string,
-          value: item._id as string
-        }
-      })
-      return temp
-    } else return []
-  }
-
-  async function fetchRoleList(name: string): Promise<IRoleSelect[]> {
-    const res = await callFetchRole(`current=1&pageSize=100&name=/${name}/i`)
     if (res && res.data) {
       const list = res.data.result
       const temp = list.map((item) => {
@@ -270,6 +237,11 @@ const ModalUnionist = (props: IProps) => {
                   {
                     required: dataInit?._id ? false : true,
                     message: 'Vui lòng không để trống!'
+                  },
+                  {
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                    message:
+                      'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.'
                   }
                 ]}
                 placeholder="Nhập mật khẩu"
@@ -314,55 +286,7 @@ const ModalUnionist = (props: IProps) => {
                 <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
               </ProForm.Item>
             </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormText
-                label="Căn cước công dân"
-                name="CCCD"
-                rules={[{required: false}]}
-                placeholder="Nhập căn cước công dân"
-              />
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProForm.Item
-                name="role"
-                label="Vai trò"
-                rules={[{required: true, message: 'Vui lòng chọn vai trò!'}]}
-              >
-                <DebounceSelect
-                  allowClear
-                  showSearch
-                  defaultValue={roles}
-                  value={roles}
-                  placeholder="Chọn vai trò"
-                  fetchOptions={fetchRoleList}
-                  onChange={(newValue: any) => {
-                    if (newValue?.length === 0 || newValue?.length === 1) {
-                      setRoles(newValue as IRoleSelect[])
-                    }
-                  }}
-                  style={{width: '100%'}}
-                />
-              </ProForm.Item>
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProForm.Item
-                label="Ngày chuyển đến"
-                name="joiningDate"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-              >
-                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
-              </ProForm.Item>
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProForm.Item
-                label="Ngày chuyển đi"
-                name="leavingDate"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-              >
-                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
-              </ProForm.Item>
-            </Col>
-            <Col lg={12} md={12} sm={24} xs={24}>
+            <Col lg={6} md={12} sm={24} xs={24}>
               <ProForm.Item
                 name="department"
                 label="Thuộc đơn vị"
@@ -384,6 +308,32 @@ const ModalUnionist = (props: IProps) => {
                 />
               </ProForm.Item>
             </Col>
+            <Col lg={6} md={6} sm={24} xs={24}>
+              <ProFormText
+                label="Căn cước công dân"
+                name="CCCD"
+                rules={[{required: false}]}
+                placeholder="Nhập căn cước công dân"
+              />
+            </Col>
+            <Col lg={6} md={6} sm={24} xs={24}>
+              <ProForm.Item
+                label="Ngày chuyển đến"
+                name="joiningDate"
+                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+              >
+                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+              </ProForm.Item>
+            </Col>
+            <Col lg={6} md={6} sm={24} xs={24}>
+              <ProForm.Item
+                label="Ngày chuyển đi"
+                name="leavingDate"
+                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+              >
+                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+              </ProForm.Item>
+            </Col>
             <Col lg={12} md={12} sm={24} xs={24}>
               <ProFormText
                 label="Địa chỉ"
@@ -392,7 +342,7 @@ const ModalUnionist = (props: IProps) => {
                 placeholder="Nhập địa chỉ"
               />
             </Col>
-            <Col lg={24} md={24} sm={24} xs={24}>
+            <Col lg={12} md={24} sm={24} xs={24}>
               <ProFormText
                 label="Ghi chú"
                 name="note"

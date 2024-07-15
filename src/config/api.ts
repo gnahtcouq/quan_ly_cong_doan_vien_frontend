@@ -9,7 +9,6 @@ import {
   IPost,
   IDocument,
   IPermission,
-  IRole,
   ISubscribers
 } from '@/types/backend'
 import axios from 'config/axios-customize'
@@ -129,6 +128,10 @@ export const callCreateUser = (user: IUser) => {
 
 export const callUpdateUser = (user: IUser, id: string) => {
   return axios.patch<IBackendRes<IUser>>(`/api/v1/users/${id}`, {...user})
+}
+
+export const callUpdateUserPermissions = (user: IUser, id: string) => {
+  return axios.put<IBackendRes<IUser>>(`/api/v1/users/${id}`, {...user})
 }
 
 export const callUpdateUserEmail = (id: string, newEmail: string) => {
@@ -310,30 +313,6 @@ export const callFetchPermission = (query: string) => {
 
 export const callFetchPermissionById = (id: string) => {
   return axios.get<IBackendRes<IPermission>>(`/api/v1/permissions/${id}`)
-}
-
-/**
- * 
-Module Role
- */
-export const callCreateRole = (role: IRole) => {
-  return axios.post<IBackendRes<IRole>>('/api/v1/roles', {...role})
-}
-
-export const callUpdateRole = (role: IRole, id: string) => {
-  return axios.patch<IBackendRes<IRole>>(`/api/v1/roles/${id}`, {...role})
-}
-
-export const callDeleteRole = (id: string) => {
-  return axios.delete<IBackendRes<IRole>>(`/api/v1/roles/${id}`)
-}
-
-export const callFetchRole = (query: string) => {
-  return axios.get<IBackendRes<IModelPaginate<IRole>>>(`/api/v1/roles?${query}`)
-}
-
-export const callFetchRoleById = (id: string) => {
-  return axios.get<IBackendRes<IRole>>(`/api/v1/roles/${id}`)
 }
 
 /**

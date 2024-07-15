@@ -44,6 +44,14 @@ const LayoutAdmin = () => {
 
   useEffect(() => {
     if (permissions?.length) {
+      const viewDashboard = permissions.find(
+        (item) =>
+          item.apiPath ===
+            ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_ADMIN_PAGE.apiPath &&
+          item.method ===
+            ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_ADMIN_PAGE.method
+      )
+
       const viewDepartment = permissions.find(
         (item) =>
           item.apiPath === ALL_PERMISSIONS.DEPARTMENTS.GET_PAGINATE.apiPath &&
@@ -74,12 +82,6 @@ const LayoutAdmin = () => {
           item.method === ALL_PERMISSIONS.DOCUMENTS.GET_PAGINATE.method
       )
 
-      const viewRole = permissions.find(
-        (item) =>
-          item.apiPath === ALL_PERMISSIONS.ROLES.GET_PAGINATE.apiPath &&
-          item.method === ALL_PERMISSIONS.ROLES.GET_PAGINATE.method
-      )
-
       const viewPermission = permissions.find(
         (item) =>
           item.apiPath === ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATE.apiPath &&
@@ -87,11 +89,16 @@ const LayoutAdmin = () => {
       )
 
       const full = [
-        {
-          label: <Link to="/admin">Tổng quan</Link>,
-          key: '/admin',
-          icon: <AppstoreOutlined />
-        },
+        ...(viewDashboard
+          ? [
+              {
+                label: <Link to="/admin">Tổng quan</Link>,
+                key: '/admin',
+                icon: <AppstoreOutlined />
+              }
+            ]
+          : []),
+
         ...(viewDepartment
           ? [
               {
@@ -148,16 +155,6 @@ const LayoutAdmin = () => {
                 label: <Link to="/admin/permission">Quyền hạn</Link>,
                 key: '/admin/permission',
                 icon: <ApiOutlined />
-              }
-            ]
-          : []),
-
-        ...(viewRole
-          ? [
-              {
-                label: <Link to="/admin/role">Vai trò</Link>,
-                key: '/admin/role',
-                icon: <ExceptionOutlined />
               }
             ]
           : [])

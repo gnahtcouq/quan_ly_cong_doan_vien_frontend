@@ -6,7 +6,6 @@ import unionistReducer from './slice/unionistSlide'
 import postReducer from './slice/postSlide'
 import documentReducer from './slice/documentSlide'
 import permissionReducer from './slice/permissionSlide'
-import roleReducer from './slice/roleSlide'
 
 export const store = configureStore({
   reducer: {
@@ -16,8 +15,7 @@ export const store = configureStore({
     unionist: unionistReducer,
     post: postReducer,
     document: documentReducer,
-    permission: permissionReducer,
-    role: roleReducer
+    permission: permissionReducer
   }
 })
 
