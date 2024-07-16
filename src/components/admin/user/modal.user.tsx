@@ -14,10 +14,8 @@ import {
   notification
 } from 'antd'
 import {isMobile} from 'react-device-detect'
-import {useState, useEffect} from 'react'
 import {callCreateUser, callUpdateUser} from '@/config/api'
 import {IUser} from '@/types/backend'
-import {DebounceSelect} from './debouce.select'
 import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
 
@@ -201,14 +199,24 @@ const ModalUser = (props: IProps) => {
                 normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
               >
-                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  placeholder="dd/mm/yyyy"
+                  style={{width: '100%'}}
+                />
               </ProForm.Item>
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
               <ProFormText
                 label="Căn cước công dân"
                 name="CCCD"
-                rules={[{required: false}]}
+                rules={[
+                  {
+                    required: false,
+                    pattern: /^[0-9]{9,12}$/,
+                    message: 'Vui lòng nhập CCCD hợp lệ!'
+                  }
+                ]}
                 placeholder="Nhập căn cước công dân"
               />
             </Col>

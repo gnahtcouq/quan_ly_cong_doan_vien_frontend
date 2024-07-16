@@ -9,7 +9,10 @@ import {
   IPost,
   IDocument,
   IPermission,
-  ISubscribers
+  ISubscribers,
+  IFee,
+  IReceipt,
+  IIncomeCategory
 } from '@/types/backend'
 import axios from 'config/axios-customize'
 
@@ -385,4 +388,102 @@ export const callFetchSubscriber = (query: string) => {
 
 export const callFetchSubscriberById = (id: string) => {
   return axios.get<IBackendRes<ISubscribers>>(`/api/v1/subscribers/${id}`)
+}
+
+/**
+ * 
+Module Fees
+ */
+export const callCreateFee = (fee: IFee) => {
+  return axios.post<IBackendRes<IFee>>('/api/v1/fees', {
+    ...fee
+  })
+}
+
+export const callUpdateFee = (fee: IFee, id: string) => {
+  return axios.patch<IBackendRes<IFee>>(`/api/v1/fees/${id}`, {
+    ...fee
+  })
+}
+
+export const callDeleteFee = (id: string) => {
+  return axios.delete<IBackendRes<IFee>>(`/api/v1/fees/${id}`)
+}
+
+export const callFetchFee = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IFee>>>(`/api/v1/fees?${query}`)
+}
+
+export const callFetchFeeById = (id: string) => {
+  return axios.get<IBackendRes<IFee>>(`/api/v1/fees/${id}`)
+}
+
+/**
+ * 
+Module Receipts
+ */
+export const callCreateReceipt = (receipt: IReceipt) => {
+  return axios.post<IBackendRes<IReceipt>>('/api/v1/receipts', {
+    ...receipt
+  })
+}
+
+export const callUpdateReceipt = (receipt: IReceipt, id: string) => {
+  return axios.patch<IBackendRes<IReceipt>>(`/api/v1/receipts/${id}`, {
+    ...receipt
+  })
+}
+
+export const callDeleteReceipt = (id: string) => {
+  return axios.delete<IBackendRes<IReceipt>>(`/api/v1/receipts/${id}`)
+}
+
+export const callFetchReceipt = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IReceipt>>>(
+    `/api/v1/receipts?${query}`
+  )
+}
+
+export const callFetchReceiptById = (id: string) => {
+  return axios.get<IBackendRes<IReceipt>>(`/api/v1/receipts/${id}`)
+}
+
+/**
+ * 
+Module Income Categories
+ */
+export const callCreateIncomeCategory = (incomeCategory: IIncomeCategory) => {
+  return axios.post<IBackendRes<IIncomeCategory>>('/api/v1/income-categories', {
+    ...incomeCategory
+  })
+}
+
+export const callUpdateIncomeCategory = (
+  incomeCategory: IIncomeCategory,
+  id: string
+) => {
+  return axios.patch<IBackendRes<IIncomeCategory>>(
+    `/api/v1/income-categories/${id}`,
+    {
+      ...incomeCategory
+    }
+  )
+}
+
+export const callDeleteIncomeCategory = (id: string) => {
+  return axios.delete<IBackendRes<IIncomeCategory>>(
+    `/api/v1/income-categories/${id}`
+  )
+}
+
+export const callFetchIncomeCategory = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IIncomeCategory>>>(
+    `/api/v1/income-categories?${query}`
+  )
+}
+
+export const callFetchIncomeCategoryById = (id: string) => {
+  return axios.get<IBackendRes<IIncomeCategory>>(
+    `/api/v1/income-categories/${id}`
+  )
 }

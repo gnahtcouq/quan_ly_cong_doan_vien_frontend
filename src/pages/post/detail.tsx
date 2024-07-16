@@ -10,7 +10,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import en_US from 'antd/locale/en_US'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
-import logo_sv from '@/assets/logo-sv.png'
+import logo_cd from '@/assets/logo-cd.png'
 
 dayjs.extend(relativeTime)
 dayjs.locale('en')
@@ -83,8 +83,8 @@ const ClientPostDetailPage = (props: any) => {
                   <div className={styles['department']}>
                     <div>
                       <img
-                        alt="logo_sv"
-                        src={logo_sv}
+                        alt="logo_cd"
+                        src={logo_cd}
                         style={{
                           height: 250,
                           width: '100%',

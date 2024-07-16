@@ -125,7 +125,7 @@ export interface IDocument {
   status: string
   history?: {
     status: string
-    updatedAt: Date
+    updatedAt: string
     updatedBy: {_id: string; email: string}
   }[]
   createdBy?: string
@@ -153,6 +153,53 @@ export interface ISubscribers {
   name?: string
   email?: string
   threads: string[]
+  createdBy?: string
+  isDeleted?: boolean
+  deletedAt?: boolean | null
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface IFee {
+  _id?: string
+  unionist?: {
+    _id: string
+    name: string
+  }
+  monthYear?: string
+  fee?: string
+  createdBy?: string
+  isDeleted?: boolean
+  deletedAt?: boolean | null
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface IReceipt {
+  _id?: string
+  user?: {
+    _id: string
+    name: string
+  }
+  description?: string
+  time?: string
+  amount?: string
+  incomeCategory?: {
+    _id: string
+    description: string
+  }
+  createdBy?: string
+  isDeleted?: boolean
+  deletedAt?: boolean | null
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface IIncomeCategory {
+  _id?: string
+  description?: string
+  budget?: string
+  year?: string
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null

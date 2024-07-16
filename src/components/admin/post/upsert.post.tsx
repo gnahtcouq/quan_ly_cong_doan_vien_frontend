@@ -11,12 +11,9 @@ import {
   notification
 } from 'antd'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
-import {DebounceSelect} from '../user/debouce.select'
 import {
   FooterToolbar,
   ProForm,
-  ProFormDatePicker,
-  ProFormSelect,
   ProFormSwitch,
   ProFormText
 } from '@ant-design/pro-components'

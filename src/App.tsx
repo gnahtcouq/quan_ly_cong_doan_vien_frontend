@@ -32,6 +32,9 @@ import ClientPostDetailPage from './pages/post/detail'
 import ClientDepartmentPage from './pages/department'
 import ClientDepartmentDetailPage from './pages/department/detail'
 import ConfirmChangeEmail from '@/pages/request/change-email'
+import FeePage from '@/pages/admin/fee'
+import ReceiptPage from '@/pages/admin/receipt'
+import IncomeCategoryPage from '@/pages/admin/incomeCategory'
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -138,6 +141,30 @@ export default function App() {
           element: (
             <ProtectedRoute>
               <UnionistPage />
+            </ProtectedRoute>
+          )
+        },
+        {
+          path: 'fee',
+          element: (
+            <ProtectedRoute>
+              <FeePage />
+            </ProtectedRoute>
+          )
+        },
+        {
+          path: 'receipt',
+          element: (
+            <ProtectedRoute>
+              <ReceiptPage />
+            </ProtectedRoute>
+          )
+        },
+        {
+          path: 'income-category',
+          element: (
+            <ProtectedRoute>
+              <IncomeCategoryPage />
             </ProtectedRoute>
           )
         },

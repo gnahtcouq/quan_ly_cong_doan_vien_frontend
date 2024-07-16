@@ -8,7 +8,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import styles from 'styles/client.module.scss'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import logo_sv from '@/assets/logo-sv.png'
+import logo_cd from '@/assets/logo-cd.png'
 
 dayjs.extend(relativeTime)
 
@@ -115,7 +115,7 @@ const PostCard = (props: IProps) => {
                   >
                     <div className={styles['card-post-content']}>
                       <div className={styles['card-post-left']}>
-                        <img alt="logo_sv" src={logo_sv} />
+                        <img alt="logo_cd" src={logo_cd} />
                       </div>
                       <div className={styles['card-post-right']}>
                         <div className={styles['post-title']}>

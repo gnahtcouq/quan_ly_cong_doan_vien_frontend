@@ -83,6 +83,31 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
         margin         : 5px 15px;
         font-weight    : 600;
 
+        .additional-info {
+            flex-direction : column;
+            justify-content: center;
+            align-items    : flex-start;
+            gap            : 5px;
+            margin-right   : 20px;
+
+            .text-1 {
+                font-size  : 20px;
+                font-weight: bold;
+                color      : navy;
+            }
+
+            .text-2 {
+                font-size  : 20px;
+                font-weight: bold;
+                color      : #005995;
+            }
+
+            .text-3 {
+                font-size: 15px;
+                color    : #950000;
+            }
+        }
+
         .extra {
             display    : flex;
             align-items: center;

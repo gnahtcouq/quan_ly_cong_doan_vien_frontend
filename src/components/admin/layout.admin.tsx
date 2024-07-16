@@ -13,7 +13,9 @@ import {
   ScheduleOutlined,
   TeamOutlined,
   HomeOutlined,
-  MenuOutlined
+  MenuOutlined,
+  DollarOutlined,
+  DatabaseOutlined
 } from '@ant-design/icons'
 import {Layout, Menu, Dropdown, Space, message, Button} from 'antd'
 import styles from '@/styles/admin.module.scss'
@@ -68,6 +70,25 @@ const LayoutAdmin = () => {
         (item) =>
           item.apiPath === ALL_PERMISSIONS.UNIONISTS.GET_PAGINATE.apiPath &&
           item.method === ALL_PERMISSIONS.UNIONISTS.GET_PAGINATE.method
+      )
+
+      const viewFee = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.FEES.GET_PAGINATE.apiPath &&
+          item.method === ALL_PERMISSIONS.FEES.GET_PAGINATE.method
+      )
+
+      const viewReceipt = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.RECEIPTS.GET_PAGINATE.apiPath &&
+          item.method === ALL_PERMISSIONS.RECEIPTS.GET_PAGINATE.method
+      )
+
+      const viewIncomeCategory = permissions.find(
+        (item) =>
+          item.apiPath ===
+            ALL_PERMISSIONS.INCOMECATEGORIES.GET_PAGINATE.apiPath &&
+          item.method === ALL_PERMISSIONS.INCOMECATEGORIES.GET_PAGINATE.method
       )
 
       const viewPost = permissions.find(
@@ -125,6 +146,36 @@ const LayoutAdmin = () => {
                 label: <Link to="/admin/unionist">Công đoàn viên</Link>,
                 key: '/admin/unionist',
                 icon: <TeamOutlined />
+              }
+            ]
+          : []),
+
+        ...(viewFee
+          ? [
+              {
+                label: <Link to="/admin/fee">Công đoàn phí</Link>,
+                key: '/admin/fee',
+                icon: <DollarOutlined />
+              }
+            ]
+          : []),
+
+        ...(viewReceipt
+          ? [
+              {
+                label: <Link to="/admin/receipt">Phiếu thu</Link>,
+                key: '/admin/receipt',
+                icon: <FileTextOutlined />
+              }
+            ]
+          : []),
+
+        ...(viewIncomeCategory
+          ? [
+              {
+                label: <Link to="/admin/income-category">Danh mục thu</Link>,
+                key: '/admin/income-category',
+                icon: <DatabaseOutlined />
               }
             ]
           : []),

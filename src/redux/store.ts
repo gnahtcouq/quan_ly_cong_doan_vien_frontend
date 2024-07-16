@@ -6,6 +6,9 @@ import unionistReducer from './slice/unionistSlide'
 import postReducer from './slice/postSlide'
 import documentReducer from './slice/documentSlide'
 import permissionReducer from './slice/permissionSlide'
+import feeReducer from './slice/feeSlide'
+import receiptReducer from './slice/receiptSlide'
+import incomeCategoryReducer from './slice/incomeCategorySlide'
 
 export const store = configureStore({
   reducer: {
@@ -15,7 +18,10 @@ export const store = configureStore({
     unionist: unionistReducer,
     post: postReducer,
     document: documentReducer,
-    permission: permissionReducer
+    permission: permissionReducer,
+    fee: feeReducer,
+    receipt: receiptReducer,
+    incomeCategory: incomeCategoryReducer
   }
 })
 

@@ -120,6 +120,79 @@ export const ALL_PERMISSIONS = {
       apiPath: '/api/v1/unionists/count',
       module: 'UNIONISTS'
     }
+  },
+  FEES: {
+    GET_PAGINATE: {
+      method: 'GET',
+      apiPath: '/api/v1/fees',
+      module: 'FEES'
+    },
+    CREATE: {method: 'POST', apiPath: '/api/v1/fees', module: 'FEES'},
+    UPDATE: {
+      method: 'PATCH',
+      apiPath: '/api/v1/fees/:id',
+      module: 'FEES'
+    },
+    DELETE: {
+      method: 'DELETE',
+      apiPath: '/api/v1/fees/:id',
+      module: 'FEES'
+    },
+    GET_NUMBER_OF_FEES: {
+      method: 'POST',
+      apiPath: '/api/v1/fees/count',
+      module: 'FEES'
+    }
+  },
+  RECEIPTS: {
+    GET_PAGINATE: {
+      method: 'GET',
+      apiPath: '/api/v1/receipts',
+      module: 'RECEIPTS'
+    },
+    CREATE: {method: 'POST', apiPath: '/api/v1/receipts', module: 'RECEIPTS'},
+    UPDATE: {
+      method: 'PATCH',
+      apiPath: '/api/v1/receipts/:id',
+      module: 'RECEIPTS'
+    },
+    DELETE: {
+      method: 'DELETE',
+      apiPath: '/api/v1/receipts/:id',
+      module: 'RECEIPTS'
+    },
+    GET_NUMBER_OF_RECEIPTS: {
+      method: 'POST',
+      apiPath: '/api/v1/receipts/count',
+      module: 'RECEIPTS'
+    }
+  },
+  INCOMECATEGORIES: {
+    GET_PAGINATE: {
+      method: 'GET',
+      apiPath: '/api/v1/income-categories',
+      module: 'INCOMECATEGORIES'
+    },
+    CREATE: {
+      method: 'POST',
+      apiPath: '/api/v1/income-categories',
+      module: 'INCOMECATEGORIES'
+    },
+    UPDATE: {
+      method: 'PATCH',
+      apiPath: '/api/v1/income-categories/:id',
+      module: 'INCOMECATEGORIES'
+    },
+    DELETE: {
+      method: 'DELETE',
+      apiPath: '/api/v1/income-categories/:id',
+      module: 'INCOMECATEGORIES'
+    },
+    GET_NUMBER_OF_INCOMECATEGORIES: {
+      method: 'POST',
+      apiPath: '/api/v1/income-categories/count',
+      module: 'INCOMECATEGORIES'
+    }
   }
 }
 
@@ -132,5 +205,8 @@ export const ALL_MODULES = {
   DOCUMENTS: 'DOCUMENTS',
   USERS: 'USERS',
   UNIONISTS: 'UNIONISTS',
-  SUBSCRIBERS: 'SUBSCRIBERS'
+  SUBSCRIBERS: 'SUBSCRIBERS',
+  FEES: 'FEES',
+  RECEIPTS: 'RECEIPTS',
+  INCOMECATEGORIES: 'INCOMECATEGORIES'
 }

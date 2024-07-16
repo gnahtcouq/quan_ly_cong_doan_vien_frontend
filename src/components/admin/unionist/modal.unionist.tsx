@@ -22,7 +22,7 @@ import {
   callUpdateUnionist
 } from '@/config/api'
 import {IUnionist} from '@/types/backend'
-import {DebounceSelect} from './debouce.select'
+import {DebounceSelect} from '@/config/debouce.select'
 import dayjs from 'dayjs'
 import en_US from 'antd/lib/locale/en_US'
 
@@ -274,7 +274,11 @@ const ModalUnionist = (props: IProps) => {
                 name="dateOfBirth"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
               >
-                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  placeholder="dd/mm/yyyy"
+                  style={{width: '100%'}}
+                />
               </ProForm.Item>
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
@@ -283,7 +287,11 @@ const ModalUnionist = (props: IProps) => {
                 name="unionEntryDate"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
               >
-                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  placeholder="dd/mm/yyyy"
+                  style={{width: '100%'}}
+                />
               </ProForm.Item>
             </Col>
             <Col lg={6} md={12} sm={24} xs={24}>
@@ -312,7 +320,13 @@ const ModalUnionist = (props: IProps) => {
               <ProFormText
                 label="Căn cước công dân"
                 name="CCCD"
-                rules={[{required: false}]}
+                rules={[
+                  {
+                    required: false,
+                    pattern: /^[0-9]{9,12}$/,
+                    message: 'Vui lòng nhập CCCD hợp lệ!'
+                  }
+                ]}
                 placeholder="Nhập căn cước công dân"
               />
             </Col>
@@ -322,7 +336,11 @@ const ModalUnionist = (props: IProps) => {
                 name="joiningDate"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
               >
-                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  placeholder="dd/mm/yyyy"
+                  style={{width: '100%'}}
+                />
               </ProForm.Item>
             </Col>
             <Col lg={6} md={6} sm={24} xs={24}>
@@ -331,7 +349,11 @@ const ModalUnionist = (props: IProps) => {
                 name="leavingDate"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
               >
-                <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  placeholder="dd/mm/yyyy"
+                  style={{width: '100%'}}
+                />
               </ProForm.Item>
             </Col>
             <Col lg={12} md={12} sm={24} xs={24}>
