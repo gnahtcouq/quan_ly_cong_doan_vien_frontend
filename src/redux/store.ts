@@ -9,6 +9,8 @@ import permissionReducer from './slice/permissionSlide'
 import feeReducer from './slice/feeSlide'
 import receiptReducer from './slice/receiptSlide'
 import incomeCategoryReducer from './slice/incomeCategorySlide'
+import expenseReducer from './slice/expenseSlide'
+import expenseCategoryReducer from './slice/expenseCategorySlide'
 
 export const store = configureStore({
   reducer: {
@@ -21,7 +23,9 @@ export const store = configureStore({
     permission: permissionReducer,
     fee: feeReducer,
     receipt: receiptReducer,
-    incomeCategory: incomeCategoryReducer
+    incomeCategory: incomeCategoryReducer,
+    expense: expenseReducer,
+    expenseCategory: expenseCategoryReducer
   }
 })
 

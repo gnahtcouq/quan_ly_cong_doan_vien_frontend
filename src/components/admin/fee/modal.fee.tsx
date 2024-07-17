@@ -207,14 +207,14 @@ const ModalFee = (props: IProps) => {
             </Col>
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProForm.Item
-                label="Số tiền (Từ 1.000đ - 1 tỷ)"
+                label="Số tiền (Từ 1.000đ - 10 tỷ)"
                 name="fee"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
               >
                 <InputNumber
                   style={{width: '100%'}}
                   min={1000}
-                  max={1000000000}
+                  max={10000000000}
                   formatter={(value) =>
                     `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                   }

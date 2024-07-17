@@ -10,15 +10,18 @@ import {
   notification
 } from 'antd'
 import {isMobile} from 'react-device-detect'
-import {callCreateIncomeCategory, callUpdateIncomeCategory} from '@/config/api'
-import {IIncomeCategory} from '@/types/backend'
+import {
+  callCreateExpenseCategory,
+  callUpdateExpenseCategory
+} from '@/config/api'
+import {IExpenseCategory} from '@/types/backend'
 import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
 
 interface IProps {
   openModal: boolean
   setOpenModal: (v: boolean) => void
-  dataInit?: IIncomeCategory | null
+  dataInit?: IExpenseCategory | null
   setDataInit: (v: any) => void
   reloadTable: () => void
 }
@@ -38,9 +41,9 @@ const ModalInComeCategory = (props: IProps) => {
         budget
       }
 
-      const res = await callUpdateIncomeCategory(receipts, dataInit._id)
+      const res = await callUpdateExpenseCategory(receipts, dataInit._id)
       if (res.data) {
-        message.success('Cập nhật danh mục thu thành công!')
+        message.success('Cập nhật danh mục chi thành công!')
         handleReset()
         reloadTable()
       } else {
@@ -56,9 +59,9 @@ const ModalInComeCategory = (props: IProps) => {
         year,
         budget
       }
-      const res = await callCreateIncomeCategory(receipts)
+      const res = await callCreateExpenseCategory(receipts)
       if (res.data) {
-        message.success('Thêm mới danh mục thu thành công!')
+        message.success('Thêm mới danh mục chi thành công!')
         handleReset()
         reloadTable()
       } else {
@@ -83,8 +86,8 @@ const ModalInComeCategory = (props: IProps) => {
           title={
             <>
               {dataInit?._id
-                ? 'Cập nhật danh mục thu'
-                : 'Thêm mới danh mục thu'}
+                ? 'Cập nhật danh mục chi'
+                : 'Thêm mới danh mục chi'}
             </>
           }
           open={openModal}

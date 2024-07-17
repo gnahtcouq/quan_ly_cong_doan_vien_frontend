@@ -12,7 +12,9 @@ import {
   ISubscribers,
   IFee,
   IReceipt,
-  IIncomeCategory
+  IIncomeCategory,
+  IExpense,
+  IExpenseCategory
 } from '@/types/backend'
 import axios from 'config/axios-customize'
 
@@ -485,5 +487,80 @@ export const callFetchIncomeCategory = (query: string) => {
 export const callFetchIncomeCategoryById = (id: string) => {
   return axios.get<IBackendRes<IIncomeCategory>>(
     `/api/v1/income-categories/${id}`
+  )
+}
+
+/**
+ * 
+Module Expenses
+ */
+export const callCreateExpense = (expense: IExpense) => {
+  return axios.post<IBackendRes<IExpense>>('/api/v1/expenses', {
+    ...expense
+  })
+}
+
+export const callUpdateExpense = (expense: IExpense, id: string) => {
+  return axios.patch<IBackendRes<IExpense>>(`/api/v1/expenses/${id}`, {
+    ...expense
+  })
+}
+
+export const callDeleteExpense = (id: string) => {
+  return axios.delete<IBackendRes<IExpense>>(`/api/v1/expenses/${id}`)
+}
+
+export const callFetchExpense = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IExpense>>>(
+    `/api/v1/expenses?${query}`
+  )
+}
+
+export const callFetchExpenseById = (id: string) => {
+  return axios.get<IBackendRes<IExpense>>(`/api/v1/expenses/${id}`)
+}
+
+/**
+ * 
+Module Expense Categories
+ */
+export const callCreateExpenseCategory = (
+  expenseCategory: IExpenseCategory
+) => {
+  return axios.post<IBackendRes<IExpenseCategory>>(
+    '/api/v1/expense-categories',
+    {
+      ...expenseCategory
+    }
+  )
+}
+
+export const callUpdateExpenseCategory = (
+  expenseCategory: IExpenseCategory,
+  id: string
+) => {
+  return axios.patch<IBackendRes<IExpenseCategory>>(
+    `/api/v1/expense-categories/${id}`,
+    {
+      ...expenseCategory
+    }
+  )
+}
+
+export const callDeleteExpenseCategory = (id: string) => {
+  return axios.delete<IBackendRes<IExpenseCategory>>(
+    `/api/v1/expense-categories/${id}`
+  )
+}
+
+export const callFetchExpenseCategory = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IExpenseCategory>>>(
+    `/api/v1/expense-categories?${query}`
+  )
+}
+
+export const callFetchExpenseCategoryById = (id: string) => {
+  return axios.get<IBackendRes<IExpenseCategory>>(
+    `/api/v1/expense-categories/${id}`
   )
 }

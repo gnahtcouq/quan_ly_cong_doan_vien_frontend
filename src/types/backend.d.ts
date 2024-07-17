@@ -206,3 +206,35 @@ export interface IIncomeCategory {
   createdAt?: string
   updatedAt?: string
 }
+
+export interface IExpense {
+  _id?: string
+  user?: {
+    _id: string
+    name: string
+  }
+  description?: string
+  time?: string
+  amount?: string
+  expenseCategory?: {
+    _id: string
+    description: string
+  }
+  createdBy?: string
+  isDeleted?: boolean
+  deletedAt?: boolean | null
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface IExpenseCategory {
+  _id?: string
+  description?: string
+  budget?: string
+  year?: string
+  createdBy?: string
+  isDeleted?: boolean
+  deletedAt?: boolean | null
+  createdAt?: string
+  updatedAt?: string
+}

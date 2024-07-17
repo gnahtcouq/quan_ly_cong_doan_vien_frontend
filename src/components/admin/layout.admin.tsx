@@ -15,7 +15,9 @@ import {
   HomeOutlined,
   MenuOutlined,
   DollarOutlined,
-  DatabaseOutlined
+  DatabaseOutlined,
+  HddOutlined,
+  ContainerOutlined
 } from '@ant-design/icons'
 import {Layout, Menu, Dropdown, Space, message, Button} from 'antd'
 import styles from '@/styles/admin.module.scss'
@@ -89,6 +91,19 @@ const LayoutAdmin = () => {
           item.apiPath ===
             ALL_PERMISSIONS.INCOMECATEGORIES.GET_PAGINATE.apiPath &&
           item.method === ALL_PERMISSIONS.INCOMECATEGORIES.GET_PAGINATE.method
+      )
+
+      const viewExpense = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.EXPENSES.GET_PAGINATE.apiPath &&
+          item.method === ALL_PERMISSIONS.EXPENSES.GET_PAGINATE.method
+      )
+
+      const viewExpenseCategory = permissions.find(
+        (item) =>
+          item.apiPath ===
+            ALL_PERMISSIONS.EXPENSECATEGORIES.GET_PAGINATE.apiPath &&
+          item.method === ALL_PERMISSIONS.EXPENSECATEGORIES.GET_PAGINATE.method
       )
 
       const viewPost = permissions.find(
@@ -176,6 +191,26 @@ const LayoutAdmin = () => {
                 label: <Link to="/admin/income-category">Danh mục thu</Link>,
                 key: '/admin/income-category',
                 icon: <DatabaseOutlined />
+              }
+            ]
+          : []),
+
+        ...(viewExpense
+          ? [
+              {
+                label: <Link to="/admin/expense">Phiếu chi</Link>,
+                key: '/admin/expense',
+                icon: <ContainerOutlined />
+              }
+            ]
+          : []),
+
+        ...(viewExpenseCategory
+          ? [
+              {
+                label: <Link to="/admin/expense-category">Danh mục chi</Link>,
+                key: '/admin/expense-category',
+                icon: <HddOutlined />
               }
             ]
           : []),

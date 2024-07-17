@@ -11,12 +11,12 @@ import {
 } from 'antd'
 import {isMobile} from 'react-device-detect'
 import {
-  callCreateReceipt,
+  callCreateExpense,
   callFetchIncomeCategory,
   callFetchUser,
-  callUpdateReceipt
+  callUpdateExpense
 } from '@/config/api'
-import {IReceipt} from '@/types/backend'
+import {IExpense} from '@/types/backend'
 import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
 import {useEffect, useState} from 'react'
@@ -25,7 +25,7 @@ import {DebounceSelect} from '@/config/debouce.select'
 interface IProps {
   openModal: boolean
   setOpenModal: (v: boolean) => void
-  dataInit?: IReceipt | null
+  dataInit?: IExpense | null
   setDataInit: (v: any) => void
   reloadTable: () => void
 }
@@ -42,10 +42,10 @@ export interface IIncomeCategorySelect {
   key?: string
 }
 
-const ModalReceipt = (props: IProps) => {
+const ModalExpense = (props: IProps) => {
   const {openModal, setOpenModal, reloadTable, dataInit, setDataInit} = props
   const [users, setUsers] = useState<IUserSelect[]>([])
-  const [incomeCategories, setIncomeCategories] = useState<
+  const [expenseCategories, setIncomeCategories] = useState<
     IIncomeCategorySelect[]
   >([])
   const [form] = Form.useForm()
@@ -61,20 +61,20 @@ const ModalReceipt = (props: IProps) => {
           }
         ])
       }
-      if (dataInit.incomeCategory) {
+      if (dataInit.expenseCategory) {
         setIncomeCategories([
           {
-            label: dataInit.incomeCategory?.description,
-            value: dataInit.incomeCategory?._id,
-            key: dataInit.incomeCategory?._id
+            label: dataInit.expenseCategory?.description,
+            value: dataInit.expenseCategory?._id,
+            key: dataInit.expenseCategory?._id
           }
         ])
       }
     }
   }, [dataInit])
 
-  const submitReceipt = async (valuesForm: any) => {
-    const {user, description, time, amount, incomeCategory} = valuesForm
+  const submitExpense = async (valuesForm: any) => {
+    const {user, description, time, amount, expenseCategory} = valuesForm
     if (dataInit?._id) {
       //update
       const receipts = {
@@ -92,21 +92,21 @@ const ModalReceipt = (props: IProps) => {
                 _id: dataInit.user?._id,
                 name: dataInit.user?.name
               }, // Giữ nguyên thành viên nếu đã có
-        incomeCategory:
-          incomeCategory && incomeCategory.value
+        expenseCategory:
+          expenseCategory && expenseCategory.value
             ? {
-                _id: incomeCategory.value,
-                description: incomeCategory.label
+                _id: expenseCategory.value,
+                description: expenseCategory.label
               }
             : {
-                _id: dataInit.incomeCategory?._id,
-                description: dataInit.incomeCategory?.description
+                _id: dataInit.expenseCategory?._id,
+                description: dataInit.expenseCategory?.description
               } // Giữ nguyên danh mục nếu đã có
       }
 
-      const res = await callUpdateReceipt(receipts, dataInit._id)
+      const res = await callUpdateExpense(receipts, dataInit._id)
       if (res.data) {
-        message.success('Cập nhật phiếu thu thành công!')
+        message.success('Cập nhật phiếu chi thành công!')
         handleReset()
         reloadTable()
       } else {
@@ -125,14 +125,14 @@ const ModalReceipt = (props: IProps) => {
           _id: user.value,
           name: user.label
         },
-        incomeCategory: {
-          _id: incomeCategory.value,
-          description: incomeCategory.label
+        expenseCategory: {
+          _id: expenseCategory.value,
+          description: expenseCategory.label
         }
       }
-      const res = await callCreateReceipt(receipts)
+      const res = await callCreateExpense(receipts)
       if (res.data) {
-        message.success('Thêm mới phiếu thu thành công!')
+        message.success('Thêm mới phiếu chi thành công!')
         handleReset()
         reloadTable()
       } else {
@@ -194,7 +194,7 @@ const ModalReceipt = (props: IProps) => {
       <ConfigProvider locale={en_US}>
         <ModalForm
           title={
-            <>{dataInit?._id ? 'Cập nhật phiếu thu' : 'Thêm mới phiếu thu'}</>
+            <>{dataInit?._id ? 'Cập nhật phiếu chi' : 'Thêm mới phiếu chi'}</>
           }
           open={openModal}
           modalProps={{
@@ -212,7 +212,7 @@ const ModalReceipt = (props: IProps) => {
           scrollToFirstError={true}
           preserve={false}
           form={form}
-          onFinish={submitReceipt}
+          onFinish={submitExpense}
           initialValues={initialValues}
         >
           <Row gutter={16}>
@@ -262,18 +262,18 @@ const ModalReceipt = (props: IProps) => {
             </Col>
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProForm.Item
-                name="incomeCategory"
-                label="Danh mục thu"
+                name="expenseCategory"
+                label="Danh mục chi"
                 rules={[
-                  {required: true, message: 'Vui lòng chọn danh mục thu!'}
+                  {required: true, message: 'Vui lòng chọn danh mục chi!'}
                 ]}
               >
                 <DebounceSelect
                   allowClear
                   showSearch
-                  defaultValue={incomeCategories}
-                  value={incomeCategories}
-                  placeholder="Chọn danh mục thu"
+                  defaultValue={expenseCategories}
+                  value={expenseCategories}
+                  placeholder="Chọn danh mục chi"
                   fetchOptions={fetchIncomeCategoryList}
                   onChange={(newValue: any) => {
                     if (newValue?.length === 0 || newValue?.length === 1) {
@@ -307,4 +307,4 @@ const ModalReceipt = (props: IProps) => {
   )
 }
 
-export default ModalReceipt
+export default ModalExpense

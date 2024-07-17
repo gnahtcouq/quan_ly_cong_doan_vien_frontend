@@ -193,6 +193,56 @@ export const ALL_PERMISSIONS = {
       apiPath: '/api/v1/income-categories/count',
       module: 'INCOMECATEGORIES'
     }
+  },
+  EXPENSES: {
+    GET_PAGINATE: {
+      method: 'GET',
+      apiPath: '/api/v1/expenses',
+      module: 'EXPENSES'
+    },
+    CREATE: {method: 'POST', apiPath: '/api/v1/expenses', module: 'EXPENSES'},
+    UPDATE: {
+      method: 'PATCH',
+      apiPath: '/api/v1/expenses/:id',
+      module: 'EXPENSES'
+    },
+    DELETE: {
+      method: 'DELETE',
+      apiPath: '/api/v1/expenses/:id',
+      module: 'EXPENSES'
+    },
+    GET_NUMBER_OF_EXPENSES: {
+      method: 'POST',
+      apiPath: '/api/v1/expenses/count',
+      module: 'EXPENSES'
+    }
+  },
+  EXPENSECATEGORIES: {
+    GET_PAGINATE: {
+      method: 'GET',
+      apiPath: '/api/v1/expense-categories',
+      module: 'EXPENSECATEGORIES'
+    },
+    CREATE: {
+      method: 'POST',
+      apiPath: '/api/v1/expense-categories',
+      module: 'EXPENSECATEGORIES'
+    },
+    UPDATE: {
+      method: 'PATCH',
+      apiPath: '/api/v1/expense-categories/:id',
+      module: 'EXPENSECATEGORIES'
+    },
+    DELETE: {
+      method: 'DELETE',
+      apiPath: '/api/v1/expense-categories/:id',
+      module: 'EXPENSECATEGORIES'
+    },
+    GET_NUMBER_OF_EXPENSECATEGORIES: {
+      method: 'POST',
+      apiPath: '/api/v1/expense-categories/count',
+      module: 'EXPENSECATEGORIES'
+    }
   }
 }
 
@@ -208,5 +258,7 @@ export const ALL_MODULES = {
   SUBSCRIBERS: 'SUBSCRIBERS',
   FEES: 'FEES',
   RECEIPTS: 'RECEIPTS',
-  INCOMECATEGORIES: 'INCOMECATEGORIES'
+  INCOMECATEGORIES: 'INCOMECATEGORIES',
+  EXPENSES: 'EXPENSES',
+  EXPENSECATEGORIES: 'EXPENSECATEGORIES'
 }

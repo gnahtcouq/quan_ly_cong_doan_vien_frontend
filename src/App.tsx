@@ -35,6 +35,8 @@ import ConfirmChangeEmail from '@/pages/request/change-email'
 import FeePage from '@/pages/admin/fee'
 import ReceiptPage from '@/pages/admin/receipt'
 import IncomeCategoryPage from '@/pages/admin/incomeCategory'
+import ExpensePage from '@/pages/admin/expense'
+import ExpenseCategoryPage from '@/pages/admin/expenseCategory'
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -165,6 +167,22 @@ export default function App() {
           element: (
             <ProtectedRoute>
               <IncomeCategoryPage />
+            </ProtectedRoute>
+          )
+        },
+        {
+          path: 'expense',
+          element: (
+            <ProtectedRoute>
+              <ExpensePage />
+            </ProtectedRoute>
+          )
+        },
+        {
+          path: 'expense-category',
+          element: (
+            <ProtectedRoute>
+              <ExpenseCategoryPage />
             </ProtectedRoute>
           )
         },
