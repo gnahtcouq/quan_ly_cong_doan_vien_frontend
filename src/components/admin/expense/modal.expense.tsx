@@ -12,7 +12,7 @@ import {
 import {isMobile} from 'react-device-detect'
 import {
   callCreateExpense,
-  callFetchIncomeCategory,
+  callFetchExpenseCategory,
   callFetchUser,
   callUpdateExpense
 } from '@/config/api'
@@ -36,7 +36,7 @@ export interface IUserSelect {
   key?: string
 }
 
-export interface IIncomeCategorySelect {
+export interface IExpenseCategorySelect {
   label: string
   value: string
   key?: string
@@ -45,8 +45,8 @@ export interface IIncomeCategorySelect {
 const ModalExpense = (props: IProps) => {
   const {openModal, setOpenModal, reloadTable, dataInit, setDataInit} = props
   const [users, setUsers] = useState<IUserSelect[]>([])
-  const [expenseCategories, setIncomeCategories] = useState<
-    IIncomeCategorySelect[]
+  const [expenseCategories, setExpenseCategories] = useState<
+    IExpenseCategorySelect[]
   >([])
   const [form] = Form.useForm()
 
@@ -62,7 +62,7 @@ const ModalExpense = (props: IProps) => {
         ])
       }
       if (dataInit.expenseCategory) {
-        setIncomeCategories([
+        setExpenseCategories([
           {
             label: dataInit.expenseCategory?.description,
             value: dataInit.expenseCategory?._id,
@@ -164,10 +164,10 @@ const ModalExpense = (props: IProps) => {
     } else return []
   }
 
-  async function fetchIncomeCategoryList(
+  async function fetchExpenseCategoryList(
     description: string
-  ): Promise<IIncomeCategorySelect[]> {
-    const res = await callFetchIncomeCategory(
+  ): Promise<IExpenseCategorySelect[]> {
+    const res = await callFetchExpenseCategory(
       `current=1&pageSize=100&description=/${description}/i`
     )
     if (res && res.data) {
@@ -274,10 +274,10 @@ const ModalExpense = (props: IProps) => {
                   defaultValue={expenseCategories}
                   value={expenseCategories}
                   placeholder="Chọn danh mục chi"
-                  fetchOptions={fetchIncomeCategoryList}
+                  fetchOptions={fetchExpenseCategoryList}
                   onChange={(newValue: any) => {
                     if (newValue?.length === 0 || newValue?.length === 1) {
-                      setIncomeCategories(newValue as IIncomeCategorySelect[])
+                      setExpenseCategories(newValue as IExpenseCategorySelect[])
                     }
                   }}
                   style={{width: '100%'}}
