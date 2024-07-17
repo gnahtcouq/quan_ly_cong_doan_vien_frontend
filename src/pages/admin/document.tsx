@@ -26,7 +26,7 @@ import {fetchDocument} from '@/redux/slice/documentSlide'
 import ViewDetailDocument from '@/components/admin/document/view.document'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 import Access from '@/components/share/access'
-import ApplyModal from '@/components/client/modal/apply.modal'
+import ApplyModal from '@/components/admin/document/apply.modal'
 import ViewDetailDocumentHistory from '@/components/admin/document/view.history'
 
 const DocumentPage = () => {

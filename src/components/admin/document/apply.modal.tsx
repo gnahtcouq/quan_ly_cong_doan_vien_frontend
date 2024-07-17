@@ -1,13 +1,10 @@
-import {useAppSelector} from '@/redux/hooks'
-import {IDocument, IPost} from '@/types/backend'
+import {IDocument} from '@/types/backend'
 import {ModalForm, ProForm, ProFormText} from '@ant-design/pro-components'
 import {
   Button,
   Col,
   ConfigProvider,
-  Divider,
   Form,
-  Modal,
   Row,
   Upload,
   message,

@@ -17,7 +17,6 @@ import {formatCurrency} from '@/config/utils'
 const ExpensePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IExpense | null>(null)
-  const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
 
   const tableRef = useRef<ActionType>()
 

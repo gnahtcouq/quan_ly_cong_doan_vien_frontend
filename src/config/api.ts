@@ -420,6 +420,17 @@ export const callFetchFeeById = (id: string) => {
   return axios.get<IBackendRes<IFee>>(`/api/v1/fees/${id}`)
 }
 
+export const callUploadFeesFile = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axios.post<IBackendRes<any>>('/api/v1/fees/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
 /**
  * 
 Module Receipts
