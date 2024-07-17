@@ -71,19 +71,19 @@ const FeePage = () => {
       }
     },
     {
+      title: 'Số tiền',
+      dataIndex: 'fee',
+      sorter: true,
+      render: (text, record) => formatCurrency(record.fee),
+      hideInSearch: true
+    },
+    {
       title: 'Thời gian',
       dataIndex: 'monthYear',
       sorter: true,
       render: (text, record, index, action) => {
         return <>{dayjs(record.monthYear).format('MM/YYYY')}</>
       }
-    },
-    {
-      title: 'Số tiền',
-      dataIndex: 'fee',
-      sorter: true,
-      render: (text, record) => formatCurrency(record.fee),
-      hideInSearch: true
     },
     {
       title: 'Ngày tạo',

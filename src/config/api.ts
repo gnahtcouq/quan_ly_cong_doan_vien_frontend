@@ -184,6 +184,17 @@ export const callFetchNumberOfUsers = () => {
   return axios.post<IBackendRes<number>>('/api/v1/users/count')
 }
 
+export const callUploadUsersFile = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axios.post<IBackendRes<any>>('/api/v1/users/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
 /**
  * 
 Module Unionist
@@ -250,6 +261,17 @@ export const callFetchUnionistById = (id: string) => {
 
 export const callFetchNumberOfUnionists = () => {
   return axios.post<IBackendRes<number>>('/api/v1/unionists/count')
+}
+
+export const callUploadUnionistsFile = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axios.post<IBackendRes<any>>('/api/v1/unionists/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
 }
 
 /**
@@ -461,6 +483,17 @@ export const callFetchReceiptById = (id: string) => {
   return axios.get<IBackendRes<IReceipt>>(`/api/v1/receipts/${id}`)
 }
 
+export const callUploadReceiptsFile = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axios.post<IBackendRes<any>>('/api/v1/receipts/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
 /**
  * 
 Module Income Categories
@@ -501,6 +534,21 @@ export const callFetchIncomeCategoryById = (id: string) => {
   )
 }
 
+export const callUploadIncomeCategoryFile = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axios.post<IBackendRes<any>>(
+    '/api/v1/income-categories/upload',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
+  )
+}
+
 /**
  * 
 Module Expenses
@@ -529,6 +577,17 @@ export const callFetchExpense = (query: string) => {
 
 export const callFetchExpenseById = (id: string) => {
   return axios.get<IBackendRes<IExpense>>(`/api/v1/expenses/${id}`)
+}
+
+export const callUploadExpensesFile = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axios.post<IBackendRes<any>>('/api/v1/expenses/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
 }
 
 /**
@@ -573,5 +632,20 @@ export const callFetchExpenseCategory = (query: string) => {
 export const callFetchExpenseCategoryById = (id: string) => {
   return axios.get<IBackendRes<IExpenseCategory>>(
     `/api/v1/expense-categories/${id}`
+  )
+}
+
+export const callUploadExpenseCategoryFile = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return axios.post<IBackendRes<any>>(
+    '/api/v1/expense-categories/upload',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
   )
 }

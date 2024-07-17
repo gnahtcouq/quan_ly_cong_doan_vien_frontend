@@ -1,7 +1,12 @@
 import DataTable from '@/components/client/data-table'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {IExpenseCategory} from '@/types/backend'
-import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons'
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FileExcelOutlined,
+  PlusOutlined
+} from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
 import {Button, Popconfirm, Space, message, notification} from 'antd'
 import {useState, useRef} from 'react'
@@ -13,11 +18,12 @@ import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 import ModalExpenseCategory from '@/components/admin/expenseCategory/modal.expenseCategory'
 import {formatCurrency} from '@/config/utils'
+import ImportModal from '@/components/admin/expenseCategory/modal.import'
 
 const ExpenseCategoryPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IExpenseCategory | null>(null)
-  const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   const tableRef = useRef<ActionType>()
 
@@ -218,13 +224,22 @@ const ExpenseCategoryPage = () => {
           rowSelection={false}
           toolBarRender={(_action, _rows): any => {
             return (
-              <Button
-                icon={<PlusOutlined />}
-                type="primary"
-                onClick={() => setOpenModal(true)}
-              >
-                Thêm mới
-              </Button>
+              <>
+                <Button
+                  icon={<PlusOutlined />}
+                  type="primary"
+                  onClick={() => setOpenModal(true)}
+                >
+                  Thêm mới
+                </Button>
+                <Button
+                  icon={<FileExcelOutlined />}
+                  type="dashed"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Nhập Excel
+                </Button>
+              </>
             )
           }}
         />
@@ -235,6 +250,11 @@ const ExpenseCategoryPage = () => {
         reloadTable={reloadTable}
         dataInit={dataInit}
         setDataInit={setDataInit}
+      />
+      <ImportModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        reloadTable={reloadTable}
       />
     </div>
   )

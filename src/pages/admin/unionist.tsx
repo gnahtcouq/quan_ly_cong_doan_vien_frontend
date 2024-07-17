@@ -7,6 +7,7 @@ import {
   CopyOutlined,
   DeleteOutlined,
   EditOutlined,
+  FileExcelOutlined,
   PlusOutlined
 } from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
@@ -20,11 +21,13 @@ import ViewDetailUnionist from '@/components/admin/unionist/view.unionist'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 import ModalPermission from '@/components/admin/unionist/modal.permission'
+import ImportModal from '@/components/admin/unionist/modal.import'
 
 const UnionistPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [openModalPermissions, setOpenModalPermissions] =
     useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IUnionist | null>(null)
   const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
 
@@ -249,13 +252,22 @@ const UnionistPage = () => {
           rowSelection={false}
           toolBarRender={(_action, _rows): any => {
             return (
-              <Button
-                icon={<PlusOutlined />}
-                type="primary"
-                onClick={() => setOpenModal(true)}
-              >
-                Thêm mới
-              </Button>
+              <>
+                <Button
+                  icon={<PlusOutlined />}
+                  type="primary"
+                  onClick={() => setOpenModal(true)}
+                >
+                  Thêm mới
+                </Button>
+                <Button
+                  icon={<FileExcelOutlined />}
+                  type="dashed"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Nhập Excel
+                </Button>
+              </>
             )
           }}
         />
@@ -279,6 +291,11 @@ const UnionistPage = () => {
         open={openViewDetail}
         dataInit={dataInit}
         setDataInit={setDataInit}
+      />
+      <ImportModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        reloadTable={reloadTable}
       />
     </div>
   )

@@ -11,7 +11,7 @@ import {
 } from 'antd'
 import en_US from 'antd/lib/locale/en_US'
 import {UploadOutlined} from '@ant-design/icons'
-import {callUploadFeesFile} from '@/config/api'
+import {callUploadUnionistsFile} from '@/config/api'
 import {useState} from 'react'
 import {isMobile} from 'react-device-detect'
 
@@ -29,7 +29,7 @@ const ImportModal = (props: IProps) => {
 
   const handleOkButton = async (valuesForm: any) => {
     if (fileList.length > 0) {
-      const res = await callUploadFeesFile(fileList[0].originFileObj)
+      const res = await callUploadUnionistsFile(fileList[0].originFileObj)
       if (res.data) {
         const {totalRowsRead, validRowsCount} = res.data
         message.success(

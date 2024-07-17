@@ -1,7 +1,12 @@
 import DataTable from '@/components/client/data-table'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {IExpense} from '@/types/backend'
-import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons'
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FileExcelOutlined,
+  PlusOutlined
+} from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
 import {Button, Popconfirm, Space, message, notification} from 'antd'
 import {useState, useRef} from 'react'
@@ -13,10 +18,12 @@ import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 import ModalExpense from '@/components/admin/expense/modal.expense'
 import {formatCurrency} from '@/config/utils'
+import ImportModal from '@/components/admin/expense/modal.import'
 
 const ExpensePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IExpense | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   const tableRef = useRef<ActionType>()
 
@@ -222,13 +229,22 @@ const ExpensePage = () => {
           rowSelection={false}
           toolBarRender={(_action, _rows): any => {
             return (
-              <Button
-                icon={<PlusOutlined />}
-                type="primary"
-                onClick={() => setOpenModal(true)}
-              >
-                Thêm mới
-              </Button>
+              <>
+                <Button
+                  icon={<PlusOutlined />}
+                  type="primary"
+                  onClick={() => setOpenModal(true)}
+                >
+                  Thêm mới
+                </Button>
+                <Button
+                  icon={<FileExcelOutlined />}
+                  type="dashed"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Nhập Excel
+                </Button>
+              </>
             )
           }}
         />
@@ -239,6 +255,11 @@ const ExpensePage = () => {
         reloadTable={reloadTable}
         dataInit={dataInit}
         setDataInit={setDataInit}
+      />
+      <ImportModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        reloadTable={reloadTable}
       />
     </div>
   )
