@@ -479,6 +479,12 @@ export const callFetchReceipt = (query: string) => {
   )
 }
 
+export const callFetchReceiptByMonthAndYear = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IReceipt>>>(
+    `/api/v1/receipts/by-month-year?${query}`
+  )
+}
+
 export const callFetchReceiptById = (id: string) => {
   return axios.get<IBackendRes<IReceipt>>(`/api/v1/receipts/${id}`)
 }
@@ -572,6 +578,12 @@ export const callDeleteExpense = (id: string) => {
 export const callFetchExpense = (query: string) => {
   return axios.get<IBackendRes<IModelPaginate<IExpense>>>(
     `/api/v1/expenses?${query}`
+  )
+}
+
+export const callFetchExpenseByMonthAndYear = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IExpense>>>(
+    `/api/v1/expenses/by-month-year?${query}`
   )
 }
 

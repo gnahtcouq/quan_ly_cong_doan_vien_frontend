@@ -79,6 +79,14 @@ const ExpensePage = () => {
       }
     },
     {
+      title: 'Danh mục chi',
+      dataIndex: 'receiptCategory',
+      sorter: true,
+      render: (text, record, index, action) => {
+        return <>{record.expenseCategory?.description}</>
+      }
+    },
+    {
       title: 'Số tiền',
       dataIndex: 'amount',
       sorter: true,
