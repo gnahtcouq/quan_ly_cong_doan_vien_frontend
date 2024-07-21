@@ -209,7 +209,7 @@ const ModalExpense = (props: IProps) => {
           destroyOnClose: true,
           width: isMobile ? '100%' : 400,
           keyboard: false,
-          maskClosable: true,
+          maskClosable: false,
           okText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>,
           cancelText: 'Hủy'
         }}

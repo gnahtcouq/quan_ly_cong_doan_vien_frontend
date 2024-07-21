@@ -132,7 +132,7 @@ const ModalPermission = (props: IProps) => {
           destroyOnClose: true,
           width: isMobile ? '100%' : 900,
           keyboard: false,
-          maskClosable: true
+          maskClosable: false
         }}
         scrollToFirstError={true}
         preserve={false}

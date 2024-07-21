@@ -65,7 +65,7 @@ const ImportModal = (props: IProps) => {
             destroyOnClose: true,
             width: isMobile ? '100%' : 600,
             keyboard: false,
-            maskClosable: true,
+            maskClosable: false,
             okText: 'Nhập',
             cancelText: 'Hủy'
           }}
