@@ -26,6 +26,7 @@ interface IState {
       method: string
       module: string
     }[]
+    type: string
   }
   unionist: {
     _id: string
@@ -38,6 +39,7 @@ interface IState {
       method: string
       module: string
     }[]
+    type: string
   }
   activeMenu: string
 }
@@ -51,13 +53,15 @@ const initialState: IState = {
     _id: '',
     email: '',
     name: '',
-    permissions: []
+    permissions: [],
+    type: 'user'
   },
   unionist: {
     _id: '',
     email: '',
     name: '',
-    permissions: []
+    permissions: [],
+    type: 'unionist'
   },
 
   activeMenu: 'home'

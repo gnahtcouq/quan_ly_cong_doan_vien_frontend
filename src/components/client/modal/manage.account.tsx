@@ -150,7 +150,7 @@ const UserUpdateInfo = (props: any) => {
   const [dataInit, setDataInit] = useState<IUser | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
-  const user = useAppSelector((state) => state.account.user) // Lấy thông tin user hiện tại
+  const user = useAppSelector((state) => state?.account?.user) // Lấy thông tin user hiện tại
   const dispatch = useAppDispatch()
 
   useEffect(() => {

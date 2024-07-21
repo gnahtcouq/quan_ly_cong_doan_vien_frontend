@@ -108,6 +108,10 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
             }
         }
 
+        .additional-info-hidden {
+            display: none;
+        }
+
         .extra {
             display    : flex;
             align-items: center;
@@ -373,8 +377,16 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
     }
 }
 
+
+
 @media (max-width: 767px) {
     .change-email-pane {
         height: 80vh;
+    }
+}
+
+@media (max-width: 1260px) {
+    .additional-info {
+        display: none;
     }
 }

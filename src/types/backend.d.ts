@@ -177,26 +177,26 @@ export interface IFee {
 
 export interface IReceipt {
   _id?: string
-  user?: {
-    _id: string
-    name: string
-  }
+  receiptId?: string
+  userId?: string
   description?: string
   time?: string
   amount?: string
-  incomeCategory?: {
-    _id: string
-    description: string
-  }
+  incomeCategoryId?: string
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null
   createdAt?: string
   updatedAt?: string
+  updatedBy?: {
+    _id: string
+    email: string
+  }
 }
 
 export interface IIncomeCategory {
   _id?: string
+  incomeCategoryId?: string
   description?: string
   budget?: string
   year?: string
@@ -209,26 +209,26 @@ export interface IIncomeCategory {
 
 export interface IExpense {
   _id?: string
-  user?: {
-    _id: string
-    name: string
-  }
+  expenseId?: string
+  userId?: string
   description?: string
   time?: string
   amount?: string
-  expenseCategory?: {
-    _id: string
-    description: string
-  }
+  expenseCategoryId?: string
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null
   createdAt?: string
   updatedAt?: string
+  updatedBy?: {
+    _id: string
+    email: string
+  }
 }
 
 export interface IExpenseCategory {
   _id?: string
+  expenseCategoryId?: string
   description?: string
   budget?: string
   year?: string

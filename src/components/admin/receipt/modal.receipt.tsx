@@ -6,6 +6,7 @@ import {
   Form,
   InputNumber,
   Row,
+  Spin,
   message,
   notification
 } from 'antd'
@@ -13,7 +14,9 @@ import {isMobile} from 'react-device-detect'
 import {
   callCreateReceipt,
   callFetchIncomeCategory,
+  callFetchIncomeCategoryById,
   callFetchUser,
+  callFetchUserById,
   callUpdateReceipt
 } from '@/config/api'
 import {IReceipt} from '@/types/backend'
@@ -31,15 +34,15 @@ interface IProps {
 }
 
 export interface IUserSelect {
-  label: string
-  value: string
-  key?: string
+  label: string | undefined
+  value: string | undefined
+  key?: string | undefined
 }
 
 export interface IIncomeCategorySelect {
-  label: string
-  value: string
-  key?: string
+  label: string | undefined
+  value: string | undefined
+  key?: string | undefined
 }
 
 const ModalReceipt = (props: IProps) => {
@@ -48,62 +51,71 @@ const ModalReceipt = (props: IProps) => {
   const [incomeCategories, setIncomeCategories] = useState<
     IIncomeCategorySelect[]
   >([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
 
   useEffect(() => {
-    if (dataInit?._id) {
-      if (dataInit.user) {
-        setUsers([
-          {
-            label: dataInit.user?.name,
-            value: dataInit.user?._id,
-            key: dataInit.user?._id
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        if (dataInit?._id) {
+          if (dataInit.userId) {
+            const res = await callFetchUserById(dataInit.userId)
+            if (res && res.data) {
+              setUsers([
+                {
+                  label: res.data.name,
+                  value: res.data._id,
+                  key: res.data._id
+                }
+              ])
+            }
           }
-        ])
-      }
-      if (dataInit.incomeCategory) {
-        setIncomeCategories([
-          {
-            label: dataInit.incomeCategory?.description,
-            value: dataInit.incomeCategory?._id,
-            key: dataInit.incomeCategory?._id
+          if (dataInit.incomeCategoryId) {
+            const res = await callFetchIncomeCategoryById(
+              dataInit.incomeCategoryId
+            )
+            if (res && res.data) {
+              setIncomeCategories([
+                {
+                  label: res.data.description,
+                  value: res.data._id,
+                  key: res.data._id
+                }
+              ])
+            }
           }
-        ])
+        }
+      } catch (error) {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: 'Đã xảy ra lỗi khi tìm nạp dữ liệu'
+        })
+      } finally {
+        setIsLoading(false)
       }
     }
+
+    fetchData()
   }, [dataInit])
 
   const submitReceipt = async (valuesForm: any) => {
-    const {user, description, time, amount, incomeCategory} = valuesForm
+    const {receiptId, description, time, amount, userId, incomeCategoryId} =
+      valuesForm
     if (dataInit?._id) {
-      //update
+      // Update
       const receipts = {
         _id: dataInit._id,
+        receiptId,
         description,
         time: time ? time.toISOString() : null,
-        amount,
-        user:
-          user && user.value
-            ? {
-                _id: user.value,
-                name: user.label
-              }
-            : {
-                _id: dataInit.user?._id,
-                name: dataInit.user?.name
-              }, // Giữ nguyên thành viên nếu đã có
-        incomeCategory:
-          incomeCategory && incomeCategory.value
-            ? {
-                _id: incomeCategory.value,
-                description: incomeCategory.label
-              }
-            : {
-                _id: dataInit.incomeCategory?._id,
-                description: dataInit.incomeCategory?.description
-              } // Giữ nguyên danh mục nếu đã có
+        amount: dataInit.amount, // không cho sửa số tiền
+        userId: userId && userId.value ? userId.value : dataInit.userId,
+        incomeCategoryId:
+          incomeCategoryId && incomeCategoryId.value
+            ? incomeCategoryId.value
+            : dataInit.incomeCategoryId
       }
-
       const res = await callUpdateReceipt(receipts, dataInit._id)
       if (res.data) {
         message.success('Cập nhật phiếu thu thành công!')
@@ -116,19 +128,14 @@ const ModalReceipt = (props: IProps) => {
         })
       }
     } else {
-      //create
+      // Create
       const receipts = {
+        receiptId,
         description,
         time,
         amount,
-        user: {
-          _id: user.value,
-          name: user.label
-        },
-        incomeCategory: {
-          _id: incomeCategory.value,
-          description: incomeCategory.label
-        }
+        userId: userId.value,
+        incomeCategoryId: incomeCategoryId.value
       }
       const res = await callCreateReceipt(receipts)
       if (res.data) {
@@ -147,6 +154,8 @@ const ModalReceipt = (props: IProps) => {
   const handleReset = async () => {
     form.resetFields()
     setDataInit(null)
+    setUsers([])
+    setIncomeCategories([])
     setOpenModal(false)
   }
 
@@ -154,12 +163,10 @@ const ModalReceipt = (props: IProps) => {
     const res = await callFetchUser(`current=1&pageSize=100&name=/${name}/i`)
     if (res && res.data) {
       const list = res.data.result
-      const temp = list.map((item) => {
-        return {
-          label: item.name as string,
-          value: item._id as string
-        }
-      })
+      const temp = list.map((item) => ({
+        label: item.name as string,
+        value: item._id as string
+      }))
       return temp
     } else return []
   }
@@ -172,12 +179,10 @@ const ModalReceipt = (props: IProps) => {
     )
     if (res && res.data) {
       const list = res.data.result
-      const temp = list.map((item) => {
-        return {
-          label: item.description as string,
-          value: item._id as string
-        }
-      })
+      const temp = list.map((item) => ({
+        label: item.description as string,
+        value: item._id as string
+      }))
       return temp
     } else return []
   }
@@ -190,32 +195,48 @@ const ModalReceipt = (props: IProps) => {
     : {}
 
   return (
-    <>
-      <ConfigProvider locale={en_US}>
-        <ModalForm
-          title={
-            <>{dataInit?._id ? 'Cập nhật phiếu thu' : 'Thêm mới phiếu thu'}</>
-          }
-          open={openModal}
-          modalProps={{
-            onCancel: () => {
-              handleReset()
-            },
-            afterClose: () => handleReset(),
-            destroyOnClose: true,
-            width: isMobile ? '100%' : 400,
-            keyboard: false,
-            maskClosable: true,
-            okText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>,
-            cancelText: 'Hủy'
-          }}
-          scrollToFirstError={true}
-          preserve={false}
-          form={form}
-          onFinish={submitReceipt}
-          initialValues={initialValues}
-        >
+    <ConfigProvider locale={en_US}>
+      <ModalForm
+        title={
+          <>{dataInit?._id ? 'Cập nhật phiếu thu' : 'Thêm mới phiếu thu'}</>
+        }
+        open={openModal}
+        modalProps={{
+          onCancel: () => {
+            handleReset()
+          },
+          afterClose: () => handleReset(),
+          destroyOnClose: true,
+          width: isMobile ? '100%' : 400,
+          keyboard: false,
+          maskClosable: true,
+          okText: <>{dataInit?._id ? 'Cập nhật' : 'Thêm mới'}</>,
+          cancelText: 'Hủy'
+        }}
+        scrollToFirstError={true}
+        preserve={false}
+        form={form}
+        onFinish={submitReceipt}
+        initialValues={initialValues}
+      >
+        {isLoading ? (
+          <Spin />
+        ) : (
           <Row gutter={16}>
+            <Col lg={24} md={12} sm={24} xs={24}>
+              <ProFormText
+                label="Mã phiếu thu (PT/năm/tháng/ngày)"
+                name="receiptId"
+                rules={[
+                  {required: true, message: 'Vui lòng không để trống!'},
+                  {
+                    pattern: /^PT\d{4}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/,
+                    message: 'Mã phiếu thu không hợp lệ! (VD: PT20240101)'
+                  }
+                ]}
+                placeholder="Nhập mã phiếu thu"
+              />
+            </Col>
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProFormText
                 label="Nội dung"
@@ -240,12 +261,11 @@ const ModalReceipt = (props: IProps) => {
             </Col>
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProForm.Item
-                name="user"
+                name="userId"
                 label="Thành viên"
                 rules={[{required: true, message: 'Vui lòng chọn thành viên!'}]}
               >
                 <DebounceSelect
-                  allowClear
                   showSearch
                   defaultValue={users}
                   value={users}
@@ -262,14 +282,13 @@ const ModalReceipt = (props: IProps) => {
             </Col>
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProForm.Item
-                name="incomeCategory"
+                name="incomeCategoryId"
                 label="Danh mục thu"
                 rules={[
                   {required: true, message: 'Vui lòng chọn danh mục thu!'}
                 ]}
               >
                 <DebounceSelect
-                  allowClear
                   showSearch
                   defaultValue={incomeCategories}
                   value={incomeCategories}
@@ -297,13 +316,14 @@ const ModalReceipt = (props: IProps) => {
                   formatter={(value) =>
                     `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                   }
+                  disabled={dataInit && dataInit._id ? true : false}
                 />
               </ProForm.Item>
             </Col>
           </Row>
-        </ModalForm>
-      </ConfigProvider>
-    </>
+        )}
+      </ModalForm>
+    </ConfigProvider>
   )
 }
 

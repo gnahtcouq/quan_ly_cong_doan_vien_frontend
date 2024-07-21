@@ -9,14 +9,16 @@ import {
 } from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
 import {Button, Popconfirm, Space, message, notification} from 'antd'
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import dayjs from 'dayjs'
-import {callDeleteReceipt} from '@/config/api'
+import {callDeleteReceipt, callFetchIncomeCategory} from '@/config/api'
 import queryString from 'query-string'
 import {fetchReceipt} from '@/redux/slice/receiptSlide'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
-import ModalReceipt from '@/components/admin/receipt/modal.receipt'
+import ModalReceipt, {
+  IIncomeCategorySelect
+} from '@/components/admin/receipt/modal.receipt'
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/receipt/modal.import'
 
@@ -24,6 +26,9 @@ const ReceiptPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IReceipt | null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [incomeCategories, setIncomeCategories] = useState<
+    IIncomeCategorySelect[]
+  >([])
 
   const tableRef = useRef<ActionType>()
 
@@ -31,6 +36,15 @@ const ReceiptPage = () => {
   const meta = useAppSelector((state) => state.receipt.meta)
   const receipts = useAppSelector((state) => state.receipt.result)
   const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categories = await fetchIncomeCategoryList('')
+      setIncomeCategories(categories)
+    }
+
+    fetchCategories()
+  }, [])
 
   const handleDeleteReceipt = async (_id: string | undefined) => {
     if (_id) {
@@ -51,6 +65,22 @@ const ReceiptPage = () => {
     tableRef?.current?.reload()
   }
 
+  async function fetchIncomeCategoryList(
+    description: string
+  ): Promise<IIncomeCategorySelect[]> {
+    const res = await callFetchIncomeCategory(
+      `current=1&pageSize=100&description=/${description}/i`
+    )
+    if (res && res.data) {
+      const list = res.data.result
+      const temp = list.map((item) => ({
+        label: item.description as string,
+        value: item._id as string
+      }))
+      return temp
+    } else return []
+  }
+
   const columns: ProColumns<IReceipt>[] = [
     {
       title: 'STT',
@@ -63,11 +93,11 @@ const ReceiptPage = () => {
       hideInSearch: true
     },
     {
-      title: 'Thành viên',
-      dataIndex: 'name',
+      title: 'Mã PT',
+      dataIndex: 'receiptId',
       sorter: true,
       render: (text, record, index, action) => {
-        return <>{record.user?.name}</>
+        return <>{record.receiptId}</>
       }
     },
     {
@@ -79,11 +109,14 @@ const ReceiptPage = () => {
       }
     },
     {
-      title: 'Danh mục thu',
-      dataIndex: 'receiptCategory',
+      title: 'Danh mục',
+      dataIndex: 'incomeCategoryId',
       sorter: true,
-      render: (text, record, index, action) => {
-        return <>{record.incomeCategory?.description}</>
+      render: (text, record) => {
+        const category = incomeCategories.find(
+          (cat) => cat.value === record.incomeCategoryId
+        )
+        return <>{category ? category.label : 'Trống'}</>
       }
     },
     {
@@ -99,6 +132,16 @@ const ReceiptPage = () => {
       sorter: true,
       render: (text, record, index, action) => {
         return <>{dayjs(record.time).format('DD/MM/YYYY')}</>
+      }
+    },
+    {
+      title: 'Người sửa',
+      dataIndex: 'updatedBy.email',
+      sorter: true,
+      render: (text, record, index, action) => {
+        return (
+          <>{record?.updatedBy?.email ? record.updatedBy.email : 'Trống'}</>
+        )
       }
     },
     {
@@ -165,7 +208,6 @@ const ReceiptPage = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
-    // if (clone.name) clone.name = `/${clone.name}/i`
     if (clone.description) clone.description = `/${clone.description}/i`
     if (clone.time) clone.time = `/${clone.time}/i`
     if (clone.amount) clone.amount = `/${clone.amount}/i`
@@ -173,9 +215,6 @@ const ReceiptPage = () => {
     let temp = queryString.stringify(clone)
 
     let sortBy = ''
-    // if (sort && sort.name) {
-    //   sortBy = sort.name === 'ascend' ? 'sort=name' : 'sort=-name'
-    // }
     if (sort && sort.description) {
       sortBy =
         sort.description === 'ascend' ? 'sort=description' : 'sort=-description'

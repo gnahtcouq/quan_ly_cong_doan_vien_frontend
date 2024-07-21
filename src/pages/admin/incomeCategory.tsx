@@ -63,6 +63,14 @@ const IncomeCategoryPage = () => {
       hideInSearch: true
     },
     {
+      title: 'Mã DMT',
+      dataIndex: 'incomeCategoryId',
+      sorter: true,
+      render: (text, record, index, action) => {
+        return <>{record.incomeCategoryId}</>
+      }
+    },
+    {
       title: 'Nội dung',
       dataIndex: 'description',
       sorter: true,
@@ -195,7 +203,7 @@ const IncomeCategoryPage = () => {
       <Access permission={ALL_PERMISSIONS.INCOMECATEGORIES.GET_PAGINATE}>
         <DataTable<IIncomeCategory>
           actionRef={tableRef}
-          headerTitle="Danh mục thu"
+          headerTitle="Danh sách danh mục thu"
           rowKey="_id"
           loading={isFetching}
           columns={columns}

@@ -24,7 +24,6 @@ const ConfirmChangeEmail = (props: any) => {
     const fetchUserData = async () => {
       setIsLoading(true)
       const res = await callFetchUserById(userId?.toString() || '')
-      console.log(res)
       if (res && res.data) {
         setVerificationExpires(res.data.verificationExpires?.toString() || null)
         if (!res.data.verificationExpires) window.location.href = '/'

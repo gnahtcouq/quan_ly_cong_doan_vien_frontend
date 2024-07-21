@@ -65,6 +65,14 @@ const ExpenseCategoryPage = () => {
       hideInSearch: true
     },
     {
+      title: 'Mã DMC',
+      dataIndex: 'expenseCategoryId',
+      sorter: true,
+      render: (text, record, index, action) => {
+        return <>{record.expenseCategoryId}</>
+      }
+    },
+    {
       title: 'Nội dung',
       dataIndex: 'description',
       sorter: true,
@@ -111,7 +119,7 @@ const ExpenseCategoryPage = () => {
       render: (_value, entity, _index, _action) => (
         <Space>
           <Access
-            permission={ALL_PERMISSIONS.EXPENSECATEGORIES.UPDATE}
+            permission={ALL_PERMISSIONS.INCOMECATEGORIES.UPDATE}
             hideChildren
           >
             <EditOutlined
@@ -128,7 +136,7 @@ const ExpenseCategoryPage = () => {
           </Access>
 
           <Access
-            permission={ALL_PERMISSIONS.EXPENSECATEGORIES.DELETE}
+            permission={ALL_PERMISSIONS.INCOMECATEGORIES.DELETE}
             hideChildren
           >
             <Popconfirm
@@ -194,10 +202,10 @@ const ExpenseCategoryPage = () => {
 
   return (
     <div>
-      <Access permission={ALL_PERMISSIONS.EXPENSECATEGORIES.GET_PAGINATE}>
+      <Access permission={ALL_PERMISSIONS.INCOMECATEGORIES.GET_PAGINATE}>
         <DataTable<IExpenseCategory>
           actionRef={tableRef}
-          headerTitle="Danh mục chi"
+          headerTitle="Danh sách danh mục chi"
           rowKey="_id"
           loading={isFetching}
           columns={columns}

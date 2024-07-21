@@ -9,14 +9,16 @@ import {
 } from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
 import {Button, Popconfirm, Space, message, notification} from 'antd'
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import dayjs from 'dayjs'
-import {callDeleteExpense} from '@/config/api'
+import {callDeleteExpense, callFetchExpenseCategory} from '@/config/api'
 import queryString from 'query-string'
 import {fetchExpense} from '@/redux/slice/expenseSlide'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
-import ModalExpense from '@/components/admin/expense/modal.expense'
+import ModalExpense, {
+  IExpenseCategorySelect
+} from '@/components/admin/expense/modal.expense'
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/expense/modal.import'
 
@@ -24,6 +26,9 @@ const ExpensePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IExpense | null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [expenseCategories, setExpenseCategories] = useState<
+    IExpenseCategorySelect[]
+  >([])
 
   const tableRef = useRef<ActionType>()
 
@@ -31,6 +36,15 @@ const ExpensePage = () => {
   const meta = useAppSelector((state) => state.expense.meta)
   const expenses = useAppSelector((state) => state.expense.result)
   const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categories = await fetchExpenseCategoryList('')
+      setExpenseCategories(categories)
+    }
+
+    fetchCategories()
+  }, [])
 
   const handleDeleteExpense = async (_id: string | undefined) => {
     if (_id) {
@@ -51,6 +65,22 @@ const ExpensePage = () => {
     tableRef?.current?.reload()
   }
 
+  async function fetchExpenseCategoryList(
+    description: string
+  ): Promise<IExpenseCategorySelect[]> {
+    const res = await callFetchExpenseCategory(
+      `current=1&pageSize=100&description=/${description}/i`
+    )
+    if (res && res.data) {
+      const list = res.data.result
+      const temp = list.map((item) => ({
+        label: item.description as string,
+        value: item._id as string
+      }))
+      return temp
+    } else return []
+  }
+
   const columns: ProColumns<IExpense>[] = [
     {
       title: 'STT',
@@ -62,14 +92,14 @@ const ExpensePage = () => {
       },
       hideInSearch: true
     },
-    // {
-    //   title: 'Thành viên',
-    //   dataIndex: 'name',
-    //   sorter: true,
-    //   render: (text, record, index, action) => {
-    //     return <>{record.user?.name}</>
-    //   }
-    // },
+    {
+      title: 'Mã PC',
+      dataIndex: 'receiptId',
+      sorter: true,
+      render: (text, record, index, action) => {
+        return <>{record.expenseId}</>
+      }
+    },
     {
       title: 'Nội dung',
       dataIndex: 'description',
@@ -79,11 +109,14 @@ const ExpensePage = () => {
       }
     },
     {
-      title: 'Danh mục chi',
-      dataIndex: 'receiptCategory',
+      title: 'Danh mục',
+      dataIndex: 'expenseCategoryId',
       sorter: true,
-      render: (text, record, index, action) => {
-        return <>{record.expenseCategory?.description}</>
+      render: (text, record) => {
+        const category = expenseCategories.find(
+          (cat) => cat.value === record.expenseCategoryId
+        )
+        return <>{category ? category.label : 'Trống'}</>
       }
     },
     {
@@ -99,6 +132,16 @@ const ExpensePage = () => {
       sorter: true,
       render: (text, record, index, action) => {
         return <>{dayjs(record.time).format('DD/MM/YYYY')}</>
+      }
+    },
+    {
+      title: 'Người sửa',
+      dataIndex: 'updatedBy.email',
+      sorter: true,
+      render: (text, record, index, action) => {
+        return (
+          <>{record?.updatedBy?.email ? record.updatedBy.email : 'Trống'}</>
+        )
       }
     },
     {
@@ -165,7 +208,6 @@ const ExpensePage = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
-    // if (clone.name) clone.name = `/${clone.name}/i`
     if (clone.description) clone.description = `/${clone.description}/i`
     if (clone.time) clone.time = `/${clone.time}/i`
     if (clone.amount) clone.amount = `/${clone.amount}/i`
@@ -173,9 +215,6 @@ const ExpensePage = () => {
     let temp = queryString.stringify(clone)
 
     let sortBy = ''
-    // if (sort && sort.name) {
-    //   sortBy = sort.name === 'ascend' ? 'sort=name' : 'sort=-name'
-    // }
     if (sort && sort.description) {
       sortBy =
         sort.description === 'ascend' ? 'sort=description' : 'sort=-description'

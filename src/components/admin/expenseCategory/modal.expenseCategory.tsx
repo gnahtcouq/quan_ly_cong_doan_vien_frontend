@@ -26,16 +26,17 @@ interface IProps {
   reloadTable: () => void
 }
 
-const ModalInComeCategory = (props: IProps) => {
+const ModalExpenseCategory = (props: IProps) => {
   const {openModal, setOpenModal, reloadTable, dataInit, setDataInit} = props
   const [form] = Form.useForm()
 
-  const submitInComeCategory = async (valuesForm: any) => {
-    const {description, year, budget} = valuesForm
+  const submitExpenseCategory = async (valuesForm: any) => {
+    const {expenseCategoryId, description, year, budget} = valuesForm
     if (dataInit?._id) {
       //update
       const receipts = {
         _id: dataInit._id,
+        expenseCategoryId,
         description,
         year,
         budget
@@ -55,6 +56,7 @@ const ModalInComeCategory = (props: IProps) => {
     } else {
       //create
       const receipts = {
+        expenseCategoryId,
         description,
         year,
         budget
@@ -106,10 +108,25 @@ const ModalInComeCategory = (props: IProps) => {
           scrollToFirstError={true}
           preserve={false}
           form={form}
-          onFinish={submitInComeCategory}
+          onFinish={submitExpenseCategory}
           initialValues={dataInit?._id ? dataInit : {}}
         >
           <Row gutter={16}>
+            <Col lg={24} md={12} sm={24} xs={24}>
+              <ProFormText
+                label="Mã danh mục chi (DMC/ngày/tháng/năm)"
+                name="expenseCategoryId"
+                rules={[
+                  {required: true, message: 'Vui lòng không để trống!'},
+                  {
+                    pattern:
+                      /^DMC\d{4}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/,
+                    message: 'Mã danh mục chi không hợp lệ! (VD: DMC20240101)'
+                  }
+                ]}
+                placeholder="Nhập mã danh mục chi"
+              />
+            </Col>
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProFormText
                 label="Nội dung"
@@ -159,4 +176,4 @@ const ModalInComeCategory = (props: IProps) => {
   )
 }
 
-export default ModalInComeCategory
+export default ModalExpenseCategory
