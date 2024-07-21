@@ -88,7 +88,7 @@ const FeePage = () => {
     },
     {
       title: 'Họ và tên',
-      dataIndex: 'unionistId',
+      dataIndex: 'name',
       sorter: true,
       render: (text, record) => {
         const category = unionists.find(
@@ -96,7 +96,7 @@ const FeePage = () => {
         )
         return <>{category ? category.label : ''}</>
       },
-      hideInSearch: true
+      hideInSearch: false
     },
     {
       title: 'Số tiền',
@@ -177,16 +177,16 @@ const FeePage = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
-    // if (clone.name) clone.name = `/${clone.name}/i`
+    if (clone.name) clone.name = `/${clone.name}/i`
     if (clone.monthYear) clone.monthYear = `/${clone.monthYear}/i`
     if (clone.fee) clone.fee = `/${clone.fee}/i`
 
     let temp = queryString.stringify(clone)
 
     let sortBy = ''
-    // if (sort && sort.name) {
-    //   sortBy = sort.name === 'ascend' ? 'sort=name' : 'sort=-name'
-    // }
+    if (sort && sort.name) {
+      sortBy = sort.name === 'ascend' ? 'sort=name' : 'sort=-name'
+    }
     if (sort && sort.monthYear) {
       sortBy =
         sort.monthYear === 'ascend' ? 'sort=monthYear' : 'sort=-monthYear'

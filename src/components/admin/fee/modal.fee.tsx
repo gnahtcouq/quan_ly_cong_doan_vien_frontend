@@ -11,6 +11,7 @@ import {
   Form,
   InputNumber,
   Row,
+  Spin,
   message,
   notification
 } from 'antd'
@@ -176,67 +177,75 @@ const ModalFee = (props: IProps) => {
           onFinish={submitFee}
           initialValues={dataInit?._id ? dataInit : {}}
         >
-          <Row gutter={16}>
-            <Col lg={24} md={12} sm={24} xs={24}>
-              <ProForm.Item
-                name="unionistId"
-                label="Công đoàn viên"
-                rules={[
-                  {required: true, message: 'Vui lòng chọn công đoàn viên!'}
-                ]}
-              >
-                <DebounceSelect
-                  allowClear
-                  showSearch
-                  defaultValue={unionists}
-                  value={unionists}
-                  placeholder="Chọn công đoàn viên"
-                  fetchOptions={fetchUnionistList}
-                  onChange={(newValue: any) => {
-                    if (newValue?.length === 0 || newValue?.length === 1) {
-                      setUnionists(newValue as IUnionistSelect[])
+          {isLoading ? (
+            <Spin />
+          ) : (
+            <Row gutter={16}>
+              <Col lg={24} md={12} sm={24} xs={24}>
+                <ProForm.Item
+                  name="unionistId"
+                  label="Công đoàn viên"
+                  rules={[
+                    {required: true, message: 'Vui lòng chọn công đoàn viên!'}
+                  ]}
+                >
+                  <DebounceSelect
+                    allowClear
+                    showSearch
+                    defaultValue={unionists}
+                    value={unionists}
+                    placeholder="Chọn công đoàn viên"
+                    fetchOptions={fetchUnionistList}
+                    onChange={(newValue: any) => {
+                      if (newValue?.length === 0 || newValue?.length === 1) {
+                        setUnionists(newValue as IUnionistSelect[])
+                      }
+                    }}
+                    style={{width: '100%'}}
+                  />
+                </ProForm.Item>
+              </Col>
+              <Col lg={24} md={12} sm={24} xs={24}>
+                <ProForm.Item
+                  label="Thời gian (tháng/năm)"
+                  name="monthYear"
+                  rules={[
+                    {required: true, message: 'Vui lòng không để trống!'}
+                  ]}
+                  getValueFromEvent={(e: any) => e?.format('YYYY/MM')}
+                  getValueProps={(e: string) => ({
+                    value: e ? dayjs(e) : ''
+                  })}
+                >
+                  <DatePicker
+                    format="MM/YYYY"
+                    placeholder="mm/yyyy"
+                    picker="month"
+                    style={{width: '100%'}}
+                  />
+                </ProForm.Item>
+              </Col>
+              <Col lg={24} md={12} sm={24} xs={24}>
+                <ProForm.Item
+                  label="Số tiền (Từ 1.000đ - 10 tỷ)"
+                  name="fee"
+                  rules={[
+                    {required: true, message: 'Vui lòng không để trống!'}
+                  ]}
+                >
+                  <InputNumber
+                    style={{width: '100%'}}
+                    min={1000}
+                    max={10000000000}
+                    formatter={(value) =>
+                      `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                     }
-                  }}
-                  style={{width: '100%'}}
-                />
-              </ProForm.Item>
-            </Col>
-            <Col lg={24} md={12} sm={24} xs={24}>
-              <ProForm.Item
-                label="Thời gian (tháng/năm)"
-                name="monthYear"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                getValueFromEvent={(e: any) => e?.format('YYYY/MM')}
-                getValueProps={(e: string) => ({
-                  value: e ? dayjs(e) : ''
-                })}
-              >
-                <DatePicker
-                  format="MM/YYYY"
-                  placeholder="mm/yyyy"
-                  picker="month"
-                  style={{width: '100%'}}
-                />
-              </ProForm.Item>
-            </Col>
-            <Col lg={24} md={12} sm={24} xs={24}>
-              <ProForm.Item
-                label="Số tiền (Từ 1.000đ - 10 tỷ)"
-                name="fee"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-              >
-                <InputNumber
-                  style={{width: '100%'}}
-                  min={1000}
-                  max={10000000000}
-                  formatter={(value) =>
-                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                  }
-                  disabled={dataInit && dataInit._id ? true : false}
-                />
-              </ProForm.Item>
-            </Col>
-          </Row>
+                    disabled={dataInit && dataInit._id ? true : false}
+                  />
+                </ProForm.Item>
+              </Col>
+            </Row>
+          )}
         </ModalForm>
       </ConfigProvider>
     </>
