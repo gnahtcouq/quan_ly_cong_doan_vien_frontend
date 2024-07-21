@@ -15,7 +15,12 @@ import {
   notification
 } from 'antd'
 import {isMobile} from 'react-device-detect'
-import {callCreateFee, callFetchUnionist, callUpdateFee} from '@/config/api'
+import {
+  callCreateFee,
+  callFetchUnionist,
+  callFetchUnionistById,
+  callUpdateFee
+} from '@/config/api'
 import {IFee} from '@/types/backend'
 import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
@@ -31,48 +36,60 @@ interface IProps {
 }
 
 export interface IUnionistSelect {
-  label: string
-  value: string
-  key?: string
+  label: string | undefined
+  value: string | undefined
+  key?: string | undefined
 }
 
 const ModalFee = (props: IProps) => {
   const {openModal, setOpenModal, reloadTable, dataInit, setDataInit} = props
   const [unionists, setUnionists] = useState<IUnionistSelect[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
 
   useEffect(() => {
-    if (dataInit?._id) {
-      if (dataInit.unionist) {
-        setUnionists([
-          {
-            label: dataInit.unionist?.name,
-            value: dataInit.unionist?._id,
-            key: dataInit.unionist?._id
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        if (dataInit?._id) {
+          if (dataInit.unionistId) {
+            const res = await callFetchUnionistById(dataInit.unionistId)
+            if (res && res.data) {
+              setUnionists([
+                {
+                  label: res.data.name,
+                  value: res.data._id,
+                  key: res.data._id
+                }
+              ])
+            }
           }
-        ])
+        }
+      } catch (error) {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: 'Đã xảy ra lỗi khi tìm nạp dữ liệu'
+        })
+      } finally {
+        setIsLoading(false)
       }
     }
+
+    fetchData()
   }, [dataInit])
 
   const submitFee = async (valuesForm: any) => {
-    const {unionist, monthYear, fee} = valuesForm
+    const {unionistId, monthYear, fee} = valuesForm
     if (dataInit?._id) {
       //update
       const fees = {
         _id: dataInit._id,
         monthYear,
-        fee,
-        unionist:
-          unionist && unionist.value
-            ? {
-                _id: unionist.value,
-                name: unionist.label
-              }
-            : {
-                _id: dataInit.unionist?._id,
-                name: dataInit.unionist?.name
-              } // Giữ nguyên đơn vị nếu đã có
+        fee: dataInit.fee, // không cho sửa số tiền
+        unionistId:
+          unionistId && unionistId.value
+            ? unionistId.value
+            : dataInit.unionistId
       }
 
       const res = await callUpdateFee(fees, dataInit._id)
@@ -91,10 +108,7 @@ const ModalFee = (props: IProps) => {
       const fees = {
         monthYear,
         fee,
-        unionist: {
-          _id: unionist.value,
-          name: unionist.label
-        }
+        unionistId: unionistId.value
       }
       const res = await callCreateFee(fees)
       if (res.data) {
@@ -165,25 +179,7 @@ const ModalFee = (props: IProps) => {
           <Row gutter={16}>
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProForm.Item
-                label="Thời gian (tháng/năm)"
-                name="monthYear"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                getValueFromEvent={(e: any) => e?.format('YYYY/MM')}
-                getValueProps={(e: string) => ({
-                  value: e ? dayjs(e) : ''
-                })}
-              >
-                <DatePicker
-                  format="MM/YYYY"
-                  placeholder="mm/yyyy"
-                  picker="month"
-                  style={{width: '100%'}}
-                />
-              </ProForm.Item>
-            </Col>
-            <Col lg={24} md={12} sm={24} xs={24}>
-              <ProForm.Item
-                name="unionist"
+                name="unionistId"
                 label="Công đoàn viên"
                 rules={[
                   {required: true, message: 'Vui lòng chọn công đoàn viên!'}
@@ -207,6 +203,24 @@ const ModalFee = (props: IProps) => {
             </Col>
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProForm.Item
+                label="Thời gian (tháng/năm)"
+                name="monthYear"
+                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                getValueFromEvent={(e: any) => e?.format('YYYY/MM')}
+                getValueProps={(e: string) => ({
+                  value: e ? dayjs(e) : ''
+                })}
+              >
+                <DatePicker
+                  format="MM/YYYY"
+                  placeholder="mm/yyyy"
+                  picker="month"
+                  style={{width: '100%'}}
+                />
+              </ProForm.Item>
+            </Col>
+            <Col lg={24} md={12} sm={24} xs={24}>
+              <ProForm.Item
                 label="Số tiền (Từ 1.000đ - 10 tỷ)"
                 name="fee"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
@@ -218,6 +232,7 @@ const ModalFee = (props: IProps) => {
                   formatter={(value) =>
                     `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                   }
+                  disabled={dataInit && dataInit._id ? true : false}
                 />
               </ProForm.Item>
             </Col>

@@ -106,7 +106,7 @@ const ModalReceipt = (props: IProps) => {
       // Update
       const receipts = {
         _id: dataInit._id,
-        receiptId,
+        receiptId: dataInit.receiptId, // không cho sửa mã phiếu thu
         description,
         time: time ? time.toISOString() : null,
         amount: dataInit.amount, // không cho sửa số tiền
@@ -235,6 +235,7 @@ const ModalReceipt = (props: IProps) => {
                   }
                 ]}
                 placeholder="Nhập mã phiếu thu"
+                disabled={dataInit && dataInit._id ? true : false}
               />
             </Col>
             <Col lg={24} md={12} sm={24} xs={24}>

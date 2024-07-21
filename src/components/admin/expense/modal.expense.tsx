@@ -235,6 +235,7 @@ const ModalExpense = (props: IProps) => {
                   }
                 ]}
                 placeholder="Nhập mã phiếu chi"
+                disabled={dataInit && dataInit._id ? true : false}
               />
             </Col>
             <Col lg={24} md={12} sm={24} xs={24}>

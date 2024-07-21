@@ -162,10 +162,7 @@ export interface ISubscribers {
 
 export interface IFee {
   _id?: string
-  unionist?: {
-    _id: string
-    name: string
-  }
+  unionistId?: string
   monthYear?: string
   fee?: string
   createdBy?: string

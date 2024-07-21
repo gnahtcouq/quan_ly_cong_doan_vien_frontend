@@ -125,6 +125,7 @@ const ModalExpenseCategory = (props: IProps) => {
                   }
                 ]}
                 placeholder="Nhập mã danh mục chi"
+                disabled={dataInit && dataInit._id ? true : false}
               />
             </Col>
             <Col lg={24} md={12} sm={24} xs={24}>

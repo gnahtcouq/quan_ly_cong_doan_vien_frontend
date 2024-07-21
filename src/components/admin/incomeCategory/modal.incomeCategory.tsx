@@ -122,6 +122,7 @@ const ModalInComeCategory = (props: IProps) => {
                   }
                 ]}
                 placeholder="Nhập mã danh mục thu"
+                disabled={dataInit && dataInit._id ? true : false}
               />
             </Col>
             <Col lg={24} md={12} sm={24} xs={24}>

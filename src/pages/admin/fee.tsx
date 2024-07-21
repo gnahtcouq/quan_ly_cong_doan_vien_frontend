@@ -9,14 +9,14 @@ import {
 } from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
 import {Button, Popconfirm, Space, message, notification} from 'antd'
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import dayjs from 'dayjs'
-import {callDeleteFee} from '@/config/api'
+import {callDeleteFee, callFetchUnionist} from '@/config/api'
 import queryString from 'query-string'
 import {fetchFee} from '@/redux/slice/feeSlide'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
-import ModalFee from '@/components/admin/fee/modal.fee'
+import ModalFee, {IUnionistSelect} from '@/components/admin/fee/modal.fee'
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/fee/modal.import'
 
@@ -24,6 +24,7 @@ const FeePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IFee | null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [unionists, setUnionists] = useState<IUnionistSelect[]>([])
 
   const tableRef = useRef<ActionType>()
 
@@ -31,6 +32,15 @@ const FeePage = () => {
   const meta = useAppSelector((state) => state.fee.meta)
   const fees = useAppSelector((state) => state.fee.result)
   const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const unionists = await fetchUnionistList('')
+      console.log('unionists', unionists)
+      setUnionists(unionists)
+    }
+    fetchCategories()
+  }, [])
 
   const handleDeleteFee = async (_id: string | undefined) => {
     if (_id) {
@@ -51,6 +61,20 @@ const FeePage = () => {
     tableRef?.current?.reload()
   }
 
+  async function fetchUnionistList(name: string): Promise<IUnionistSelect[]> {
+    const res = await callFetchUnionist(
+      `current=1&pageSize=100&name=/${name}/i`
+    )
+    if (res && res.data) {
+      const list = res.data.result
+      const temp = list.map((item) => ({
+        label: item.name as string,
+        value: item._id as string
+      }))
+      return temp
+    } else return []
+  }
+
   const columns: ProColumns<IFee>[] = [
     {
       title: 'STT',
@@ -64,10 +88,13 @@ const FeePage = () => {
     },
     {
       title: 'Họ và tên',
-      dataIndex: 'name',
+      dataIndex: 'unionistId',
       sorter: true,
-      render: (text, record, index, action) => {
-        return <>{record.unionist?.name}</>
+      render: (text, record) => {
+        const category = unionists.find(
+          (cat) => cat.value === record.unionistId
+        )
+        return <>{category ? category.label : ''}</>
       },
       hideInSearch: true
     },
