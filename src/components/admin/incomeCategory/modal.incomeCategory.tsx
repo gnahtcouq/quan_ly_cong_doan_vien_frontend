@@ -35,8 +35,7 @@ const ModalInComeCategory = (props: IProps) => {
         _id: dataInit._id,
         incomeCategoryId,
         description,
-        year,
-        budget
+        year
       }
 
       const res = await callUpdateIncomeCategory(receipts, dataInit._id)

@@ -109,7 +109,7 @@ const ModalExpense = (props: IProps) => {
         expenseId,
         description,
         time: time ? time.toISOString() : null,
-        amount: dataInit.amount, // không cho sửa số tiền
+        // amount: dataInit.amount, // không cho sửa số tiền
         userId: userId && userId.value ? userId.value : dataInit.userId,
         expenseCategoryId:
           expenseCategoryId && expenseCategoryId.value

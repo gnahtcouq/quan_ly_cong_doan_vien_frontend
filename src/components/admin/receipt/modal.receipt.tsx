@@ -109,7 +109,7 @@ const ModalReceipt = (props: IProps) => {
         receiptId: dataInit.receiptId, // không cho sửa mã phiếu thu
         description,
         time: time ? time.toISOString() : null,
-        amount: dataInit.amount, // không cho sửa số tiền
+        // amount: dataInit.amount, // không cho sửa số tiền
         userId: userId && userId.value ? userId.value : dataInit.userId,
         incomeCategoryId:
           incomeCategoryId && incomeCategoryId.value
