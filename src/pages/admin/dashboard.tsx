@@ -1,4 +1,4 @@
-import {Card, Col, Row, Spin, DatePicker, Form} from 'antd'
+import {Card, Col, Row, Spin, DatePicker, Form, notification} from 'antd'
 import {useEffect, useState, useRef} from 'react'
 import Chart from 'chart.js/auto'
 import {
@@ -49,7 +49,10 @@ const DashboardPage = () => {
       setPostCount(postCountResponse.data || 0)
       setDocumentCount(documentCountResponse.data || 0)
     } catch (error) {
-      console.error('Error fetching data:', error)
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: 'Đã xảy ra lỗi khi tìm nạp dữ liệu'
+      })
     } finally {
       setIsLoading(false)
     }
@@ -253,13 +256,13 @@ const DashboardPage = () => {
           <Card title="Thống kê số tiền thu và chi" bordered={false}>
             <Form>
               <ProForm.Item
-                label="Tháng/Năm"
+                label="Tháng/năm"
                 name="monthYear"
                 rules={[{required: false}]}
               >
                 <DatePicker
                   format="MM/YYYY"
-                  placeholder="mm/yyyy"
+                  placeholder="tháng/năm"
                   picker="month"
                   onChange={handleDatePickerChange}
                 />

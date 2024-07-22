@@ -86,11 +86,7 @@ const ModalFee = (props: IProps) => {
       const fees = {
         _id: dataInit._id,
         monthYear,
-        fee: dataInit.fee, // không cho sửa số tiền
-        unionistId:
-          unionistId && unionistId.value
-            ? unionistId.value
-            : dataInit.unionistId
+        fee
       }
 
       const res = await callUpdateFee(fees, dataInit._id)
@@ -202,6 +198,7 @@ const ModalFee = (props: IProps) => {
                       }
                     }}
                     style={{width: '100%'}}
+                    disabled={dataInit && dataInit._id ? true : false}
                   />
                 </ProForm.Item>
               </Col>
@@ -240,7 +237,6 @@ const ModalFee = (props: IProps) => {
                     formatter={(value) =>
                       `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                     }
-                    disabled={dataInit && dataInit._id ? true : false}
                   />
                 </ProForm.Item>
               </Col>

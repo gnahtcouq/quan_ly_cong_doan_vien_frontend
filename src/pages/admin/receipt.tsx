@@ -143,7 +143,6 @@ const ReceiptPage = () => {
         )
         return <>{category ? category.label : 'Trống'}</>
       }
-      // hideInSearch: true
     },
     {
       title: 'Số tiền',
@@ -168,7 +167,8 @@ const ReceiptPage = () => {
         return (
           <>{record?.updatedBy?.email ? record.updatedBy.email : 'Trống'}</>
         )
-      }
+      },
+      hideInSearch: true
     },
     {
       title: 'Ngày tạo',
