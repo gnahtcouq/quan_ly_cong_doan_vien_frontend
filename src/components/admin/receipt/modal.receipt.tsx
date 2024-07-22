@@ -106,10 +106,9 @@ const ModalReceipt = (props: IProps) => {
       // Update
       const receipts = {
         _id: dataInit._id,
-        receiptId: dataInit.receiptId, // không cho sửa mã phiếu thu
         description,
         time: time ? time.toISOString() : null,
-        amount: dataInit.amount,
+        amount,
         userId: userId && userId.value ? userId.value : dataInit.userId,
         incomeCategoryId:
           incomeCategoryId && incomeCategoryId.value

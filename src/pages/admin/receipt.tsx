@@ -230,7 +230,6 @@ const ReceiptPage = () => {
   const convertDateFormat = (dateStr) => {
     // Tách ngày, tháng, năm từ chuỗi ngày
     const [day, month, year] = dateStr.split('/')
-
     // Tạo đối tượng ngày với định dạng yyyy-mm-dd
     const formattedDate = dayjs(`${year}-${month}-${day}`).format('YYYY-MM-DD')
 

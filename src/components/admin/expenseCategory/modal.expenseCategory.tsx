@@ -36,7 +36,7 @@ const ModalExpenseCategory = (props: IProps) => {
       //update
       const receipts = {
         _id: dataInit._id,
-        expenseCategoryId,
+        budget,
         description,
         year
       }

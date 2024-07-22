@@ -162,7 +162,8 @@ const ExpensePage = () => {
         return (
           <>{record?.updatedBy?.email ? record.updatedBy.email : 'Trống'}</>
         )
-      }
+      },
+      hideInSearch: true
     },
     {
       title: 'Ngày tạo',
@@ -226,10 +227,23 @@ const ExpensePage = () => {
     }
   ]
 
+  const convertDateFormat = (dateStr) => {
+    // Tách ngày, tháng, năm từ chuỗi ngày
+    const [day, month, year] = dateStr.split('/')
+    // Tạo đối tượng ngày với định dạng yyyy-mm-dd
+    const formattedDate = dayjs(`${year}-${month}-${day}`).format('YYYY-MM-DD')
+
+    return formattedDate
+  }
+
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
     if (clone.description) clone.description = `/${clone.description}/i`
-    if (clone.time) clone.time = `/${clone.time}/i`
+    if (clone.time) {
+      // Chuyển đổi ngày thành định dạng YYYY-MM-DD
+      const formattedDate = convertDateFormat(clone.time)
+      clone.time = `/${formattedDate}/i`
+    }
     if (clone.amount) clone.amount = `/${clone.amount}/i`
 
     let temp = queryString.stringify(clone)

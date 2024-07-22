@@ -106,10 +106,9 @@ const ModalExpense = (props: IProps) => {
       // Update
       const expenses = {
         _id: dataInit._id,
-        expenseId,
         description,
         time: time ? time.toISOString() : null,
-        amount: dataInit.amount,
+        amount,
         userId: userId && userId.value ? userId.value : dataInit.userId,
         expenseCategoryId:
           expenseCategoryId && expenseCategoryId.value
