@@ -79,8 +79,8 @@ const ModalExpense = (props: IProps) => {
               setExpenseCategories([
                 {
                   label: res.data.description,
-                  value: res.data._id,
-                  key: res.data._id
+                  value: res.data.expenseCategoryId,
+                  key: res.data.expenseCategoryId
                 }
               ])
             }
@@ -109,7 +109,7 @@ const ModalExpense = (props: IProps) => {
         expenseId,
         description,
         time: time ? time.toISOString() : null,
-        // amount: dataInit.amount, // không cho sửa số tiền
+        amount: dataInit.amount,
         userId: userId && userId.value ? userId.value : dataInit.userId,
         expenseCategoryId:
           expenseCategoryId && expenseCategoryId.value
@@ -181,7 +181,7 @@ const ModalExpense = (props: IProps) => {
       const list = res.data.result
       const temp = list.map((item) => ({
         label: item.description as string,
-        value: item._id as string
+        value: item.expenseCategoryId as string
       }))
       return temp
     } else return []
@@ -317,7 +317,6 @@ const ModalExpense = (props: IProps) => {
                   formatter={(value) =>
                     `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                   }
-                  disabled={dataInit && dataInit._id ? true : false}
                 />
               </ProForm.Item>
             </Col>

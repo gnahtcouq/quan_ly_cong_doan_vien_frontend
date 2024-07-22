@@ -79,8 +79,8 @@ const ModalReceipt = (props: IProps) => {
               setIncomeCategories([
                 {
                   label: res.data.description,
-                  value: res.data._id,
-                  key: res.data._id
+                  value: res.data.incomeCategoryId,
+                  key: res.data.incomeCategoryId
                 }
               ])
             }
@@ -109,7 +109,7 @@ const ModalReceipt = (props: IProps) => {
         receiptId: dataInit.receiptId, // không cho sửa mã phiếu thu
         description,
         time: time ? time.toISOString() : null,
-        // amount: dataInit.amount, // không cho sửa số tiền
+        amount: dataInit.amount,
         userId: userId && userId.value ? userId.value : dataInit.userId,
         incomeCategoryId:
           incomeCategoryId && incomeCategoryId.value
@@ -181,7 +181,7 @@ const ModalReceipt = (props: IProps) => {
       const list = res.data.result
       const temp = list.map((item) => ({
         label: item.description as string,
-        value: item._id as string
+        value: item.incomeCategoryId as string
       }))
       return temp
     } else return []
@@ -317,7 +317,6 @@ const ModalReceipt = (props: IProps) => {
                   formatter={(value) =>
                     `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                   }
-                  disabled={dataInit && dataInit._id ? true : false}
                 />
               </ProForm.Item>
             </Col>

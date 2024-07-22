@@ -21,9 +21,11 @@ import ModalExpense, {
 } from '@/components/admin/expense/modal.expense'
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/expense/modal.import'
+import ViewDetailExpense from '@/components/admin/expense/view.expense'
 
 const ExpensePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
+  const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IExpense | null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [expenseCategories, setExpenseCategories] = useState<
@@ -61,6 +63,17 @@ const ExpensePage = () => {
     }
   }
 
+  const handleViewDetail = (record) => {
+    const category = expenseCategories.find(
+      (cat) => cat.value === record.expenseCategoryId
+    )
+    setDataInit({
+      ...record,
+      expenseCategory: category ? category.label : 'Trống'
+    })
+    setOpenViewDetail(true)
+  }
+
   const reloadTable = () => {
     tableRef?.current?.reload()
   }
@@ -75,7 +88,7 @@ const ExpensePage = () => {
       const list = res.data.result
       const temp = list.map((item) => ({
         label: item.description as string,
-        value: item._id as string
+        value: item.expenseCategoryId as string
       }))
       return temp
     } else return []
@@ -97,7 +110,14 @@ const ExpensePage = () => {
       dataIndex: 'receiptId',
       sorter: true,
       render: (text, record, index, action) => {
-        return <>{record.expenseId}</>
+        return (
+          <>
+            {' '}
+            <a href="#" onClick={() => handleViewDetail(record)}>
+              {record.expenseId}
+            </a>
+          </>
+        )
       }
     },
     {
@@ -300,6 +320,12 @@ const ExpensePage = () => {
         openModal={openModal}
         setOpenModal={setOpenModal}
         reloadTable={reloadTable}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+      />
+      <ViewDetailExpense
+        onClose={setOpenViewDetail}
+        open={openViewDetail}
         dataInit={dataInit}
         setDataInit={setDataInit}
       />

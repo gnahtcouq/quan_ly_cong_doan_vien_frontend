@@ -21,9 +21,11 @@ import ModalReceipt, {
 } from '@/components/admin/receipt/modal.receipt'
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/receipt/modal.import'
+import ViewDetailReceipt from '@/components/admin/receipt/view.receipt'
 
 const ReceiptPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
+  const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IReceipt | null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [incomeCategories, setIncomeCategories] = useState<
@@ -61,6 +63,17 @@ const ReceiptPage = () => {
     }
   }
 
+  const handleViewDetail = (record) => {
+    const category = incomeCategories.find(
+      (cat) => cat.value === record.incomeCategoryId
+    )
+    setDataInit({
+      ...record,
+      incomeCategory: category ? category.label : 'Trống'
+    })
+    setOpenViewDetail(true)
+  }
+
   const reloadTable = () => {
     tableRef?.current?.reload()
   }
@@ -75,7 +88,7 @@ const ReceiptPage = () => {
       const list = res.data.result
       const temp = list.map((item) => ({
         label: item.description as string,
-        value: item._id as string
+        value: item.incomeCategoryId as string
       }))
       return temp
     } else return []
@@ -97,7 +110,14 @@ const ReceiptPage = () => {
       dataIndex: 'receiptId',
       sorter: true,
       render: (text, record, index, action) => {
-        return <>{record.receiptId}</>
+        return (
+          <>
+            {' '}
+            <a href="#" onClick={() => handleViewDetail(record)}>
+              {record.receiptId}
+            </a>
+          </>
+        )
       }
     },
     {
@@ -117,7 +137,8 @@ const ReceiptPage = () => {
           (cat) => cat.value === record.incomeCategoryId
         )
         return <>{category ? category.label : 'Trống'}</>
-      }
+      },
+      hideInSearch: true
     },
     {
       title: 'Số tiền',
@@ -206,10 +227,24 @@ const ReceiptPage = () => {
     }
   ]
 
+  const convertDateFormat = (dateStr) => {
+    // Tách ngày, tháng, năm từ chuỗi ngày
+    const [day, month, year] = dateStr.split('/')
+
+    // Tạo đối tượng ngày với định dạng yyyy-mm-dd
+    const formattedDate = dayjs(`${year}-${month}-${day}`).format('YYYY-MM-DD')
+
+    return formattedDate
+  }
+
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
     if (clone.description) clone.description = `/${clone.description}/i`
-    if (clone.time) clone.time = `/${clone.time}/i`
+    if (clone.time) {
+      // Chuyển đổi ngày thành định dạng YYYY-MM-DD
+      const formattedDate = convertDateFormat(clone.time)
+      clone.time = `/${formattedDate}/i`
+    }
     if (clone.amount) clone.amount = `/${clone.amount}/i`
 
     let temp = queryString.stringify(clone)
@@ -300,6 +335,12 @@ const ReceiptPage = () => {
         openModal={openModal}
         setOpenModal={setOpenModal}
         reloadTable={reloadTable}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+      />
+      <ViewDetailReceipt
+        onClose={setOpenViewDetail}
+        open={openViewDetail}
         dataInit={dataInit}
         setDataInit={setDataInit}
       />

@@ -180,6 +180,7 @@ export interface IReceipt {
   time?: string
   amount?: string
   incomeCategoryId?: string
+  incomeCategory?: string
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null
@@ -212,6 +213,7 @@ export interface IExpense {
   time?: string
   amount?: string
   expenseCategoryId?: string
+  expenseCategory?: string
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null
