@@ -21,9 +21,13 @@ import {IDocument, IUser} from '@/types/backend'
 import {useState, useEffect} from 'react'
 import {
   callFetchDocumentByUser,
+  callFetchUnionistById,
   callFetchUserById,
   callGetSubscriberThreads,
   callUpdateSubscriber,
+  callUpdateUnionist,
+  callUpdateUnionistEmail,
+  callUpdateUnionistPassword,
   callUpdateUser,
   callUpdateUserEmail,
   callUpdateUserPassword
@@ -151,18 +155,34 @@ const UserUpdateInfo = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
   const user = useAppSelector((state) => state?.account?.user) // Lấy thông tin user hiện tại
+  const type = useAppSelector((state) => state?.account?.user?.type) // Lấy loại user hiện tại
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     const fetchUserData = async () => {
       setIsLoading(true)
-      const res = await callFetchUserById(user._id)
-      if (res && res.data) {
-        setDataInit(res.data)
-        form.setFieldsValue({
-          ...res.data,
-          dateOfBirth: res.data.dateOfBirth ? dayjs(res.data.dateOfBirth) : null
-        })
+      if (type === 'user') {
+        const res = await callFetchUserById(user._id)
+        if (res && res.data) {
+          setDataInit(res.data)
+          form.setFieldsValue({
+            ...res.data,
+            dateOfBirth: res.data.dateOfBirth
+              ? dayjs(res.data.dateOfBirth)
+              : null
+          })
+        }
+      } else {
+        const res = await callFetchUnionistById(user._id)
+        if (res && res.data) {
+          setDataInit(res.data)
+          form.setFieldsValue({
+            ...res.data,
+            dateOfBirth: res.data.dateOfBirth
+              ? dayjs(res.data.dateOfBirth)
+              : null
+          })
+        }
       }
       setIsLoading(false)
     }
@@ -170,32 +190,39 @@ const UserUpdateInfo = (props: any) => {
   }, [user._id])
 
   const onFinish = async (values: any) => {
-    const {
-      name,
-      email,
-      password,
-      dateOfBirth,
-      gender,
-      address,
-      CCCD,
-      permissions
-    } = values
+    const {name, email, password, dateOfBirth, gender, address, CCCD} = values
 
     if (dataInit?._id) {
       // Nếu có thay đổi email, gửi yêu cầu thay đổi email qua API trước
       if (email !== dataInit.email) {
         setIsLoading(true)
-        const resChangeEmail = await callUpdateUserEmail(dataInit._id, email)
-        setIsLoading(false)
-        if (resChangeEmail.data) {
-          message.success('Yêu cầu thay đổi email đã được gửi đi!')
+        if (type === 'user') {
+          const resChangeEmail = await callUpdateUserEmail(dataInit._id, email)
+          if (resChangeEmail.data) {
+            message.success('Yêu cầu thay đổi email đã được gửi đi!')
+          } else {
+            notification.error({
+              message: 'Có lỗi xảy ra',
+              description: resChangeEmail.message
+            })
+            return // Ngừng xử lý nếu có lỗi xảy ra khi gửi yêu cầu thay đổi email
+          }
         } else {
-          notification.error({
-            message: 'Có lỗi xảy ra',
-            description: resChangeEmail.message
-          })
-          return // Ngừng xử lý nếu có lỗi xảy ra khi gửi yêu cầu thay đổi email
+          const resChangeEmail = await callUpdateUnionistEmail(
+            dataInit._id,
+            email
+          )
+          if (resChangeEmail.data) {
+            message.success('Yêu cầu thay đổi email đã được gửi đi!')
+          } else {
+            notification.error({
+              message: 'Có lỗi xảy ra',
+              description: resChangeEmail.message
+            })
+            return // Ngừng xử lý nếu có lỗi xảy ra khi gửi yêu cầu thay đổi email
+          }
         }
+        setIsLoading(false)
       }
 
       setIsLoading(true)
@@ -208,28 +235,49 @@ const UserUpdateInfo = (props: any) => {
         dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : null,
         gender,
         address,
-        CCCD: CCCD ? CCCD : null,
-        permissions: dataInit.permissions
+        CCCD: CCCD ? CCCD : null
       }
 
       // Gửi yêu cầu cập nhật thông tin người dùng
-      const resUpdateUser = await callUpdateUser(user, dataInit._id)
-      const resSubscriber = await callGetSubscriberThreads()
-      const resUpdateSubscriber = await callUpdateSubscriber({
-        email: dataInit.email,
-        name: user.name,
-        threads: resSubscriber.data ? resSubscriber.data.threads : []
-      })
-      setIsLoading(false)
-
-      if (resUpdateUser.data && resUpdateSubscriber.data) {
-        message.success('Cập nhật thông tin thành công!')
-        dispatch(updateUserInfo(user))
-      } else {
-        notification.error({
-          message: 'Có lỗi xảy ra',
-          description: resUpdateUser.message || resUpdateSubscriber.message
+      if (type === 'user') {
+        const resUpdateUser = await callUpdateUser(user, dataInit._id)
+        const resSubscriber = await callGetSubscriberThreads()
+        const resUpdateSubscriber = await callUpdateSubscriber({
+          email: dataInit.email,
+          name: user.name,
+          threads: resSubscriber.data ? resSubscriber.data.threads : []
         })
+        setIsLoading(false)
+
+        if (resUpdateUser.data && resUpdateSubscriber.data) {
+          message.success('Cập nhật thông tin thành công!')
+          dispatch(updateUserInfo(user))
+        } else {
+          notification.error({
+            message: 'Có lỗi xảy ra',
+            description: resUpdateUser.message || resUpdateSubscriber.message
+          })
+        }
+      } else {
+        const resUpdateUnionist = await callUpdateUnionist(user, dataInit._id)
+        const resSubscriber = await callGetSubscriberThreads()
+        const resUpdateSubscriber = await callUpdateSubscriber({
+          email: dataInit.email,
+          name: user.name,
+          threads: resSubscriber.data ? resSubscriber.data.threads : []
+        })
+        setIsLoading(false)
+
+        if (resUpdateUnionist.data && resUpdateSubscriber.data) {
+          message.success('Cập nhật thông tin thành công!')
+          dispatch(updateUserInfo(user))
+        } else {
+          notification.error({
+            message: 'Có lỗi xảy ra',
+            description:
+              resUpdateUnionist.message || resUpdateSubscriber.message
+          })
+        }
       }
     }
   }
@@ -428,6 +476,7 @@ const UserUpdatePassword = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
   const user = useAppSelector((state) => state.account.user)
+  const type = useAppSelector((state) => state?.account?.user?.type) // Lấy loại user hiện tại
 
   const onFinish = async (values: any) => {
     const {currentPassword, newPassword, reNewPassword} = values
@@ -440,21 +489,40 @@ const UserUpdatePassword = (props: any) => {
     }
 
     setIsLoading(true)
-    const res = await callUpdateUserPassword(
-      user._id,
-      currentPassword,
-      newPassword
-    )
-    setIsLoading(false)
+    if (type === 'user') {
+      const res = await callUpdateUserPassword(
+        user._id,
+        currentPassword,
+        newPassword
+      )
+      setIsLoading(false)
 
-    if (res.data) {
-      message.success('Cập nhật mật khẩu thành công!')
-      form.resetFields()
+      if (res.data) {
+        message.success('Cập nhật mật khẩu thành công!')
+        form.resetFields()
+      } else {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: res.message
+        })
+      }
     } else {
-      notification.error({
-        message: 'Có lỗi xảy ra',
-        description: res.message
-      })
+      const res = await callUpdateUnionistPassword(
+        user._id,
+        currentPassword,
+        newPassword
+      )
+      setIsLoading(false)
+
+      if (res.data) {
+        message.success('Cập nhật mật khẩu thành công!')
+        form.resetFields()
+      } else {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: res.message
+        })
+      }
     }
   }
 

@@ -28,6 +28,7 @@ export interface IAccount {
       method: string
       module: string
     }[]
+    type: string
   }
   unionist: {
     _id: string
@@ -67,7 +68,7 @@ export interface IUser {
   address: string
   CCCD?: string
   note?: string
-  permissions: IPermission[] | string[]
+  permissions?: IPermission[] | string[]
   verificationCode?: string
   verificationExpires?: string
   createdBy?: string
@@ -90,7 +91,7 @@ export interface IUnionist {
   leavingDate?: string
   unionEntryDate?: string
   note?: string
-  permissions: IPermission[] | string[]
+  permissions?: IPermission[] | string[]
   department?: {
     _id: string
     name: string

@@ -54,14 +54,14 @@ const initialState: IState = {
     email: '',
     name: '',
     permissions: [],
-    type: 'user'
+    type: ''
   },
   unionist: {
     _id: '',
     email: '',
     name: '',
     permissions: [],
-    type: 'unionist'
+    type: ''
   },
 
   activeMenu: 'home'
@@ -83,6 +83,7 @@ export const accountSlide = createSlice({
       state.user.email = action.payload.email
       state.user.name = action.payload.name
       state.user.permissions = action?.payload?.permissions
+      state.user.type = action?.payload?.type
     },
     setLogoutAction: (state, action) => {
       localStorage.removeItem('access_token')
@@ -114,6 +115,7 @@ export const accountSlide = createSlice({
         state.user.email = action.payload.user?.email
         state.user.name = action.payload.user?.name
         state.user.permissions = action?.payload?.user?.permissions
+        state.user.type = action?.payload?.user?.type
       }
     })
 
