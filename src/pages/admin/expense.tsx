@@ -132,6 +132,11 @@ const ExpensePage = () => {
       title: 'Danh mục',
       dataIndex: 'expenseCategoryId',
       sorter: true,
+      valueType: 'select',
+      fieldProps: {
+        options: expenseCategories,
+        mode: 'multiple'
+      },
       render: (text, record) => {
         const category = expenseCategories.find(
           (cat) => cat.value === record.expenseCategoryId
@@ -245,6 +250,8 @@ const ExpensePage = () => {
       clone.time = `/${formattedDate}/i`
     }
     if (clone.amount) clone.amount = `/${clone.amount}/i`
+    if (clone.expenseCategoryId)
+      clone.expenseCategoryId = clone.expenseCategoryId.join(',')
 
     let temp = queryString.stringify(clone)
 
@@ -258,6 +265,12 @@ const ExpensePage = () => {
     }
     if (sort && sort.amount) {
       sortBy = sort.amount === 'ascend' ? 'sort=amount' : 'sort=-amount'
+    }
+    if (sort && sort.expenseCategoryId) {
+      sortBy =
+        sort.expenseCategoryId === 'ascend'
+          ? 'sort=expenseCategoryId'
+          : 'sort=-expenseCategoryId'
     }
     if (sort && sort.createdAt) {
       sortBy =

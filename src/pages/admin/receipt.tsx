@@ -132,13 +132,18 @@ const ReceiptPage = () => {
       title: 'Danh mục',
       dataIndex: 'incomeCategoryId',
       sorter: true,
+      valueType: 'select',
+      fieldProps: {
+        options: incomeCategories,
+        mode: 'multiple'
+      },
       render: (text, record) => {
         const category = incomeCategories.find(
           (cat) => cat.value === record.incomeCategoryId
         )
         return <>{category ? category.label : 'Trống'}</>
-      },
-      hideInSearch: true
+      }
+      // hideInSearch: true
     },
     {
       title: 'Số tiền',
@@ -245,6 +250,8 @@ const ReceiptPage = () => {
       clone.time = `/${formattedDate}/i`
     }
     if (clone.amount) clone.amount = `/${clone.amount}/i`
+    if (clone.incomeCategoryId)
+      clone.incomeCategoryId = clone.incomeCategoryId.join(',')
 
     let temp = queryString.stringify(clone)
 
@@ -258,6 +265,12 @@ const ReceiptPage = () => {
     }
     if (sort && sort.amount) {
       sortBy = sort.amount === 'ascend' ? 'sort=amount' : 'sort=-amount'
+    }
+    if (sort && sort.incomeCategoryId) {
+      sortBy =
+        sort.incomeCategoryId === 'ascend'
+          ? 'sort=incomeCategoryId'
+          : 'sort=-incomeCategoryId'
     }
     if (sort && sort.createdAt) {
       sortBy =

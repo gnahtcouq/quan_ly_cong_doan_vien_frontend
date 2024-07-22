@@ -34,12 +34,12 @@ const FeePage = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchUnionists = async () => {
       const unionists = await fetchUnionistList('')
       console.log('unionists', unionists)
       setUnionists(unionists)
     }
-    fetchCategories()
+    fetchUnionists()
   }, [])
 
   const handleDeleteFee = async (_id: string | undefined) => {
@@ -88,15 +88,19 @@ const FeePage = () => {
     },
     {
       title: 'Họ và tên',
-      dataIndex: 'name',
+      dataIndex: 'unionistId',
       sorter: true,
+      valueType: 'select',
+      fieldProps: {
+        options: unionists,
+        mode: 'multiple'
+      },
       render: (text, record) => {
         const category = unionists.find(
           (cat) => cat.value === record.unionistId
         )
         return <>{category ? category.label : ''}</>
-      },
-      hideInSearch: false
+      }
     },
     {
       title: 'Số tiền',
@@ -177,15 +181,19 @@ const FeePage = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
-    if (clone.name) clone.name = `/${clone.name}/i`
-    if (clone.monthYear) clone.monthYear = `/${clone.monthYear}/i`
+    if (clone.unionistId) clone.unionistId = clone.unionistId.join(',')
+    if (clone.monthYear) {
+      const [month, year] = clone.monthYear.split('/')
+      clone.monthYear = `${year}/${month}`
+    }
     if (clone.fee) clone.fee = `/${clone.fee}/i`
 
     let temp = queryString.stringify(clone)
 
     let sortBy = ''
-    if (sort && sort.name) {
-      sortBy = sort.name === 'ascend' ? 'sort=name' : 'sort=-name'
+    if (sort && sort.unionistId) {
+      sortBy =
+        sort.unionistId === 'ascend' ? 'sort=unionistId' : 'sort=-unionistId'
     }
     if (sort && sort.monthYear) {
       sortBy =
