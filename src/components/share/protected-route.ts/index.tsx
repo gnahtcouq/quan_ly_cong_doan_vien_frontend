@@ -14,7 +14,7 @@ const PermissionBaseRoute = (props: any) => {
     (permission) => permission.method === 'ACCESS_TO_ADMIN_PAGE'
   )
 
-  if ((user && userHasPermission) || (unionist && !unionistHasPermission)) {
+  if (user && userHasPermission && unionist && !unionistHasPermission) {
     return <>{props.children}</>
   } else {
     return <NotPermitted />
