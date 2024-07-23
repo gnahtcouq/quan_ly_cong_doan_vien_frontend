@@ -17,6 +17,7 @@ import {
 import {IExpenseCategory} from '@/types/backend'
 import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
+import {disabledMonthYear} from '@/config/utils'
 
 interface IProps {
   openModal: boolean
@@ -149,6 +150,7 @@ const ModalExpenseCategory = (props: IProps) => {
                   format="YYYY"
                   placeholder="yyyy"
                   picker="year"
+                  disabledDate={disabledMonthYear}
                   style={{width: '100%'}}
                 />
               </ProForm.Item>

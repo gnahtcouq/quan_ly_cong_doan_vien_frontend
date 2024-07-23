@@ -1,4 +1,5 @@
 import {grey, green, blue, red, orange} from '@ant-design/colors'
+import dayjs from 'dayjs'
 
 export const THREADS_LIST = [
   {label: 'Thông Báo', value: 'THÔNG BÁO'},
@@ -75,4 +76,56 @@ export const formatCurrency = (value) => {
   })
     .format(value)
     .replace(/\./g, ',')
+}
+
+export const validateDateOfBirth = (_, value) => {
+  const date = dayjs(value)
+  const today = dayjs()
+  const age = today.diff(date, 'year')
+  if (!date.isValid() || age < 18) {
+    return Promise.reject(new Error('Bạn phải đủ 18 tuổi trở lên'))
+  }
+  return Promise.resolve()
+}
+
+// Hàm disable ngày không hợp lệ
+export const disabledDateBirthday = (current) => {
+  // Ngày phải lớn hơn hoặc bằng năm 1900
+  const minDate = dayjs().year(1900).startOf('year')
+
+  // Disable ngày sau hôm nay và ngày sẽ làm người dùng dưới 18 tuổi
+  return (
+    current &&
+    (current < minDate ||
+      current > dayjs().endOf('day') ||
+      current > dayjs().subtract(18, 'year'))
+  )
+}
+
+// Hàm disable ngày lớn hơn ngày hiện tại
+export const disabledDate = (current) => {
+  // Ngày bắt đầu của năm 1900
+  const minDate = dayjs().year(1900).startOf('year')
+
+  // Disable ngày trước năm 1900 và ngày sau hôm nay
+  return current && (current < minDate || current > dayjs().endOf('day'))
+}
+
+// Hàm disable tháng và năm không hợp lệ của công đoàn phí
+export const disabledMonthYear = (current) => {
+  if (!current) return false
+
+  const today = dayjs()
+  const currentMonth = current.month()
+  const currentYear = current.year()
+
+  const todayMonth = today.month()
+  const todayYear = today.year()
+
+  // Disable các tháng và năm sau tháng và năm hiện tại
+  return (
+    currentYear < 1900 ||
+    currentYear > todayYear ||
+    (currentYear === todayYear && currentMonth > todayMonth)
+  )
 }

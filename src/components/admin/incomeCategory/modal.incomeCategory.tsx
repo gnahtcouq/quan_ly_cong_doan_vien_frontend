@@ -14,6 +14,7 @@ import {callCreateIncomeCategory, callUpdateIncomeCategory} from '@/config/api'
 import {IIncomeCategory} from '@/types/backend'
 import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
+import {disabledMonthYear} from '@/config/utils'
 
 interface IProps {
   openModal: boolean
@@ -146,6 +147,7 @@ const ModalInComeCategory = (props: IProps) => {
                   format="YYYY"
                   placeholder="yyyy"
                   picker="year"
+                  disabledDate={disabledMonthYear}
                   style={{width: '100%'}}
                 />
               </ProForm.Item>

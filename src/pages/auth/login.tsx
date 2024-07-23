@@ -107,7 +107,8 @@ const LoginPage = () => {
               <p className="text text-normal" style={{textAlign: 'center'}}>
                 Bạn chưa có tài khoản?
                 <span>
-                  <Link to="/register"> Đăng ký </Link>
+                  <Link to="/register"> Đăng ký </Link> /
+                  <Link to="/forgot-password"> Quên mật khẩu </Link>
                 </span>
               </p>
             </Form>

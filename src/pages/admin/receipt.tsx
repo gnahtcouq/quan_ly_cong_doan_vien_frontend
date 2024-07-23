@@ -69,7 +69,7 @@ const ReceiptPage = () => {
     )
     setDataInit({
       ...record,
-      incomeCategory: category ? category.label : 'Trống'
+      incomeCategory: category ? category.label : ''
     })
     setOpenViewDetail(true)
   }
@@ -141,7 +141,7 @@ const ReceiptPage = () => {
         const category = incomeCategories.find(
           (cat) => cat.value === record.incomeCategoryId
         )
-        return <>{category ? category.label : 'Trống'}</>
+        return <>{category ? category.label : ''}</>
       }
     },
     {
@@ -164,9 +164,7 @@ const ReceiptPage = () => {
       dataIndex: 'updatedBy.email',
       sorter: true,
       render: (text, record, index, action) => {
-        return (
-          <>{record?.updatedBy?.email ? record.updatedBy.email : 'Trống'}</>
-        )
+        return <>{record?.updatedBy?.email ? record.updatedBy.email : ''}</>
       },
       hideInSearch: true
     },

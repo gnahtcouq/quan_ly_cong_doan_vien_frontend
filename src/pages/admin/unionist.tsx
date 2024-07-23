@@ -90,6 +90,7 @@ const UnionistPage = () => {
     {
       title: 'Họ và tên',
       dataIndex: 'name',
+      width: 200,
       sorter: true,
       render: (text, record, index, action) => {
         return (
@@ -110,7 +111,25 @@ const UnionistPage = () => {
       dataIndex: 'email',
       sorter: true
     },
-
+    {
+      title: 'Đơn vị',
+      dataIndex: 'department',
+      width: 250,
+      sorter: true,
+      render: (text, record, index, action) => {
+        return <>{record.department?.name}</>
+      }
+    },
+    {
+      title: 'Ngày vào công đoàn',
+      dataIndex: 'unionEntryDate',
+      width: 200,
+      sorter: true,
+      render: (text, record, index, action) => {
+        return <>{dayjs(record.unionEntryDate).format('DD/MM/YYYY')}</>
+      },
+      hideInSearch: true
+    },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',

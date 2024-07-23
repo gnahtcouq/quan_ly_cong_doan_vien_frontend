@@ -24,6 +24,7 @@ import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
 import {useEffect, useState} from 'react'
 import {DebounceSelect} from '@/config/debouce.select'
+import {disabledDate} from '@/config/utils'
 
 interface IProps {
   openModal: boolean
@@ -255,6 +256,7 @@ const ModalReceipt = (props: IProps) => {
                 <DatePicker
                   format="DD/MM/YYYY"
                   placeholder="dd/mm/yyyy"
+                  disabledDate={disabledDate}
                   style={{width: '100%'}}
                 />
               </ProForm.Item>

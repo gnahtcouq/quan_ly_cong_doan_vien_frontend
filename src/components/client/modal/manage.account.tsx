@@ -205,6 +205,7 @@ const UserUpdateInfo = (props: any) => {
               message: 'Có lỗi xảy ra',
               description: resChangeEmail.message
             })
+            setIsLoading(false)
             return // Ngừng xử lý nếu có lỗi xảy ra khi gửi yêu cầu thay đổi email
           }
         } else {
@@ -219,6 +220,7 @@ const UserUpdateInfo = (props: any) => {
               message: 'Có lỗi xảy ra',
               description: resChangeEmail.message
             })
+            setIsLoading(false)
             return // Ngừng xử lý nếu có lỗi xảy ra khi gửi yêu cầu thay đổi email
           }
         }

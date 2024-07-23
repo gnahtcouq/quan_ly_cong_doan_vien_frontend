@@ -25,6 +25,11 @@ import {IUnionist} from '@/types/backend'
 import {DebounceSelect} from '@/config/debouce.select'
 import dayjs from 'dayjs'
 import en_US from 'antd/lib/locale/en_US'
+import {
+  disabledDateBirthday,
+  disabledDate,
+  validateDateOfBirth
+} from '@/config/utils'
 
 interface IProps {
   openModal: boolean
@@ -272,11 +277,15 @@ const ModalUnionist = (props: IProps) => {
               <ProForm.Item
                 label="Ngày sinh"
                 name="dateOfBirth"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                rules={[
+                  {required: true, message: 'Vui lòng không để trống!'},
+                  {validator: validateDateOfBirth}
+                ]}
               >
                 <DatePicker
                   format="DD/MM/YYYY"
                   placeholder="dd/mm/yyyy"
+                  disabledDate={disabledDateBirthday}
                   style={{width: '100%'}}
                 />
               </ProForm.Item>
@@ -290,6 +299,7 @@ const ModalUnionist = (props: IProps) => {
                 <DatePicker
                   format="DD/MM/YYYY"
                   placeholder="dd/mm/yyyy"
+                  disabledDate={disabledDate}
                   style={{width: '100%'}}
                 />
               </ProForm.Item>
@@ -339,6 +349,7 @@ const ModalUnionist = (props: IProps) => {
                 <DatePicker
                   format="DD/MM/YYYY"
                   placeholder="dd/mm/yyyy"
+                  disabledDate={disabledDate}
                   style={{width: '100%'}}
                 />
               </ProForm.Item>
@@ -352,6 +363,7 @@ const ModalUnionist = (props: IProps) => {
                 <DatePicker
                   format="DD/MM/YYYY"
                   placeholder="dd/mm/yyyy"
+                  disabledDate={disabledDate}
                   style={{width: '100%'}}
                 />
               </ProForm.Item>

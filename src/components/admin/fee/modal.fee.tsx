@@ -27,6 +27,7 @@ import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
 import {useEffect, useState} from 'react'
 import {DebounceSelect} from '@/config/debouce.select'
+import {disabledMonthYear} from '@/config/utils'
 
 interface IProps {
   openModal: boolean
@@ -124,6 +125,7 @@ const ModalFee = (props: IProps) => {
   const handleReset = async () => {
     form.resetFields()
     setDataInit(null)
+    setUnionists([])
     setOpenModal(false)
   }
 
@@ -218,6 +220,7 @@ const ModalFee = (props: IProps) => {
                     format="MM/YYYY"
                     placeholder="mm/yyyy"
                     picker="month"
+                    disabledDate={disabledMonthYear}
                     style={{width: '100%'}}
                   />
                 </ProForm.Item>

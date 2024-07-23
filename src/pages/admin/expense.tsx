@@ -69,7 +69,7 @@ const ExpensePage = () => {
     )
     setDataInit({
       ...record,
-      expenseCategory: category ? category.label : 'Trống'
+      expenseCategory: category ? category.label : ''
     })
     setOpenViewDetail(true)
   }
@@ -141,7 +141,7 @@ const ExpensePage = () => {
         const category = expenseCategories.find(
           (cat) => cat.value === record.expenseCategoryId
         )
-        return <>{category ? category.label : 'Trống'}</>
+        return <>{category ? category.label : ''}</>
       }
     },
     {
@@ -164,9 +164,7 @@ const ExpensePage = () => {
       dataIndex: 'updatedBy.email',
       sorter: true,
       render: (text, record, index, action) => {
-        return (
-          <>{record?.updatedBy?.email ? record.updatedBy.email : 'Trống'}</>
-        )
+        return <>{record?.updatedBy?.email ? record.updatedBy.email : ''}</>
       },
       hideInSearch: true
     },

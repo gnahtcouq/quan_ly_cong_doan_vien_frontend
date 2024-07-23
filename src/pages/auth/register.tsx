@@ -16,6 +16,7 @@ import styles from 'styles/auth.module.scss'
 import {IUser} from '@/types/backend'
 import {DatePicker} from 'antd'
 import logo from '@/assets/logo.webp'
+import {disabledDateBirthday, validateDateOfBirth} from '@/config/utils'
 
 const {Option} = Select
 
@@ -87,12 +88,12 @@ const RegisterPage = () => {
                 label="Mật khẩu"
                 name="password"
                 rules={[
-                  {required: true, message: 'Vui lòng không để trống!'}
-                  // {
-                  //   pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-                  //   message:
-                  //     'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.'
-                  // }
+                  {required: true, message: 'Vui lòng không để trống!'},
+                  {
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                    message:
+                      'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.'
+                  }
                 ]}
               >
                 <Input.Password />
@@ -113,10 +114,15 @@ const RegisterPage = () => {
                     label="Ngày sinh"
                     name="dateOfBirth"
                     rules={[
-                      {required: true, message: 'Vui lòng không để trống!'}
+                      {required: true, message: 'Vui lòng không để trống!'},
+                      {validator: validateDateOfBirth}
                     ]}
                   >
-                    <DatePicker format="DD/MM/YYYY" placeholder="dd/mm/yyyy" />
+                    <DatePicker
+                      format="DD/MM/YYYY"
+                      placeholder="dd/mm/yyyy"
+                      disabledDate={disabledDateBirthday}
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -130,7 +136,7 @@ const RegisterPage = () => {
                       }
                     ]}
                   >
-                    <Select allowClear>
+                    <Select allowClear placeholder="Chọn giới tính">
                       <Option value="MALE">Nam</Option>
                       <Option value="FEMALE">Nữ</Option>
                       <Option value="OTHER">Khác</Option>

@@ -18,6 +18,7 @@ import {callCreateUser, callUpdateUser} from '@/config/api'
 import {IUser} from '@/types/backend'
 import en_US from 'antd/lib/locale/en_US'
 import dayjs from 'dayjs'
+import {disabledDateBirthday, validateDateOfBirth} from '@/config/utils'
 
 interface IProps {
   openModal: boolean
@@ -197,11 +198,15 @@ const ModalUser = (props: IProps) => {
                 label="Ngày sinh"
                 name="dateOfBirth"
                 normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                rules={[
+                  {required: true, message: 'Vui lòng không để trống!'},
+                  {validator: validateDateOfBirth}
+                ]}
               >
                 <DatePicker
                   format="DD/MM/YYYY"
                   placeholder="dd/mm/yyyy"
+                  disabledDate={disabledDateBirthday}
                   style={{width: '100%'}}
                 />
               </ProForm.Item>
