@@ -11,6 +11,7 @@ import {
   callFetchNumberOfDocuments
 } from '@/config/api'
 import {ProForm} from '@ant-design/pro-components'
+import {disabledMonthYear} from '@/config/utils'
 
 const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -82,7 +83,10 @@ const DashboardPage = () => {
 
     const ctx = document.getElementById('myChart') as HTMLCanvasElement
     if (!ctx) {
-      console.error('Canvas element not found')
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: 'Đã xảy ra lỗi khi tìm nạp dữ liệu'
+      })
       return
     }
 
@@ -146,14 +150,20 @@ const DashboardPage = () => {
         }
       })
     } catch (error) {
-      console.error('Error rendering chart:', error)
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: 'Đã xảy ra lỗi khi khởi tạo biểu đồ'
+      })
     }
   }
 
   const renderPolarChart = () => {
     const ctx = document.getElementById('polarChart') as HTMLCanvasElement
     if (!ctx) {
-      console.error('Canvas element not found')
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: 'Đã xảy ra lỗi khi tìm nạp dữ liệu'
+      })
       return
     }
 
@@ -214,7 +224,10 @@ const DashboardPage = () => {
         }
       })
     } catch (error) {
-      console.error('Error rendering chart:', error)
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: 'Đã xảy ra lỗi khi khởi tạo biểu đồ'
+      })
     }
   }
 
@@ -264,6 +277,7 @@ const DashboardPage = () => {
                   format="MM/YYYY"
                   placeholder="tháng/năm"
                   picker="month"
+                  disabledDate={disabledMonthYear}
                   onChange={handleDatePickerChange}
                 />
               </ProForm.Item>

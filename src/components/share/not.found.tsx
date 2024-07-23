@@ -11,6 +11,7 @@ const NotFound = () => {
       navigate('/') // Điều hướng đến trang chính nếu không có lịch sử
     }
   }
+
   return (
     <>
       <Result
