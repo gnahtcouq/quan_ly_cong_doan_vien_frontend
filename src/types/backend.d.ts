@@ -19,6 +19,7 @@ export interface IAccount {
   access_token: string
   user: {
     _id: string
+    id: string
     email: string
     name: string
     permissions: {
@@ -32,6 +33,7 @@ export interface IAccount {
   }
   unionist: {
     _id: string
+    id: string
     email: string
     name: string
     permissions: {
@@ -60,6 +62,7 @@ export interface IDepartment {
 
 export interface IUser {
   _id?: string
+  id?: string
   name: string
   email: string
   password?: string
@@ -80,6 +83,7 @@ export interface IUser {
 
 export interface IUnionist {
   _id?: string
+  id?: string
   name: string
   email: string
   password?: string
@@ -177,6 +181,7 @@ export interface IReceipt {
   _id?: string
   receiptId?: string
   userId?: string
+  userName?: string
   description?: string
   time?: string
   amount?: string
@@ -210,6 +215,7 @@ export interface IExpense {
   _id?: string
   expenseId?: string
   userId?: string
+  userName?: string
   description?: string
   time?: string
   amount?: string

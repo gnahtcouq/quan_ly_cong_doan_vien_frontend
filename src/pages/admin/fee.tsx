@@ -36,7 +36,6 @@ const FeePage = () => {
   useEffect(() => {
     const fetchUnionists = async () => {
       const unionists = await fetchUnionistList('')
-      console.log('unionists', unionists)
       setUnionists(unionists)
     }
     fetchUnionists()
@@ -69,7 +68,7 @@ const FeePage = () => {
       const list = res.data.result
       const temp = list.map((item) => ({
         label: item.name as string,
-        value: item._id as string
+        value: item.id as string
       }))
       return temp
     } else return []
@@ -96,10 +95,10 @@ const FeePage = () => {
         mode: 'multiple'
       },
       render: (text, record) => {
-        const category = unionists.find(
+        const unionist = unionists.find(
           (cat) => cat.value === record.unionistId
         )
-        return <>{category ? category.label : ''}</>
+        return <>{unionist ? unionist.label : ''}</>
       }
     },
     {

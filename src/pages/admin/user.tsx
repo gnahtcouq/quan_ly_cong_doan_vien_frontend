@@ -68,29 +68,10 @@ const UserPage = () => {
       },
       hideInSearch: true
     },
-    // {
-    //   title: 'ID',
-    //   dataIndex: '_id',
-    //   width: 200,
-    //   render: (text, record, index, action) => {
-    //     return (
-    //       <a
-    //         href="#"
-    //         onClick={() => {
-    //           setOpenViewDetail(true)
-    //           setDataInit(record)
-    //         }}
-    //       >
-    //         {record._id}
-    //       </a>
-    //     )
-    //   },
-    //   hideInSearch: true
-    // },
     {
-      title: 'Họ và tên',
-      dataIndex: 'name',
-      sorter: true,
+      title: 'ID',
+      dataIndex: 'id',
+      width: 200,
       render: (text, record, index, action) => {
         return (
           <a
@@ -100,10 +81,15 @@ const UserPage = () => {
               setDataInit(record)
             }}
           >
-            {record.name}
+            {record.id}
           </a>
         )
       }
+    },
+    {
+      title: 'Họ và tên',
+      dataIndex: 'name',
+      sorter: true
     },
     {
       title: 'Email',

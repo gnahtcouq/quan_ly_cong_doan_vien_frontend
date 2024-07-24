@@ -19,7 +19,7 @@ import {isMobile} from 'react-device-detect'
 import {
   callCreateFee,
   callFetchUnionist,
-  callFetchUnionistById,
+  callFetchUnionistNameByUnionistId,
   callUpdateFee
 } from '@/config/api'
 import {IFee} from '@/types/backend'
@@ -55,13 +55,15 @@ const ModalFee = (props: IProps) => {
       try {
         if (dataInit?._id) {
           if (dataInit.unionistId) {
-            const res = await callFetchUnionistById(dataInit.unionistId)
+            const res = await callFetchUnionistNameByUnionistId(
+              dataInit.unionistId
+            )
             if (res && res.data) {
               setUnionists([
                 {
                   label: res.data.name,
-                  value: res.data._id,
-                  key: res.data._id
+                  value: res.data.id,
+                  key: res.data.id
                 }
               ])
             }
@@ -138,7 +140,7 @@ const ModalFee = (props: IProps) => {
       const temp = list.map((item) => {
         return {
           label: item.name as string,
-          value: item._id as string
+          value: item.id as string
         }
       })
       return temp

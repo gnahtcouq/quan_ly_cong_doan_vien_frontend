@@ -30,7 +30,11 @@ const ViewDetailExpense = (props: IProps) => {
             {dataInit?.expenseId}
           </Descriptions.Item>
 
-          <Descriptions.Item label="Nội dung phiếu chi">
+          <Descriptions.Item label="Thành viên">
+            {dataInit?.userName}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Nội dung phiếu chi" span={2}>
             {dataInit?.description}
           </Descriptions.Item>
 

@@ -68,30 +68,10 @@ const UnionistPage = () => {
       },
       hideInSearch: true
     },
-    // {
-    //   title: 'ID',
-    //   dataIndex: '_id',
-    //   width: 200,
-    //   render: (text, record, index, action) => {
-    //     return (
-    //       <a
-    //         href="#"
-    //         onClick={() => {
-    //           setOpenViewDetail(true)
-    //           setDataInit(record)
-    //         }}
-    //       >
-    //         {record._id}
-    //       </a>
-    //     )
-    //   },
-    //   hideInSearch: true
-    // },
     {
-      title: 'Họ và tên',
-      dataIndex: 'name',
+      title: 'ID',
+      dataIndex: 'id',
       width: 200,
-      sorter: true,
       render: (text, record, index, action) => {
         return (
           <a
@@ -101,10 +81,17 @@ const UnionistPage = () => {
               setDataInit(record)
             }}
           >
-            {record.name}
+            {record.id}
           </a>
         )
-      }
+      },
+      hideInSearch: true
+    },
+    {
+      title: 'Họ và tên',
+      dataIndex: 'name',
+      width: 200,
+      sorter: true
     },
     {
       title: 'Email',

@@ -180,6 +180,10 @@ export const callFetchUserById = (id: string) => {
   return axios.get<IBackendRes<IUser>>(`/api/v1/users/${id}`)
 }
 
+export const callFetchUserNameByUserId = (id: string) => {
+  return axios.get<IBackendRes<IUser>>(`/api/v1/users/name/${id}`)
+}
+
 export const callFetchNumberOfUsers = () => {
   return axios.post<IBackendRes<number>>('/api/v1/users/count')
 }
@@ -257,6 +261,10 @@ export const callFetchUnionist = (query: string) => {
 
 export const callFetchUnionistById = (id: string) => {
   return axios.get<IBackendRes<IUnionist>>(`/api/v1/unionists/${id}`)
+}
+
+export const callFetchUnionistNameByUnionistId = (id: string) => {
+  return axios.get<IBackendRes<IUnionist>>(`/api/v1/unionists/name/${id}`)
 }
 
 export const callFetchNumberOfUnionists = () => {

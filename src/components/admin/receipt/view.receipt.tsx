@@ -30,7 +30,11 @@ const ViewDetailReceipt = (props: IProps) => {
             {dataInit?.receiptId}
           </Descriptions.Item>
 
-          <Descriptions.Item label="Nội dung phiếu thu">
+          <Descriptions.Item label="Thành viên">
+            {dataInit?.userName}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Nội dung phiếu thu" span={2}>
             {dataInit?.description}
           </Descriptions.Item>
 

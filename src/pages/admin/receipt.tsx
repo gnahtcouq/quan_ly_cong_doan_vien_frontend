@@ -11,13 +11,18 @@ import {ActionType, ProColumns} from '@ant-design/pro-components'
 import {Button, Popconfirm, Space, message, notification} from 'antd'
 import {useState, useRef, useEffect} from 'react'
 import dayjs from 'dayjs'
-import {callDeleteReceipt, callFetchIncomeCategory} from '@/config/api'
+import {
+  callDeleteReceipt,
+  callFetchIncomeCategory,
+  callFetchUser
+} from '@/config/api'
 import queryString from 'query-string'
 import {fetchReceipt} from '@/redux/slice/receiptSlide'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 import ModalReceipt, {
-  IIncomeCategorySelect
+  IIncomeCategorySelect,
+  IUserSelect
 } from '@/components/admin/receipt/modal.receipt'
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/receipt/modal.import'
@@ -31,6 +36,7 @@ const ReceiptPage = () => {
   const [incomeCategories, setIncomeCategories] = useState<
     IIncomeCategorySelect[]
   >([])
+  const [users, setUsers] = useState<IUserSelect[]>([])
 
   const tableRef = useRef<ActionType>()
 
@@ -40,11 +46,16 @@ const ReceiptPage = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      const users = await fetchUserList('')
+      setUsers(users)
+    }
     const fetchCategories = async () => {
       const categories = await fetchIncomeCategoryList('')
       setIncomeCategories(categories)
     }
 
+    fetchUsers()
     fetchCategories()
   }, [])
 
@@ -64,11 +75,13 @@ const ReceiptPage = () => {
   }
 
   const handleViewDetail = (record) => {
+    const user = users.find((cat) => cat.value === record.userId)
     const category = incomeCategories.find(
       (cat) => cat.value === record.incomeCategoryId
     )
     setDataInit({
       ...record,
+      userName: user ? user.label : '',
       incomeCategory: category ? category.label : ''
     })
     setOpenViewDetail(true)
@@ -76,6 +89,18 @@ const ReceiptPage = () => {
 
   const reloadTable = () => {
     tableRef?.current?.reload()
+  }
+
+  async function fetchUserList(name: string): Promise<IUserSelect[]> {
+    const res = await callFetchUser(`current=1&pageSize=100&name=/${name}/i`)
+    if (res && res.data) {
+      const list = res.data.result
+      const temp = list.map((item) => ({
+        label: item.name as string,
+        value: item.id as string
+      }))
+      return temp
+    } else return []
   }
 
   async function fetchIncomeCategoryList(
@@ -118,6 +143,20 @@ const ReceiptPage = () => {
             </a>
           </>
         )
+      }
+    },
+    {
+      title: 'Thành viên',
+      dataIndex: 'userId',
+      sorter: true,
+      valueType: 'select',
+      fieldProps: {
+        options: users,
+        mode: 'multiple'
+      },
+      render: (text, record) => {
+        const user = users.find((cat) => cat.value === record.userId)
+        return <>{user ? user.label : ''}</>
       }
     },
     {

@@ -17,6 +17,7 @@ interface IState {
   errorRefreshToken: string
   user: {
     _id: string
+    id: string
     email: string
     name: string
     permissions: {
@@ -30,6 +31,7 @@ interface IState {
   }
   unionist: {
     _id: string
+    id: string
     email: string
     name: string
     permissions: {
@@ -51,6 +53,7 @@ const initialState: IState = {
   errorRefreshToken: '',
   user: {
     _id: '',
+    id: '',
     email: '',
     name: '',
     permissions: [],
@@ -58,6 +61,7 @@ const initialState: IState = {
   },
   unionist: {
     _id: '',
+    id: '',
     email: '',
     name: '',
     permissions: [],
@@ -80,6 +84,7 @@ export const accountSlide = createSlice({
       state.isAuthenticated = true
       state.isLoading = false
       state.user._id = action?.payload?._id
+      state.user.id = action?.payload?.id
       state.user.email = action.payload.email
       state.user.name = action.payload.name
       state.user.permissions = action?.payload?.permissions
@@ -112,6 +117,7 @@ export const accountSlide = createSlice({
         state.isAuthenticated = true
         state.isLoading = false
         state.user._id = action?.payload?.user?._id
+        state.user.id = action?.payload?.user?.id
         state.user.email = action.payload.user?.email
         state.user.name = action.payload.user?.name
         state.user.permissions = action?.payload?.user?.permissions

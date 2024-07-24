@@ -11,13 +11,18 @@ import {ActionType, ProColumns} from '@ant-design/pro-components'
 import {Button, Popconfirm, Space, message, notification} from 'antd'
 import {useState, useRef, useEffect} from 'react'
 import dayjs from 'dayjs'
-import {callDeleteExpense, callFetchExpenseCategory} from '@/config/api'
+import {
+  callDeleteExpense,
+  callFetchExpenseCategory,
+  callFetchUser
+} from '@/config/api'
 import queryString from 'query-string'
 import {fetchExpense} from '@/redux/slice/expenseSlide'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 import ModalExpense, {
-  IExpenseCategorySelect
+  IExpenseCategorySelect,
+  IUserSelect
 } from '@/components/admin/expense/modal.expense'
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/expense/modal.import'
@@ -31,6 +36,7 @@ const ExpensePage = () => {
   const [expenseCategories, setExpenseCategories] = useState<
     IExpenseCategorySelect[]
   >([])
+  const [users, setUsers] = useState<IUserSelect[]>([])
 
   const tableRef = useRef<ActionType>()
 
@@ -40,11 +46,16 @@ const ExpensePage = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      const users = await fetchUserList('')
+      setUsers(users)
+    }
     const fetchCategories = async () => {
       const categories = await fetchExpenseCategoryList('')
       setExpenseCategories(categories)
     }
 
+    fetchUsers()
     fetchCategories()
   }, [])
 
@@ -64,11 +75,13 @@ const ExpensePage = () => {
   }
 
   const handleViewDetail = (record) => {
+    const user = users.find((cat) => cat.value === record.id)
     const category = expenseCategories.find(
       (cat) => cat.value === record.expenseCategoryId
     )
     setDataInit({
       ...record,
+      userName: user ? user.label : '',
       expenseCategory: category ? category.label : ''
     })
     setOpenViewDetail(true)
@@ -76,6 +89,18 @@ const ExpensePage = () => {
 
   const reloadTable = () => {
     tableRef?.current?.reload()
+  }
+
+  async function fetchUserList(name: string): Promise<IUserSelect[]> {
+    const res = await callFetchUser(`current=1&pageSize=100&name=/${name}/i`)
+    if (res && res.data) {
+      const list = res.data.result
+      const temp = list.map((item) => ({
+        label: item.name as string,
+        value: item.id as string
+      }))
+      return temp
+    } else return []
   }
 
   async function fetchExpenseCategoryList(
@@ -118,6 +143,20 @@ const ExpensePage = () => {
             </a>
           </>
         )
+      }
+    },
+    {
+      title: 'Thành viên',
+      dataIndex: 'userId',
+      sorter: true,
+      valueType: 'select',
+      fieldProps: {
+        options: users,
+        mode: 'multiple'
+      },
+      render: (text, record) => {
+        const user = users.find((cat) => cat.value === record.userId)
+        return <>{user ? user.label : ''}</>
       }
     },
     {

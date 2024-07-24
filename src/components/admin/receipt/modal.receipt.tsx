@@ -16,7 +16,7 @@ import {
   callFetchIncomeCategory,
   callFetchIncomeCategoryById,
   callFetchUser,
-  callFetchUserById,
+  callFetchUserNameByUserId,
   callUpdateReceipt
 } from '@/config/api'
 import {IReceipt} from '@/types/backend'
@@ -61,13 +61,13 @@ const ModalReceipt = (props: IProps) => {
       try {
         if (dataInit?._id) {
           if (dataInit.userId) {
-            const res = await callFetchUserById(dataInit.userId)
+            const res = await callFetchUserNameByUserId(dataInit.userId)
             if (res && res.data) {
               setUsers([
                 {
                   label: res.data.name,
-                  value: res.data._id,
-                  key: res.data._id
+                  value: res.data.id,
+                  key: res.data.id
                 }
               ])
             }
@@ -165,7 +165,7 @@ const ModalReceipt = (props: IProps) => {
       const list = res.data.result
       const temp = list.map((item) => ({
         label: item.name as string,
-        value: item._id as string
+        value: item.id as string
       }))
       return temp
     } else return []
