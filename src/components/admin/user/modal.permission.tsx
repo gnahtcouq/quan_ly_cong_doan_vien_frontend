@@ -1,5 +1,5 @@
 import {FooterToolbar, ModalForm, ProCard} from '@ant-design/pro-components'
-import {Col, Form, Row, message, notification} from 'antd'
+import {Col, Form, Row, Spin, message, notification} from 'antd'
 import {isMobile} from 'react-device-detect'
 import {callFetchPermission, callUpdateUserPermissions} from '@/config/api'
 import {IPermission, IUser} from '@/types/backend'
@@ -18,6 +18,7 @@ interface IProps {
 
 const ModalPermission = (props: IProps) => {
   const {openModal, setOpenModal, reloadTable, dataInit, setDataInit} = props
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
 
   const [listPermissions, setListPermissions] = useState<
@@ -39,10 +40,12 @@ const ModalPermission = (props: IProps) => {
 
   useEffect(() => {
     const init = async () => {
+      setIsLoading(true)
       const res = await callFetchPermission(`current=1&pageSize=100`)
       if (res.data?.result) {
         setListPermissions(groupByPermission(res.data?.result))
       }
+      setIsLoading(false)
     }
     init()
   }, [])
@@ -150,21 +153,25 @@ const ModalPermission = (props: IProps) => {
           }
         }}
       >
-        <Row gutter={16}>
-          <Col span={24}>
-            <ProCard
-              title="Quyền hạn"
-              subTitle="Các quyền hạn được phép cho thành viên này"
-              headStyle={{color: '#d81921'}}
-              style={{marginBottom: 20}}
-              headerBordered
-              size="small"
-              bordered
-            >
-              <ModuleApi form={form} listPermissions={listPermissions} />
-            </ProCard>
-          </Col>
-        </Row>
+        {isLoading ? (
+          <Spin />
+        ) : (
+          <Row gutter={16}>
+            <Col span={24}>
+              <ProCard
+                title="Quyền hạn"
+                subTitle="Các quyền hạn được phép cho thành viên này"
+                headStyle={{color: '#d81921'}}
+                style={{marginBottom: 20}}
+                headerBordered
+                size="small"
+                bordered
+              >
+                <ModuleApi form={form} listPermissions={listPermissions} />
+              </ProCard>
+            </Col>
+          </Row>
+        )}
       </ModalForm>
     </>
   )
