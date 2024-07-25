@@ -63,11 +63,11 @@ const IncomeCategoryPage = () => {
       hideInSearch: true
     },
     {
-      title: 'Mã DMT',
-      dataIndex: 'incomeCategoryId',
+      title: 'ID',
+      dataIndex: 'id',
       sorter: true,
       render: (text, record, index, action) => {
-        return <>{record.incomeCategoryId}</>
+        return <>{record.id}</>
       }
     },
     {

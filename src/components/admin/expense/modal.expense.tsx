@@ -80,8 +80,8 @@ const ModalExpense = (props: IProps) => {
               setExpenseCategories([
                 {
                   label: res.data.description,
-                  value: res.data.expenseCategoryId,
-                  key: res.data.expenseCategoryId
+                  value: res.data.id,
+                  key: res.data.id
                 }
               ])
             }
@@ -181,7 +181,7 @@ const ModalExpense = (props: IProps) => {
       const list = res.data.result
       const temp = list.map((item) => ({
         label: item.description as string,
-        value: item.expenseCategoryId as string
+        value: item.id as string
       }))
       return temp
     } else return []
@@ -226,7 +226,7 @@ const ModalExpense = (props: IProps) => {
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProFormText
                 label="Mã phiếu chi (PC/năm/tháng/ngày)"
-                name="expenseId"
+                name="id"
                 rules={[
                   {required: true, message: 'Vui lòng không để trống!'},
                   {

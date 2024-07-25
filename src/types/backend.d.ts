@@ -50,6 +50,7 @@ export interface IGetAccount extends Omit<IAccount, 'access_token'> {}
 
 export interface IDepartment {
   _id?: string
+  id?: string
   name?: string
   logo: string
   description?: string
@@ -96,10 +97,8 @@ export interface IUnionist {
   unionEntryDate?: string
   note?: string
   permissions?: IPermission[] | string[]
-  department?: {
-    _id: string
-    name: string
-  }
+  departmentId?: string
+  departmentName?: string
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null
@@ -179,7 +178,7 @@ export interface IFee {
 
 export interface IReceipt {
   _id?: string
-  receiptId?: string
+  id?: string
   userId?: string
   userName?: string
   description?: string
@@ -200,7 +199,7 @@ export interface IReceipt {
 
 export interface IIncomeCategory {
   _id?: string
-  incomeCategoryId?: string
+  id?: string
   description?: string
   budget?: string
   year?: string
@@ -213,7 +212,7 @@ export interface IIncomeCategory {
 
 export interface IExpense {
   _id?: string
-  expenseId?: string
+  id?: string
   userId?: string
   userName?: string
   description?: string
@@ -234,7 +233,7 @@ export interface IExpense {
 
 export interface IExpenseCategory {
   _id?: string
-  expenseCategoryId?: string
+  id?: string
   description?: string
   budget?: string
   year?: string

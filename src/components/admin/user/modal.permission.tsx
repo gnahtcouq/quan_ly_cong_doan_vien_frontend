@@ -50,10 +50,11 @@ const ModalPermission = (props: IProps) => {
   useEffect(() => {
     if (listPermissions?.length && dataInit?._id) {
       const userPermissions = listPermissions.map((listItem) => {
-        const matchedPermissions = dataInit.permissions.filter((permissionId) =>
-          listItem.permissions.some(
-            (permission) => (permission as IPermission)._id === permissionId
-          )
+        const matchedPermissions = dataInit?.permissions?.filter(
+          (permissionId) =>
+            listItem.permissions.some(
+              (permission) => (permission as IPermission)._id === permissionId
+            )
         )
         return {module: listItem.module, permissions: matchedPermissions}
       })

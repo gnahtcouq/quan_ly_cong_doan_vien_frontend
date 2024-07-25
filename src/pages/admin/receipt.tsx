@@ -40,9 +40,9 @@ const ReceiptPage = () => {
 
   const tableRef = useRef<ActionType>()
 
-  const isFetching = useAppSelector((state) => state.receipt.isFetching)
-  const meta = useAppSelector((state) => state.receipt.meta)
-  const receipts = useAppSelector((state) => state.receipt.result)
+  const isFetching = useAppSelector((state) => state?.receipt?.isFetching)
+  const meta = useAppSelector((state) => state?.receipt?.meta)
+  const receipts = useAppSelector((state) => state?.receipt?.result)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const ReceiptPage = () => {
       const list = res.data.result
       const temp = list.map((item) => ({
         label: item.description as string,
-        value: item.incomeCategoryId as string
+        value: item.id as string
       }))
       return temp
     } else return []
@@ -131,15 +131,14 @@ const ReceiptPage = () => {
       hideInSearch: true
     },
     {
-      title: 'Mã PT',
-      dataIndex: 'receiptId',
+      title: 'ID',
+      dataIndex: 'id',
       sorter: true,
       render: (text, record, index, action) => {
         return (
           <>
-            {' '}
             <a href="#" onClick={() => handleViewDetail(record)}>
-              {record.receiptId}
+              {record.id}
             </a>
           </>
         )

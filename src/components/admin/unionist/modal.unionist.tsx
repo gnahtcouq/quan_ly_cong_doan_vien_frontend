@@ -11,6 +11,7 @@ import {
   DatePicker,
   Form,
   Row,
+  Spin,
   message,
   notification
 } from 'antd'
@@ -19,6 +20,7 @@ import {useState, useEffect} from 'react'
 import {
   callCreateUnionist,
   callFetchDepartment,
+  callFetchDepartmentNameByDepartmentId,
   callUpdateUnionist
 } from '@/config/api'
 import {IUnionist} from '@/types/backend'
@@ -40,28 +42,48 @@ interface IProps {
 }
 
 export interface IDepartmentSelect {
-  label: string
-  value: string
-  key?: string
+  label: string | undefined
+  value: string | undefined
+  key?: string | undefined
 }
 
 const ModalUnionist = (props: IProps) => {
   const {openModal, setOpenModal, reloadTable, dataInit, setDataInit} = props
   const [departments, setDepartments] = useState<IDepartmentSelect[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
 
   useEffect(() => {
-    if (dataInit?._id) {
-      if (dataInit.department) {
-        setDepartments([
-          {
-            label: dataInit.department?.name,
-            value: dataInit.department?._id,
-            key: dataInit.department?._id
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        if (dataInit?._id) {
+          if (dataInit.departmentId) {
+            const res = await callFetchDepartmentNameByDepartmentId(
+              dataInit.departmentId
+            )
+            if (res && res.data) {
+              setDepartments([
+                {
+                  label: res.data.name,
+                  value: res.data.id,
+                  key: res.data.id
+                }
+              ])
+            }
           }
-        ])
+        }
+      } catch (error) {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: 'Đã xảy ra lỗi khi tìm nạp dữ liệu'
+        })
+      } finally {
+        setIsLoading(false)
       }
     }
+
+    fetchData()
   }, [dataInit])
 
   const submitUnionist = async (valuesForm: any) => {
@@ -78,7 +100,7 @@ const ModalUnionist = (props: IProps) => {
       unionEntryDate,
       note,
       permissions,
-      department
+      departmentId
     } = valuesForm
     if (dataInit?._id) {
       //update
@@ -96,16 +118,10 @@ const ModalUnionist = (props: IProps) => {
         unionEntryDate: unionEntryDate ? unionEntryDate.toISOString() : null,
         note,
         permissions: dataInit.permissions,
-        department:
-          department && department.value
-            ? {
-                _id: department.value,
-                name: department.label
-              }
-            : {
-                _id: dataInit.department?._id,
-                name: dataInit.department?.name
-              } // Giữ nguyên đơn vị nếu đã có
+        departmentId:
+          departmentId && departmentId.value
+            ? departmentId.value
+            : dataInit.departmentId
       }
 
       const res = await callUpdateUnionist(unionist, dataInit._id)
@@ -134,10 +150,7 @@ const ModalUnionist = (props: IProps) => {
         unionEntryDate,
         note,
         permissions,
-        department: {
-          _id: department.value,
-          name: department.label
-        }
+        departmentId: departmentId.value
       }
       const res = await callCreateUnionist(unionist)
       if (res.data) {
@@ -172,7 +185,7 @@ const ModalUnionist = (props: IProps) => {
       const temp = list.map((item) => {
         return {
           label: item.name as string,
-          value: item._id as string
+          value: item.id as string
         }
       })
       return temp
@@ -221,170 +234,185 @@ const ModalUnionist = (props: IProps) => {
           onFinish={submitUnionist}
           initialValues={initialValues}
         >
-          <Row gutter={16}>
-            <Col lg={12} md={12} sm={24} xs={24}>
-              <ProFormText
-                label="Email"
-                name="email"
-                rules={[
-                  {required: true, message: 'Vui lòng không để trống!'},
-                  {type: 'email', message: 'Vui lòng nhập email hợp lệ!'}
-                ]}
-                placeholder="Nhập email"
-              />
-            </Col>
-            <Col lg={12} md={12} sm={24} xs={24}>
-              <ProFormText.Password
-                disabled={dataInit?._id ? true : false}
-                label="Mật khẩu"
-                name="password"
-                rules={[
-                  {
-                    required: dataInit?._id ? false : true,
-                    message: 'Vui lòng không để trống!'
-                  },
-                  {
-                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-                    message:
-                      'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.'
-                  }
-                ]}
-                placeholder="Nhập mật khẩu"
-              />
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormText
-                label="Họ và tên"
-                name="name"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="Nhập họ và tên"
-              />
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormSelect
-                name="gender"
-                label="Giới tính"
-                valueEnum={{
-                  MALE: 'Nam',
-                  FEMALE: 'Nữ',
-                  OTHER: 'Khác'
-                }}
-                placeholder="Chọn giới tính"
-                rules={[{required: true, message: 'Vui lòng chọn giới tính!'}]}
-              />
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProForm.Item
-                label="Ngày sinh"
-                name="dateOfBirth"
-                rules={[
-                  {required: true, message: 'Vui lòng không để trống!'},
-                  {validator: validateDateOfBirth}
-                ]}
-              >
-                <DatePicker
-                  format="DD/MM/YYYY"
-                  placeholder="dd/mm/yyyy"
-                  disabledDate={disabledDateBirthday}
-                  style={{width: '100%'}}
+          {isLoading ? (
+            <Spin />
+          ) : (
+            <Row gutter={16}>
+              <Col lg={12} md={12} sm={24} xs={24}>
+                <ProFormText
+                  label="Email"
+                  name="email"
+                  rules={[
+                    {required: true, message: 'Vui lòng không để trống!'},
+                    {type: 'email', message: 'Vui lòng nhập email hợp lệ!'}
+                  ]}
+                  placeholder="Nhập email"
                 />
-              </ProForm.Item>
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProForm.Item
-                label="Ngày vào công đoàn"
-                name="unionEntryDate"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-              >
-                <DatePicker
-                  format="DD/MM/YYYY"
-                  placeholder="dd/mm/yyyy"
-                  disabledDate={disabledDate}
-                  style={{width: '100%'}}
-                />
-              </ProForm.Item>
-            </Col>
-            <Col lg={6} md={12} sm={24} xs={24}>
-              <ProForm.Item
-                name="department"
-                label="Thuộc đơn vị"
-                rules={[{required: true, message: 'Vui lòng chọn đơn vị!'}]}
-              >
-                <DebounceSelect
-                  allowClear
-                  showSearch
-                  defaultValue={departments}
-                  value={departments}
-                  placeholder="Chọn đơn vị"
-                  fetchOptions={fetchDepartmentList}
-                  onChange={(newValue: any) => {
-                    if (newValue?.length === 0 || newValue?.length === 1) {
-                      setDepartments(newValue as IDepartmentSelect[])
+              </Col>
+              <Col lg={12} md={12} sm={24} xs={24}>
+                <ProFormText.Password
+                  disabled={dataInit?._id ? true : false}
+                  label="Mật khẩu"
+                  name="password"
+                  rules={[
+                    {
+                      required: dataInit?._id ? false : true,
+                      message: 'Vui lòng không để trống!'
+                    },
+                    {
+                      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                      message:
+                        'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.'
                     }
+                  ]}
+                  placeholder="Nhập mật khẩu"
+                />
+              </Col>
+              <Col lg={6} md={6} sm={24} xs={24}>
+                <ProFormText
+                  label="Họ và tên"
+                  name="name"
+                  rules={[
+                    {required: true, message: 'Vui lòng không để trống!'}
+                  ]}
+                  placeholder="Nhập họ và tên"
+                />
+              </Col>
+              <Col lg={6} md={6} sm={24} xs={24}>
+                <ProFormSelect
+                  name="gender"
+                  label="Giới tính"
+                  valueEnum={{
+                    MALE: 'Nam',
+                    FEMALE: 'Nữ',
+                    OTHER: 'Khác'
                   }}
-                  style={{width: '100%'}}
+                  placeholder="Chọn giới tính"
+                  rules={[
+                    {required: true, message: 'Vui lòng chọn giới tính!'}
+                  ]}
                 />
-              </ProForm.Item>
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProFormText
-                label="Căn cước công dân"
-                name="CCCD"
-                rules={[
-                  {
-                    required: false,
-                    pattern: /^[0-9]{9,12}$/,
-                    message: 'Vui lòng nhập CCCD hợp lệ!'
-                  }
-                ]}
-                placeholder="Nhập căn cước công dân"
-              />
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProForm.Item
-                label="Ngày chuyển đến"
-                name="joiningDate"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-              >
-                <DatePicker
-                  format="DD/MM/YYYY"
-                  placeholder="dd/mm/yyyy"
-                  disabledDate={disabledDate}
-                  style={{width: '100%'}}
+              </Col>
+              <Col lg={6} md={6} sm={24} xs={24}>
+                <ProForm.Item
+                  label="Ngày sinh"
+                  name="dateOfBirth"
+                  rules={[
+                    {required: true, message: 'Vui lòng không để trống!'},
+                    {validator: validateDateOfBirth}
+                  ]}
+                >
+                  <DatePicker
+                    format="DD/MM/YYYY"
+                    placeholder="dd/mm/yyyy"
+                    disabledDate={disabledDateBirthday}
+                    style={{width: '100%'}}
+                  />
+                </ProForm.Item>
+              </Col>
+              <Col lg={6} md={6} sm={24} xs={24}>
+                <ProForm.Item
+                  label="Ngày vào công đoàn"
+                  name="unionEntryDate"
+                  rules={[
+                    {required: true, message: 'Vui lòng không để trống!'}
+                  ]}
+                >
+                  <DatePicker
+                    format="DD/MM/YYYY"
+                    placeholder="dd/mm/yyyy"
+                    disabledDate={disabledDate}
+                    style={{width: '100%'}}
+                  />
+                </ProForm.Item>
+              </Col>
+              <Col lg={6} md={12} sm={24} xs={24}>
+                <ProForm.Item
+                  name="departmentId"
+                  label="Thuộc đơn vị"
+                  rules={[{required: true, message: 'Vui lòng chọn đơn vị!'}]}
+                >
+                  <DebounceSelect
+                    showSearch
+                    defaultValue={departments}
+                    value={departments}
+                    placeholder="Chọn đơn vị"
+                    fetchOptions={fetchDepartmentList}
+                    onChange={(newValue: any) => {
+                      if (newValue?.length === 0 || newValue?.length === 1) {
+                        setDepartments(newValue as IDepartmentSelect[])
+                      }
+                    }}
+                    style={{width: '100%'}}
+                  />
+                </ProForm.Item>
+              </Col>
+              <Col lg={6} md={6} sm={24} xs={24}>
+                <ProFormText
+                  label="Căn cước công dân"
+                  name="CCCD"
+                  rules={[
+                    {
+                      required: false,
+                      pattern: /^[0-9]{9,12}$/,
+                      message: 'Vui lòng nhập CCCD hợp lệ!'
+                    }
+                  ]}
+                  placeholder="Nhập căn cước công dân"
                 />
-              </ProForm.Item>
-            </Col>
-            <Col lg={6} md={6} sm={24} xs={24}>
-              <ProForm.Item
-                label="Ngày chuyển đi"
-                name="leavingDate"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-              >
-                <DatePicker
-                  format="DD/MM/YYYY"
-                  placeholder="dd/mm/yyyy"
-                  disabledDate={disabledDate}
-                  style={{width: '100%'}}
+              </Col>
+              <Col lg={6} md={6} sm={24} xs={24}>
+                <ProForm.Item
+                  label="Ngày chuyển đến"
+                  name="joiningDate"
+                  rules={[
+                    {required: true, message: 'Vui lòng không để trống!'}
+                  ]}
+                >
+                  <DatePicker
+                    format="DD/MM/YYYY"
+                    placeholder="dd/mm/yyyy"
+                    disabledDate={disabledDate}
+                    style={{width: '100%'}}
+                  />
+                </ProForm.Item>
+              </Col>
+              <Col lg={6} md={6} sm={24} xs={24}>
+                <ProForm.Item
+                  label="Ngày chuyển đi"
+                  name="leavingDate"
+                  rules={[
+                    {required: true, message: 'Vui lòng không để trống!'}
+                  ]}
+                >
+                  <DatePicker
+                    format="DD/MM/YYYY"
+                    placeholder="dd/mm/yyyy"
+                    disabledDate={disabledDate}
+                    style={{width: '100%'}}
+                  />
+                </ProForm.Item>
+              </Col>
+              <Col lg={12} md={12} sm={24} xs={24}>
+                <ProFormText
+                  label="Địa chỉ"
+                  name="address"
+                  rules={[
+                    {required: true, message: 'Vui lòng không để trống!'}
+                  ]}
+                  placeholder="Nhập địa chỉ"
                 />
-              </ProForm.Item>
-            </Col>
-            <Col lg={12} md={12} sm={24} xs={24}>
-              <ProFormText
-                label="Địa chỉ"
-                name="address"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="Nhập địa chỉ"
-              />
-            </Col>
-            <Col lg={12} md={24} sm={24} xs={24}>
-              <ProFormText
-                label="Ghi chú"
-                name="note"
-                rules={[{required: false}]}
-                placeholder="Nhập ghi chú"
-              />
-            </Col>
-          </Row>
+              </Col>
+              <Col lg={12} md={24} sm={24} xs={24}>
+                <ProFormText
+                  label="Ghi chú"
+                  name="note"
+                  rules={[{required: false}]}
+                  placeholder="Nhập ghi chú"
+                />
+              </Col>
+            </Row>
+          )}
         </ModalForm>
       </ConfigProvider>
     </>

@@ -27,7 +27,7 @@ const ViewDetailExpense = (props: IProps) => {
       >
         <Descriptions title="" bordered column={2} layout="vertical">
           <Descriptions.Item label="Mã phiếu chi">
-            {dataInit?.expenseId}
+            {dataInit?.id}
           </Descriptions.Item>
 
           <Descriptions.Item label="Thành viên">

@@ -40,9 +40,9 @@ const ExpensePage = () => {
 
   const tableRef = useRef<ActionType>()
 
-  const isFetching = useAppSelector((state) => state.expense.isFetching)
-  const meta = useAppSelector((state) => state.expense.meta)
-  const expenses = useAppSelector((state) => state.expense.result)
+  const isFetching = useAppSelector((state) => state?.expense?.isFetching)
+  const meta = useAppSelector((state) => state?.expense?.meta)
+  const expenses = useAppSelector((state) => state?.expense?.result)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const ExpensePage = () => {
   }
 
   const handleViewDetail = (record) => {
-    const user = users.find((cat) => cat.value === record.id)
+    const user = users.find((cat) => cat.value === record.userId)
     const category = expenseCategories.find(
       (cat) => cat.value === record.expenseCategoryId
     )
@@ -113,7 +113,7 @@ const ExpensePage = () => {
       const list = res.data.result
       const temp = list.map((item) => ({
         label: item.description as string,
-        value: item.expenseCategoryId as string
+        value: item.id as string
       }))
       return temp
     } else return []
@@ -131,15 +131,14 @@ const ExpensePage = () => {
       hideInSearch: true
     },
     {
-      title: 'Mã PC',
-      dataIndex: 'receiptId',
+      title: 'ID',
+      dataIndex: 'id',
       sorter: true,
       render: (text, record, index, action) => {
         return (
           <>
-            {' '}
             <a href="#" onClick={() => handleViewDetail(record)}>
-              {record.expenseId}
+              {record.id}
             </a>
           </>
         )

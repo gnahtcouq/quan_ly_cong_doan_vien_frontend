@@ -27,7 +27,7 @@ const ViewDetailReceipt = (props: IProps) => {
       >
         <Descriptions title="" bordered column={2} layout="vertical">
           <Descriptions.Item label="Mã phiếu thu">
-            {dataInit?.receiptId}
+            {dataInit?.id}
           </Descriptions.Item>
 
           <Descriptions.Item label="Thành viên">

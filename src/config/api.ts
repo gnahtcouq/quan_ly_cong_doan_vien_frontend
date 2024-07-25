@@ -115,8 +115,18 @@ export const callFetchDepartment = (query: string) => {
   )
 }
 
+export const callFetchDepartmentWithoutDescription = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IDepartment>>>(
+    `/api/v1/departments/without-description?${query}`
+  )
+}
+
 export const callFetchDepartmentById = (id: string) => {
   return axios.get<IBackendRes<IDepartment>>(`/api/v1/departments/${id}`)
+}
+
+export const callFetchDepartmentNameByDepartmentId = (id: string) => {
+  return axios.get<IBackendRes<IDepartment>>(`/api/v1/departments/name/${id}`)
 }
 
 export const callFetchNumberOfDepartments = () => {

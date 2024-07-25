@@ -65,11 +65,11 @@ const ExpenseCategoryPage = () => {
       hideInSearch: true
     },
     {
-      title: 'Mã DMC',
-      dataIndex: 'expenseCategoryId',
+      title: 'ID',
+      dataIndex: 'id',
       sorter: true,
       render: (text, record, index, action) => {
-        return <>{record.expenseCategoryId}</>
+        return <>{record.id}</>
       }
     },
     {

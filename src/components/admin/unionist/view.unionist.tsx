@@ -54,7 +54,7 @@ const ViewDetailUnionist = (props: IProps) => {
           </Descriptions.Item>
 
           <Descriptions.Item label="Thuộc đơn vị">
-            {dataInit?.department?.name ?? ''}
+            {dataInit?.departmentName ?? ''}
           </Descriptions.Item>
 
           <Descriptions.Item label="Địa chỉ">

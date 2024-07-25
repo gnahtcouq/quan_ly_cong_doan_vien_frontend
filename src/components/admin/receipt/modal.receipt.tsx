@@ -80,8 +80,8 @@ const ModalReceipt = (props: IProps) => {
               setIncomeCategories([
                 {
                   label: res.data.description,
-                  value: res.data.incomeCategoryId,
-                  key: res.data.incomeCategoryId
+                  value: res.data.id,
+                  key: res.data.id
                 }
               ])
             }
@@ -129,7 +129,7 @@ const ModalReceipt = (props: IProps) => {
       }
     } else {
       // Create
-      const receipts = {
+      const receipt = {
         receiptId,
         description,
         time,
@@ -137,7 +137,7 @@ const ModalReceipt = (props: IProps) => {
         userId: userId.value,
         incomeCategoryId: incomeCategoryId.value
       }
-      const res = await callCreateReceipt(receipts)
+      const res = await callCreateReceipt(receipt)
       if (res.data) {
         message.success('Thêm mới phiếu thu thành công!')
         handleReset()
@@ -181,7 +181,7 @@ const ModalReceipt = (props: IProps) => {
       const list = res.data.result
       const temp = list.map((item) => ({
         label: item.description as string,
-        value: item.incomeCategoryId as string
+        value: item.id as string
       }))
       return temp
     } else return []
@@ -226,7 +226,7 @@ const ModalReceipt = (props: IProps) => {
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProFormText
                 label="Mã phiếu thu (PT/năm/tháng/ngày)"
-                name="receiptId"
+                name="id"
                 rules={[
                   {required: true, message: 'Vui lòng không để trống!'},
                   {

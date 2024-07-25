@@ -11,12 +11,18 @@ import {
   PlusOutlined
 } from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
-import {Button, Popconfirm, Space, message, notification} from 'antd'
-import {useState, useRef} from 'react'
+import {Button, Popconfirm, Space, Spin, message, notification} from 'antd'
+import {useState, useRef, useEffect} from 'react'
 import dayjs from 'dayjs'
-import {callDeleteUnionist} from '@/config/api'
+import {
+  callDeleteUnionist,
+  callFetchDepartment,
+  callFetchDepartmentWithoutDescription
+} from '@/config/api'
 import queryString from 'query-string'
-import ModalUnionist from '@/components/admin/unionist/modal.unionist'
+import ModalUnionist, {
+  IDepartmentSelect
+} from '@/components/admin/unionist/modal.unionist'
 import ViewDetailUnionist from '@/components/admin/unionist/view.unionist'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
@@ -30,6 +36,7 @@ const UnionistPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IUnionist | null>(null)
   const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
+  const [departments, setDepartments] = useState<IDepartmentSelect[]>([])
 
   const tableRef = useRef<ActionType>()
 
@@ -37,6 +44,14 @@ const UnionistPage = () => {
   const meta = useAppSelector((state) => state.unionist.meta)
   const unionists = useAppSelector((state) => state.unionist.result)
   const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      const departments = await fetchDepartmentList('')
+      setDepartments(departments)
+    }
+    fetchDepartments()
+  }, [])
 
   const handleDeleteUnionist = async (_id: string | undefined) => {
     if (_id) {
@@ -53,8 +68,35 @@ const UnionistPage = () => {
     }
   }
 
+  const handleViewDetail = (record) => {
+    const department = departments.find(
+      (cat) => cat.value === record.departmentId
+    )
+    setDataInit({
+      ...record,
+      departmentName: department ? department.label : ''
+    })
+    setOpenViewDetail(true)
+  }
+
   const reloadTable = () => {
     tableRef?.current?.reload()
+  }
+
+  async function fetchDepartmentList(
+    name: string
+  ): Promise<IDepartmentSelect[]> {
+    const res = await callFetchDepartmentWithoutDescription(
+      `current=1&pageSize=100&name=/${name}/i`
+    )
+    if (res && res.data) {
+      const list = res.data.result
+      const temp = list.map((item) => ({
+        label: item.name as string,
+        value: item.id as string
+      }))
+      return temp
+    } else return []
   }
 
   const columns: ProColumns<IUnionist>[] = [
@@ -74,18 +116,11 @@ const UnionistPage = () => {
       width: 200,
       render: (text, record, index, action) => {
         return (
-          <a
-            href="#"
-            onClick={() => {
-              setOpenViewDetail(true)
-              setDataInit(record)
-            }}
-          >
+          <a href="#" onClick={() => handleViewDetail(record)}>
             {record.id}
           </a>
         )
-      },
-      hideInSearch: true
+      }
     },
     {
       title: 'Họ và tên',
@@ -100,11 +135,19 @@ const UnionistPage = () => {
     },
     {
       title: 'Đơn vị',
-      dataIndex: 'department',
+      dataIndex: 'departmentId',
       width: 250,
       sorter: true,
-      render: (text, record, index, action) => {
-        return <>{record.department?.name}</>
+      valueType: 'select',
+      fieldProps: {
+        options: departments,
+        mode: 'multiple'
+      },
+      render: (text, record) => {
+        const department = departments.find(
+          (cat) => cat.value === record.departmentId
+        )
+        return <>{department ? department.label : ''}</>
       }
     },
     {
