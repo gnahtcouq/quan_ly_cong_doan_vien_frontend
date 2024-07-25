@@ -71,7 +71,7 @@ const UserPage = () => {
     {
       title: 'ID',
       dataIndex: 'id',
-      width: 200,
+      sorter: true,
       render: (text, record, index, action) => {
         return (
           <a
@@ -175,12 +175,16 @@ const UserPage = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
+    if (clone.id) clone.id = `/${clone.id}/i`
     if (clone.name) clone.name = `/${clone.name}/i`
     if (clone.email) clone.email = `/${clone.email}/i`
 
     let temp = queryString.stringify(clone)
 
     let sortBy = ''
+    if (sort && sort.id) {
+      sortBy = sort.id === 'ascend' ? 'sort=id' : 'sort=-id'
+    }
     if (sort && sort.name) {
       sortBy = sort.name === 'ascend' ? 'sort=name' : 'sort=-name'
     }

@@ -164,8 +164,7 @@ const ExpenseCategoryPage = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
-    if (clone.expenseCategoryId)
-      clone.expenseCategoryId = `/${clone.expenseCategoryId}/i`
+    if (clone.id) clone.id = `/${clone.id}/i`
     if (clone.description) clone.description = `/${clone.description}/i`
     if (clone.budget) clone.budget = `/${clone.budget}/i`
     if (clone.year) clone.year = `/${clone.year}/i`
@@ -173,11 +172,8 @@ const ExpenseCategoryPage = () => {
     let temp = queryString.stringify(clone)
 
     let sortBy = ''
-    if (sort && sort.expenseCategoryId) {
-      sortBy =
-        sort.expenseCategoryId === 'ascend'
-          ? 'sort=expenseCategoryId'
-          : 'sort=-expenseCategoryId'
+    if (sort && sort.id) {
+      sortBy = sort.id === 'ascend' ? 'sort=id' : 'sort=-id'
     }
     if (sort && sort.description) {
       sortBy =

@@ -52,15 +52,11 @@ const DepartmentPage = forwardRef<any>((props, ref) => {
       },
       hideInSearch: true
     },
-    // {
-    //   title: 'ID',
-    //   dataIndex: '_id',
-    //   width: 250,
-    //   render: (text, record, index, action) => {
-    //     return <span>{record._id}</span>
-    //   },
-    //   hideInSearch: true
-    // },
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      sorter: true
+    },
     {
       title: 'Tên đơn vị',
       dataIndex: 'name',
@@ -126,18 +122,18 @@ const DepartmentPage = forwardRef<any>((props, ref) => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
+    if (clone.id) clone.id = `/${clone.id}/i`
     if (clone.name) clone.name = `/${clone.name}/i`
-    // if (clone.address) clone.address = `/${clone.address}/i`
 
     let temp = queryString.stringify(clone)
 
     let sortBy = ''
+    if (sort && sort.id) {
+      sortBy = sort.id === 'ascend' ? 'sort=id' : 'sort=-id'
+    }
     if (sort && sort.name) {
       sortBy = sort.name === 'ascend' ? 'sort=name' : 'sort=-name'
     }
-    // if (sort && sort.address) {
-    //   sortBy = sort.address === 'ascend' ? 'sort=address' : 'sort=-address'
-    // }
     if (sort && sort.createdAt) {
       sortBy =
         sort.createdAt === 'ascend' ? 'sort=createdAt' : 'sort=-createdAt'

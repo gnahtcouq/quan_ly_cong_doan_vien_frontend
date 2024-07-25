@@ -162,8 +162,7 @@ const IncomeCategoryPage = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
-    if (clone.incomeCategoryId)
-      clone.incomeCategoryId = `/${clone.incomeCategoryId}/i`
+    if (clone.id) clone.id = `/${clone.id}/i`
     if (clone.description) clone.description = `/${clone.description}/i`
     if (clone.budget) clone.budget = `/${clone.budget}/i`
     if (clone.year) clone.year = `/${clone.year}/i`
@@ -171,11 +170,8 @@ const IncomeCategoryPage = () => {
     let temp = queryString.stringify(clone)
 
     let sortBy = ''
-    if (sort && sort.incomeCategoryId) {
-      sortBy =
-        sort.incomeCategoryId === 'ascend'
-          ? 'sort=incomeCategoryId'
-          : 'sort=-incomeCategoryId'
+    if (sort && sort.id) {
+      sortBy = sort.id === 'ascend' ? 'sort=id' : 'sort=-id'
     }
     if (sort && sort.description) {
       sortBy =
