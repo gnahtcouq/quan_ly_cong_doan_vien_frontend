@@ -111,7 +111,7 @@ export interface IPost {
   name: string
   threads: string[]
   description: string
-  isActive: boolean
+  status?: string
 
   createdBy?: string
   isDeleted?: boolean

@@ -304,6 +304,12 @@ export const callUpdatePost = (post: IPost, id: string) => {
   return axios.patch<IBackendRes<IPost>>(`/api/v1/posts/${id}`, {...post})
 }
 
+export const callUpdatePostStatus = (id: any, status: string) => {
+  return axios.put<IBackendRes<IPost>>(`/api/v1/posts/${id}`, {
+    status
+  })
+}
+
 export const callDeletePost = (id: string) => {
   return axios.delete<IBackendRes<IPost>>(`/api/v1/posts/${id}`)
 }

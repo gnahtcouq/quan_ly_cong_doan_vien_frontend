@@ -52,7 +52,7 @@ const PostCard = (props: IProps) => {
       res = await callFetchPost(query) // Assign the value to 'res'
       if (res && res.data) {
         const activePosts = res.data.result.filter(
-          (post: IPost) => post.isActive
+          (post: IPost) => post.status === 'ACTIVE'
         )
         accumulatedPosts = [...accumulatedPosts, ...activePosts]
         shouldFetchMore =

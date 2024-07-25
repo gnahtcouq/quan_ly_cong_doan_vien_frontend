@@ -20,6 +20,7 @@ import {useNavigate} from 'react-router-dom'
 import {fetchPost} from '@/redux/slice/postSlide'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
+import ViewDetailPost from '@/components/admin/post/view.post'
 
 const PostPage = () => {
   const tableRef = useRef<ActionType>()
@@ -28,6 +29,9 @@ const PostPage = () => {
   const meta = useAppSelector((state) => state.post.meta)
   const posts = useAppSelector((state) => state.post.result)
   const dispatch = useAppDispatch()
+
+  const [dataInit, setDataInit] = useState<IPost | null>(null)
+  const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
   const navigate = useNavigate()
 
   const handleDeletePost = async (_id: string | undefined) => {
@@ -62,12 +66,25 @@ const PostPage = () => {
     },
     {
       title: 'Tiêu đề',
-      dataIndex: 'name',
-      sorter: true
+      dataIndex: ['name'],
+      hideInSearch: false,
+      render: (text, record, index, action) => {
+        return (
+          <a
+            href="#"
+            onClick={() => {
+              setOpenViewDetail(true)
+              setDataInit(record)
+            }}
+          >
+            {record.name}
+          </a>
+        )
+      }
     },
     {
       title: 'Trạng thái',
-      dataIndex: 'isActive',
+      dataIndex: 'status',
       width: 100,
       sorter: true,
       renderFormItem: (item, props, form) => (
@@ -84,8 +101,8 @@ const PostPage = () => {
       render(value, record, index) {
         return (
           <>
-            <Tag color={value ? 'lime' : 'red'}>
-              {value ? 'ACTIVE' : 'INACTIVE'}
+            <Tag color={record.status === 'ACTIVE' ? 'lime' : 'red'}>
+              {record.status === 'ACTIVE' ? 'ACTIVE' : 'INACTIVE'}
             </Tag>
           </>
         )
@@ -230,6 +247,13 @@ const PostPage = () => {
           }}
         />
       </Access>
+      <ViewDetailPost
+        open={openViewDetail}
+        onClose={setOpenViewDetail}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+        reloadTable={reloadTable}
+      />
     </div>
   )
 }
