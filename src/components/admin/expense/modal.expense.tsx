@@ -101,7 +101,7 @@ const ModalExpense = (props: IProps) => {
   }, [dataInit])
 
   const submitExpense = async (valuesForm: any) => {
-    const {expenseId, description, time, amount, userId, expenseCategoryId} =
+    const {id, description, time, amount, userId, expenseCategoryId} =
       valuesForm
     if (dataInit?._id) {
       // Update
@@ -130,7 +130,7 @@ const ModalExpense = (props: IProps) => {
     } else {
       // Create
       const expenses = {
-        expenseId,
+        id,
         description,
         time,
         amount,

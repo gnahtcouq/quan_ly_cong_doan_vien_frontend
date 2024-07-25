@@ -101,8 +101,7 @@ const ModalReceipt = (props: IProps) => {
   }, [dataInit])
 
   const submitReceipt = async (valuesForm: any) => {
-    const {receiptId, description, time, amount, userId, incomeCategoryId} =
-      valuesForm
+    const {id, description, time, amount, userId, incomeCategoryId} = valuesForm
     if (dataInit?._id) {
       // Update
       const receipts = {
@@ -130,7 +129,7 @@ const ModalReceipt = (props: IProps) => {
     } else {
       // Create
       const receipt = {
-        receiptId,
+        id,
         description,
         time,
         amount,
