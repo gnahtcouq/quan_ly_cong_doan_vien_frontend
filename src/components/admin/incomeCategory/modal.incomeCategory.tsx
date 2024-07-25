@@ -29,17 +29,17 @@ const ModalInComeCategory = (props: IProps) => {
   const [form] = Form.useForm()
 
   const submitInComeCategory = async (valuesForm: any) => {
-    const {incomeCategoryId, description, year, budget} = valuesForm
+    const {id, description, year, budget} = valuesForm
     if (dataInit?._id) {
       //update
-      const receipts = {
+      const incomeCategory = {
         _id: dataInit._id,
         description,
         budget,
         year
       }
 
-      const res = await callUpdateIncomeCategory(receipts, dataInit._id)
+      const res = await callUpdateIncomeCategory(incomeCategory, dataInit._id)
       if (res.data) {
         message.success('Cập nhật danh mục thu thành công!')
         handleReset()
@@ -52,13 +52,13 @@ const ModalInComeCategory = (props: IProps) => {
       }
     } else {
       //create
-      const receipts = {
-        incomeCategoryId,
+      const incomeCategory = {
+        id,
         description,
         year,
         budget
       }
-      const res = await callCreateIncomeCategory(receipts)
+      const res = await callCreateIncomeCategory(incomeCategory)
       if (res.data) {
         message.success('Thêm mới danh mục thu thành công!')
         handleReset()
@@ -112,7 +112,7 @@ const ModalInComeCategory = (props: IProps) => {
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProFormText
                 label="Mã danh mục thu (DMT/ngày/tháng/năm)"
-                name="incomeCategoryId"
+                name="id"
                 rules={[
                   {required: true, message: 'Vui lòng không để trống!'},
                   {

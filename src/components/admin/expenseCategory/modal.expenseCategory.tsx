@@ -32,17 +32,17 @@ const ModalExpenseCategory = (props: IProps) => {
   const [form] = Form.useForm()
 
   const submitExpenseCategory = async (valuesForm: any) => {
-    const {expenseCategoryId, description, year, budget} = valuesForm
+    const {id, description, year, budget} = valuesForm
     if (dataInit?._id) {
       //update
-      const receipts = {
+      const expenseCategory = {
         _id: dataInit._id,
         budget,
         description,
         year
       }
 
-      const res = await callUpdateExpenseCategory(receipts, dataInit._id)
+      const res = await callUpdateExpenseCategory(expenseCategory, dataInit._id)
       if (res.data) {
         message.success('Cập nhật danh mục chi thành công!')
         handleReset()
@@ -55,13 +55,13 @@ const ModalExpenseCategory = (props: IProps) => {
       }
     } else {
       //create
-      const receipts = {
-        expenseCategoryId,
+      const expenseCategory = {
+        id,
         description,
         year,
         budget
       }
-      const res = await callCreateExpenseCategory(receipts)
+      const res = await callCreateExpenseCategory(expenseCategory)
       if (res.data) {
         message.success('Thêm mới danh mục chi thành công!')
         handleReset()
@@ -115,7 +115,7 @@ const ModalExpenseCategory = (props: IProps) => {
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProFormText
                 label="Mã danh mục chi (DMC/ngày/tháng/năm)"
-                name="expenseCategoryId"
+                name="id"
                 rules={[
                   {required: true, message: 'Vui lòng không để trống!'},
                   {
