@@ -1,4 +1,6 @@
 import {callUpdateDocumentStatus, callUpdatePostStatus} from '@/config/api'
+import {ALL_PERMISSIONS} from '@/config/permissions'
+import {useAppSelector} from '@/redux/hooks'
 import {IPost} from '@/types/backend'
 import {
   Badge,
@@ -23,13 +25,14 @@ interface IProps {
 }
 
 const ViewDetailPost = (props: IProps) => {
+  const user = useAppSelector((state) => state.account.user)
+  const [canUpdateStatus, setCanUpdateStatus] = useState<boolean>(false)
   const [isSubmit, setIsSubmit] = useState<boolean>(false)
   const {onClose, open, dataInit, setDataInit, reloadTable} = props
   const [form] = Form.useForm() // Create form instance
 
   const handleChangeStatus = async () => {
     setIsSubmit(true)
-
     const status = form.getFieldValue('status') // Access form field value
     const res = await callUpdatePostStatus(dataInit?._id, status)
     if (res.data) {
@@ -51,6 +54,16 @@ const ViewDetailPost = (props: IProps) => {
     if (dataInit) {
       form.setFieldsValue({status: dataInit.status}) // Set form field value
     }
+    if (
+      user.permissions?.length &&
+      user.permissions.some(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.POSTS.UPDATE_STATUS.apiPath &&
+          item.method === ALL_PERMISSIONS.POSTS.UPDATE_STATUS.method
+      )
+    ) {
+      setCanUpdateStatus(true)
+    }
   }, [dataInit, form])
 
   return (
@@ -71,6 +84,7 @@ const ViewDetailPost = (props: IProps) => {
             loading={isSubmit}
             type="primary"
             onClick={handleChangeStatus}
+            disabled={!canUpdateStatus || isSubmit} // Disable button if can't update status or is submitting
           >
             Cập nhật
           </Button>
@@ -89,7 +103,7 @@ const ViewDetailPost = (props: IProps) => {
             </Descriptions.Item>
             <Descriptions.Item label="Trạng thái">
               <Form.Item name="status">
-                <Select>
+                <Select disabled={!canUpdateStatus}>
                   <Option value="ACTIVE">ACTIVE</Option>
                   <Option value="INACTIVE">INACTIVE</Option>
                 </Select>

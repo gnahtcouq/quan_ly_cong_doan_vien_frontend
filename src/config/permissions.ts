@@ -30,6 +30,11 @@ export const ALL_PERMISSIONS = {
     GET_PAGINATE: {method: 'GET', apiPath: '/api/v1/posts', module: 'POSTS'},
     CREATE: {method: 'POST', apiPath: '/api/v1/posts', module: 'POSTS'},
     UPDATE: {method: 'PATCH', apiPath: '/api/v1/posts/:id', module: 'POSTS'},
+    UPDATE_STATUS: {
+      method: 'PUT',
+      apiPath: '/api/v1/posts/:id',
+      module: 'POSTS'
+    },
     DELETE: {method: 'DELETE', apiPath: '/api/v1/posts/:id', module: 'POSTS'},
     GET_NUMBER_OF_POSTS: {
       method: 'POST',
