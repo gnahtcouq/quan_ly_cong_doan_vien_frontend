@@ -185,6 +185,7 @@ const ViewUpsertPost = (props: any) => {
                     {required: true, message: 'Vui lòng không để trống!'}
                   ]}
                   placeholder="Nhập tiêu đề"
+                  disabled={dataUpdate?.status === 'ACTIVE'}
                 />
               </Col>
               <Col span={12} md={12}>
@@ -206,6 +207,7 @@ const ViewUpsertPost = (props: any) => {
                     optionLabelProp="label"
                     options={THREADS_LIST}
                     variant="outlined"
+                    disabled={dataUpdate?.status === 'ACTIVE'}
                   />
                 </Form.Item>
               </Col>
@@ -220,11 +222,27 @@ const ViewUpsertPost = (props: any) => {
                     {required: true, message: 'Vui lòng nhập mô tả bài đăng!'}
                   ]}
                 >
-                  <div ref={quillRef} style={{minHeight: 200}} />
+                  <div
+                    ref={quillRef}
+                    style={{minHeight: 200, position: 'relative'}}
+                  >
+                    {dataUpdate?.status === 'ACTIVE' && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          backgroundColor: 'rgba(0,0,0,0.1)',
+                          cursor: 'not-allowed'
+                        }}
+                      />
+                    )}
+                  </div>
                 </ProForm.Item>
               </Col>
             </Row>
-            <Divider />
           </ProForm>
         </ConfigProvider>
       </div>
