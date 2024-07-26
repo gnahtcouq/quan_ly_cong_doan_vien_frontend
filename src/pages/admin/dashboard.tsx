@@ -12,8 +12,12 @@ import {
 } from '@/config/api'
 import {ProForm} from '@ant-design/pro-components'
 import {disabledMonthYear} from '@/config/utils'
+import Access from '@/components/share/access'
+import {ALL_PERMISSIONS} from '@/config/permissions'
+import {useAppSelector} from '@/redux/hooks'
 
 const DashboardPage = () => {
+  const user = useAppSelector((state) => state.account.user)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [receiptData, setReceiptData] = useState<any[]>([])
   const [expenseData, setExpenseData] = useState<any[]>([])
@@ -28,34 +32,44 @@ const DashboardPage = () => {
   )
 
   const fetchData = async (month: number, year: number) => {
-    setIsLoading(true)
-    try {
-      const receiptResponseByTime = await callFetchReceiptByMonthAndYear(
-        `month=${month}&year=${year}`
+    if (
+      user.permissions?.length &&
+      user.permissions.some(
+        (item) =>
+          item.apiPath ===
+            ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_DASHBOARD.apiPath &&
+          item.method === ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_DASHBOARD.method
       )
-      const expenseResponseByTime = await callFetchExpenseByMonthAndYear(
-        `month=${month}&year=${year}`
-      )
-      setReceiptData((receiptResponseByTime?.data as unknown as any) || [])
-      setExpenseData((expenseResponseByTime?.data as unknown as any) || [])
+    ) {
+      setIsLoading(true)
+      try {
+        const receiptResponseByTime = await callFetchReceiptByMonthAndYear(
+          `month=${month}&year=${year}`
+        )
+        const expenseResponseByTime = await callFetchExpenseByMonthAndYear(
+          `month=${month}&year=${year}`
+        )
+        setReceiptData((receiptResponseByTime?.data as unknown as any) || [])
+        setExpenseData((expenseResponseByTime?.data as unknown as any) || [])
 
-      const userCountResponse = await callFetchNumberOfUsers()
-      const unionistCountResponse = await callFetchNumberOfUnionists()
-      const departmentCountResponse = await callFetchNumberOfDepartments()
-      const postCountResponse = await callFetchNumberOfPosts()
-      const documentCountResponse = await callFetchNumberOfDocuments()
-      setUserCount(userCountResponse.data || 0)
-      setUnionistCount(unionistCountResponse.data || 0)
-      setDepartmentCount(departmentCountResponse.data || 0)
-      setPostCount(postCountResponse.data || 0)
-      setDocumentCount(documentCountResponse.data || 0)
-    } catch (error) {
-      notification.error({
-        message: 'Có lỗi xảy ra',
-        description: 'Đã xảy ra lỗi khi tìm nạp dữ liệu'
-      })
-    } finally {
-      setIsLoading(false)
+        const userCountResponse = await callFetchNumberOfUsers()
+        const unionistCountResponse = await callFetchNumberOfUnionists()
+        const departmentCountResponse = await callFetchNumberOfDepartments()
+        const postCountResponse = await callFetchNumberOfPosts()
+        const documentCountResponse = await callFetchNumberOfDocuments()
+        setUserCount(userCountResponse.data || 0)
+        setUnionistCount(unionistCountResponse.data || 0)
+        setDepartmentCount(departmentCountResponse.data || 0)
+        setPostCount(postCountResponse.data || 0)
+        setDocumentCount(documentCountResponse.data || 0)
+      } catch (error) {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: 'Đã xảy ra lỗi khi tìm nạp dữ liệu'
+        })
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
 
@@ -259,33 +273,35 @@ const DashboardPage = () => {
 
   return (
     <Spin spinning={isLoading}>
-      <Row gutter={[20, 20]}>
-        <Col span={24}>
-          <Card title="Thống kê số lượng" bordered={false}>
-            <canvas id="polarChart"></canvas>
-          </Card>
-        </Col>
-        <Col span={24}>
-          <Card title="Thống kê số tiền thu và chi" bordered={false}>
-            <Form>
-              <ProForm.Item
-                label="Tháng/năm"
-                name="monthYear"
-                rules={[{required: false}]}
-              >
-                <DatePicker
-                  format="MM/YYYY"
-                  placeholder="tháng/năm"
-                  picker="month"
-                  disabledDate={disabledMonthYear}
-                  onChange={handleDatePickerChange}
-                />
-              </ProForm.Item>
-            </Form>
-            <canvas id="myChart"></canvas>
-          </Card>
-        </Col>
-      </Row>
+      <Access permission={ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_DASHBOARD}>
+        <Row gutter={[20, 20]}>
+          <Col span={24}>
+            <Card title="Thống kê số lượng" bordered={false}>
+              <canvas id="polarChart"></canvas>
+            </Card>
+          </Col>
+          <Col span={24}>
+            <Card title="Thống kê số tiền thu và chi" bordered={false}>
+              <Form>
+                <ProForm.Item
+                  label="Tháng/năm"
+                  name="monthYear"
+                  rules={[{required: false}]}
+                >
+                  <DatePicker
+                    format="MM/YYYY"
+                    placeholder="tháng/năm"
+                    picker="month"
+                    disabledDate={disabledMonthYear}
+                    onChange={handleDatePickerChange}
+                  />
+                </ProForm.Item>
+              </Form>
+              <canvas id="myChart"></canvas>
+            </Card>
+          </Col>
+        </Row>
+      </Access>
     </Spin>
   )
 }

@@ -62,6 +62,11 @@ export const ALL_PERMISSIONS = {
       method: 'ACCESS_TO_ADMIN_PAGE',
       apiPath: '/admin',
       module: 'PERMISSIONS'
+    },
+    ACCESS_TO_DASHBOARD: {
+      method: 'ACCESS_TO_DASHBOARD',
+      apiPath: '/admin/dashboard',
+      module: 'PERMISSIONS'
     }
   },
   DOCUMENTS: {

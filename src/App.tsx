@@ -37,6 +37,7 @@ import ReceiptPage from '@/pages/admin/receipt'
 import IncomeCategoryPage from '@/pages/admin/incomeCategory'
 import ExpensePage from '@/pages/admin/expense'
 import ExpenseCategoryPage from '@/pages/admin/expenseCategory'
+import IntroPage from '@/pages/admin/intro'
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -103,6 +104,14 @@ export default function App() {
       children: [
         {
           index: true,
+          element: (
+            <ProtectedRoute>
+              <IntroPage />
+            </ProtectedRoute>
+          )
+        },
+        {
+          path: 'dashboard',
           element: (
             <ProtectedRoute>
               <DashboardPage />

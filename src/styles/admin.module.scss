@@ -52,3 +52,42 @@
 .admin-content {
     padding: 15px;
 }
+
+.intro-page {
+    flex-direction : column;
+    justify-content: center;
+    align-items    : center;
+    text-align     : center;
+    gap            : 5px;
+    font-family    : 'Roboto';
+
+    .text-1 {
+        font-size  : 30px;
+        font-weight: bold;
+        color      : navy;
+    }
+
+    .text-2 {
+        margin-top : 5px;
+        font-size  : 30px;
+        font-weight: bold;
+        color      : #005995;
+    }
+
+    .text-3 {
+        margin-top: 5px;
+        font-size : 25px;
+        color     : #950000;
+    }
+
+    .logo {
+        height    : 300px;
+        margin    : 16px;
+        text-align: 'center';
+
+        img {
+            max-height: 100%;
+            max-width : 100%;
+        }
+    }
+}

@@ -38,9 +38,11 @@ const LayoutAdmin = () => {
 
   const [collapsed, setCollapsed] = useState(false)
   const [activeMenu, setActiveMenu] = useState('')
-  const user = useAppSelector((state) => state.account.user)
+  const user = useAppSelector((state) => state?.account?.user)
 
-  const permissions = useAppSelector((state) => state.account.user.permissions)
+  const permissions = useAppSelector(
+    (state) => state?.account?.user?.permissions
+  )
   const [menuItems, setMenuItems] = useState<MenuProps['items']>([])
 
   const navigate = useNavigate()
@@ -48,13 +50,23 @@ const LayoutAdmin = () => {
 
   useEffect(() => {
     if (permissions?.length) {
-      const viewDashboard = permissions.find(
+      const hasAccessToDashboard = permissions.some(
+        (item) =>
+          item.apiPath ===
+            ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_DASHBOARD.apiPath &&
+          item.method === ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_DASHBOARD.method
+      )
+
+      const hasAccessToAdminPage = permissions.some(
         (item) =>
           item.apiPath ===
             ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_ADMIN_PAGE.apiPath &&
           item.method ===
             ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_ADMIN_PAGE.method
       )
+
+      // Kiểm tra nếu người dùng có cả hai quyền
+      const canViewDashboard = hasAccessToDashboard && hasAccessToAdminPage
 
       const viewDepartment = permissions.find(
         (item) =>
@@ -125,11 +137,11 @@ const LayoutAdmin = () => {
       )
 
       const full = [
-        ...(viewDashboard
+        ...(canViewDashboard
           ? [
               {
-                label: <Link to="/admin">Tổng quan</Link>,
-                key: '/admin',
+                label: <Link to="/admin/dashboard">Tổng quan</Link>,
+                key: '/admin/dashboard',
                 icon: <AppstoreOutlined />
               }
             ]
