@@ -107,8 +107,8 @@ const DocumentPage = () => {
           allowClear
           placeholder="Chọn trạng thái"
         >
-          <Select.Option value="true">ACTIVE</Select.Option>
-          <Select.Option value="false">INACTIVE</Select.Option>
+          <Select.Option value="ACTIVE">ACTIVE</Select.Option>
+          <Select.Option value="INACTIVE">INACTIVE</Select.Option>
         </Select>
       ),
       render(value, record, index) {

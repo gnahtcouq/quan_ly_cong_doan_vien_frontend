@@ -94,8 +94,8 @@ const PostPage = () => {
           allowClear
           placeholder="Chọn trạng thái"
         >
-          <Select.Option value="true">ACTIVE</Select.Option>
-          <Select.Option value="false">INACTIVE</Select.Option>
+          <Select.Option value="ACTIVE">ACTIVE</Select.Option>
+          <Select.Option value="INACTIVE">INACTIVE</Select.Option>
         </Select>
       ),
       render(value, record, index) {
@@ -171,19 +171,17 @@ const PostPage = () => {
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
     if (clone.name) clone.name = `/${clone.name}/i`
-    if (clone.salary) clone.salary = `/${clone.salary}/i`
-    if (clone?.level?.length) {
-      clone.level = clone.level.join(',')
+    if (clone?.status?.length) {
+      clone.status = clone.status.join(',')
     }
-
     let temp = queryString.stringify(clone)
 
     let sortBy = ''
     if (sort && sort.name) {
       sortBy = sort.name === 'ascend' ? 'sort=name' : 'sort=-name'
     }
-    if (sort && sort.salary) {
-      sortBy = sort.salary === 'ascend' ? 'sort=salary' : 'sort=-salary'
+    if (sort && sort.status) {
+      sortBy = sort.status === 'ascend' ? 'sort=status' : 'sort=-status'
     }
     if (sort && sort.createdAt) {
       sortBy =
