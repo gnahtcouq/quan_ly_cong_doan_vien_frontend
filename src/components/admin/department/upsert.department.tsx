@@ -111,6 +111,14 @@ const ViewUpsertDepartment = (props: any) => {
       return
     }
 
+    if (delta.ops.length === 1 && delta.ops[0].insert === '\n') {
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: 'Vui lòng nhập mô tả bài đăng!'
+      })
+      return
+    }
+
     if (dataUpdate?._id) {
       const department = {
         name: values.name,
