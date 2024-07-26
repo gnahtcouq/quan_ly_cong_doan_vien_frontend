@@ -5,6 +5,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   FileExcelOutlined,
+  HistoryOutlined,
   PlusOutlined
 } from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
@@ -27,10 +28,13 @@ import ModalReceipt, {
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/receipt/modal.import'
 import ViewDetailReceipt from '@/components/admin/receipt/view.receipt'
+import ViewDetailReceiptHistory from '@/components/admin/receipt/view.history'
 
 const ReceiptPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
+  const [openViewDetailHistory, setOpenViewDetailHistory] =
+    useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IReceipt | null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [incomeCategories, setIncomeCategories] = useState<
@@ -144,20 +148,20 @@ const ReceiptPage = () => {
         )
       }
     },
-    {
-      title: 'Thành viên',
-      dataIndex: 'userId',
-      sorter: true,
-      valueType: 'select',
-      fieldProps: {
-        options: users,
-        mode: 'multiple'
-      },
-      render: (text, record) => {
-        const user = users.find((cat) => cat.value === record.userId)
-        return <>{user ? user.label : ''}</>
-      }
-    },
+    // {
+    //   title: 'Thành viên',
+    //   dataIndex: 'userId',
+    //   sorter: true,
+    //   valueType: 'select',
+    //   fieldProps: {
+    //     options: users,
+    //     mode: 'multiple'
+    //   },
+    //   render: (text, record) => {
+    //     const user = users.find((cat) => cat.value === record.userId)
+    //     return <>{user ? user.label : ''}</>
+    //   }
+    // },
     {
       title: 'Nội dung',
       dataIndex: 'description',
@@ -197,15 +201,15 @@ const ReceiptPage = () => {
         return <>{dayjs(record.time).format('DD/MM/YYYY')}</>
       }
     },
-    {
-      title: 'Người sửa',
-      dataIndex: 'updatedBy.email',
-      sorter: true,
-      render: (text, record, index, action) => {
-        return <>{record?.updatedBy?.email ? record.updatedBy.email : ''}</>
-      },
-      hideInSearch: true
-    },
+    // {
+    //   title: 'Người sửa',
+    //   dataIndex: 'updatedBy.email',
+    //   sorter: true,
+    //   render: (text, record, index, action) => {
+    //     return <>{record?.updatedBy?.email ? record.updatedBy.email : ''}</>
+    //   },
+    //   hideInSearch: true
+    // },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
@@ -263,6 +267,22 @@ const ReceiptPage = () => {
               </span>
             </Popconfirm>
           </Access>
+
+          <a
+            href="#"
+            onClick={() => {
+              setOpenViewDetailHistory(true)
+              setDataInit(entity)
+            }}
+          >
+            <HistoryOutlined
+              style={{
+                fontSize: 20,
+                color: '#000'
+              }}
+              type=""
+            />
+          </a>
         </Space>
       )
     }
@@ -395,6 +415,13 @@ const ReceiptPage = () => {
         open={openViewDetail}
         dataInit={dataInit}
         setDataInit={setDataInit}
+      />
+      <ViewDetailReceiptHistory
+        open={openViewDetailHistory}
+        onClose={setOpenViewDetailHistory}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+        reloadTable={reloadTable}
       />
       <ImportModal
         isModalOpen={isModalOpen}

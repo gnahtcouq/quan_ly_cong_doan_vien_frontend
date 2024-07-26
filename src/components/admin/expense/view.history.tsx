@@ -1,17 +1,17 @@
-import {IDocument} from '@/types/backend'
+import {formatCurrency} from '@/config/utils'
+import {IExpense} from '@/types/backend'
 import {Descriptions, Drawer} from 'antd'
 import dayjs from 'dayjs'
-import {useState} from 'react'
 
 interface IProps {
   onClose: (v: boolean) => void
   open: boolean
-  dataInit: IDocument | null | any
+  dataInit: IExpense | null | any
   setDataInit: (v: any) => void
   reloadTable: () => void
 }
 
-const ViewDetailDocumentHistory = (props: IProps) => {
+const ViewDetailExpenseHistory = (props: IProps) => {
   const {onClose, open, dataInit, setDataInit} = props
 
   // Lấy 5 phần tử cuối cùng hoặc toàn bộ nếu ít hơn 5
@@ -40,9 +40,13 @@ const ViewDetailDocumentHistory = (props: IProps) => {
         >
           {latestHistory.length > 1 ? (
             latestHistory.map((item: any, index: number) => (
-              <Descriptions.Item key={index} label={`${item.name}`}>
+              <Descriptions.Item key={index} label={`${item.description}`}>
                 <p>
-                  <strong>Trạng thái:</strong> {item.status}
+                  <strong>Số tiền:</strong> {formatCurrency(item.amount)}
+                </p>
+                <p>
+                  <strong>Thời gian:</strong>{' '}
+                  {dayjs(item.time).format('DD/MM/YYYY')}
                 </p>
                 <p>
                   <strong>Người thực hiện:</strong> {item.updatedBy.email}
@@ -54,7 +58,7 @@ const ViewDetailDocumentHistory = (props: IProps) => {
               </Descriptions.Item>
             ))
           ) : (
-            <Descriptions.Item label={`${dataInit?.name}`}>
+            <Descriptions.Item label={`${dataInit?.description}`}>
               <p>Không có lịch sử cập nhật</p>
             </Descriptions.Item>
           )}
@@ -64,4 +68,4 @@ const ViewDetailDocumentHistory = (props: IProps) => {
   )
 }
 
-export default ViewDetailDocumentHistory
+export default ViewDetailExpenseHistory

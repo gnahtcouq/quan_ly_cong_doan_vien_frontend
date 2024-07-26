@@ -5,6 +5,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   FileExcelOutlined,
+  HistoryOutlined,
   PlusOutlined
 } from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
@@ -19,11 +20,14 @@ import {ALL_PERMISSIONS} from '@/config/permissions'
 import ModalExpenseCategory from '@/components/admin/expenseCategory/modal.expenseCategory'
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/expenseCategory/modal.import'
+import ViewDetailExpenseCategoryHistory from '@/components/admin/expenseCategory/view.history'
 
 const ExpenseCategoryPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IExpenseCategory | null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [openViewDetailHistory, setOpenViewDetailHistory] =
+    useState<boolean>(false)
 
   const tableRef = useRef<ActionType>()
 
@@ -157,6 +161,22 @@ const ExpenseCategoryPage = () => {
               </span>
             </Popconfirm>
           </Access>
+
+          <a
+            href="#"
+            onClick={() => {
+              setOpenViewDetailHistory(true)
+              setDataInit(entity)
+            }}
+          >
+            <HistoryOutlined
+              style={{
+                fontSize: 20,
+                color: '#000'
+              }}
+              type=""
+            />
+          </a>
         </Space>
       )
     }
@@ -262,6 +282,13 @@ const ExpenseCategoryPage = () => {
         reloadTable={reloadTable}
         dataInit={dataInit}
         setDataInit={setDataInit}
+      />
+      <ViewDetailExpenseCategoryHistory
+        open={openViewDetailHistory}
+        onClose={setOpenViewDetailHistory}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+        reloadTable={reloadTable}
       />
       <ImportModal
         isModalOpen={isModalOpen}

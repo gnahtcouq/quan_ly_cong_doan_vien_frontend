@@ -5,6 +5,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   FileExcelOutlined,
+  HistoryOutlined,
   PlusOutlined
 } from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
@@ -19,11 +20,14 @@ import {ALL_PERMISSIONS} from '@/config/permissions'
 import ModalIncomeCategory from '@/components/admin/incomeCategory/modal.incomeCategory'
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/incomeCategory/modal.import'
+import ViewDetailIncomeCategoryHistory from '@/components/admin/incomeCategory/view.history'
 
 const IncomeCategoryPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IIncomeCategory | null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [openViewDetailHistory, setOpenViewDetailHistory] =
+    useState<boolean>(false)
 
   const tableRef = useRef<ActionType>()
 
@@ -155,6 +159,22 @@ const IncomeCategoryPage = () => {
               </span>
             </Popconfirm>
           </Access>
+
+          <a
+            href="#"
+            onClick={() => {
+              setOpenViewDetailHistory(true)
+              setDataInit(entity)
+            }}
+          >
+            <HistoryOutlined
+              style={{
+                fontSize: 20,
+                color: '#000'
+              }}
+              type=""
+            />
+          </a>
         </Space>
       )
     }
@@ -260,6 +280,13 @@ const IncomeCategoryPage = () => {
         reloadTable={reloadTable}
         dataInit={dataInit}
         setDataInit={setDataInit}
+      />
+      <ViewDetailIncomeCategoryHistory
+        open={openViewDetailHistory}
+        onClose={setOpenViewDetailHistory}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+        reloadTable={reloadTable}
       />
       <ImportModal
         isModalOpen={isModalOpen}

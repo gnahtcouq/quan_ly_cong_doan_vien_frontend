@@ -5,6 +5,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   FileExcelOutlined,
+  HistoryOutlined,
   PlusOutlined
 } from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
@@ -19,9 +20,12 @@ import {ALL_PERMISSIONS} from '@/config/permissions'
 import ModalFee, {IUnionistSelect} from '@/components/admin/fee/modal.fee'
 import {formatCurrency} from '@/config/utils'
 import ImportModal from '@/components/admin/fee/modal.import'
+import ViewDetailFeeHistory from '@/components/admin/fee/view.history'
 
 const FeePage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
+  const [openViewDetailHistory, setOpenViewDetailHistory] =
+    useState<boolean>(false)
   const [dataInit, setDataInit] = useState<IFee | null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [unionists, setUnionists] = useState<IUnionistSelect[]>([])
@@ -173,6 +177,22 @@ const FeePage = () => {
               </span>
             </Popconfirm>
           </Access>
+
+          <a
+            href="#"
+            onClick={() => {
+              setOpenViewDetailHistory(true)
+              setDataInit(entity)
+            }}
+          >
+            <HistoryOutlined
+              style={{
+                fontSize: 20,
+                color: '#000'
+              }}
+              type=""
+            />
+          </a>
         </Space>
       )
     }
@@ -278,6 +298,13 @@ const FeePage = () => {
         reloadTable={reloadTable}
         dataInit={dataInit}
         setDataInit={setDataInit}
+      />
+      <ViewDetailFeeHistory
+        open={openViewDetailHistory}
+        onClose={setOpenViewDetailHistory}
+        dataInit={dataInit}
+        setDataInit={setDataInit}
+        reloadTable={reloadTable}
       />
       <ImportModal
         isModalOpen={isModalOpen}
