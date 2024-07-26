@@ -63,8 +63,7 @@ const PermissionPage = () => {
             {record._id}
           </a>
         )
-      },
-      hideInSearch: true
+      }
     },
     {
       title: 'Tên quyền',
@@ -166,6 +165,7 @@ const PermissionPage = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
+    // if (clone._id) clone._id = `/${clone._id}/i`
     if (clone.name) clone.name = `/${clone.name}/i`
     if (clone.apiPath) clone.apiPath = `/${clone.apiPath}/i`
     if (clone.method) clone.method = `/${clone.method}/i`
