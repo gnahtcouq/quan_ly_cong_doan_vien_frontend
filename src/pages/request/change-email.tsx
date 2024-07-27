@@ -22,18 +22,30 @@ const ConfirmChangeEmail = (props: any) => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      setIsLoading(true)
-      const res = await callFetchUserById(userId?.toString() || '')
-      if (res && res.data) {
-        setVerificationExpires(res.data.verificationExpires?.toString() || null)
-        if (!res.data.verificationExpires) window.location.href = '/'
+      if (userId === user._id) {
+        setIsLoading(true)
+        const res = await callFetchUserById(userId?.toString() || '')
+        if (res && res.data) {
+          setVerificationExpires(
+            res.data.verificationExpires?.toString() || null
+          )
+          if (!res.data.verificationExpires) window.location.href = '/'
+        } else {
+          notification.error({
+            message: 'Có lỗi xảy ra',
+            description: res.message
+          })
+        }
+        setIsLoading(false)
       } else {
         notification.error({
           message: 'Có lỗi xảy ra',
-          description: res.message
+          description: 'Dữ liệu không hợp lệ'
         })
+        setTimeout(() => {
+          window.location.href = '/'
+        }, 2000)
       }
-      setIsLoading(false)
     }
     fetchUserData()
   }, [])
@@ -47,7 +59,7 @@ const ConfirmChangeEmail = (props: any) => {
       if (expiryDate <= currentDate) {
         notification.error({
           message: 'Có lỗi xảy ra',
-          description: 'Thời gian xác nhận đã hết hạn!'
+          description: 'Thời gian xác nhận đã hết hạn. Vui lòng gửi yêu cầu mới'
         })
         setTimeout(() => {
           window.location.href = '/'
