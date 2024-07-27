@@ -22,9 +22,9 @@ const DepartmentPage = forwardRef<any>((props, ref) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const handleDeleteDepartment = async (_id: string | undefined) => {
-    if (_id) {
-      const res = await callDeleteDepartment(_id)
+  const handleDeleteDepartment = async (id: string | undefined) => {
+    if (id) {
+      const res = await callDeleteDepartment(id)
       if (res && res.data) {
         message.success('Xóa đơn vị thành công!')
         reloadTable()
@@ -103,7 +103,7 @@ const DepartmentPage = forwardRef<any>((props, ref) => {
               placement="leftTop"
               title={'Xác nhận xóa đơn vị'}
               description={'Bạn có chắc chắn muốn xóa đơn vị này?'}
-              onConfirm={() => handleDeleteDepartment(entity._id)}
+              onConfirm={() => handleDeleteDepartment(entity.id)}
               okText="Xác nhận"
               cancelText="Hủy"
             >

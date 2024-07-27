@@ -68,6 +68,9 @@ const ViewUpsertPost = (props: any) => {
 
   useEffect(() => {
     if (quill) {
+      if (dataUpdate?.status === 'ACTIVE') quill.disable()
+      else quill.enable()
+
       const handleChange = () => {
         const delta = quill.getContents()
         const deltaString = JSON.stringify(delta)
@@ -79,7 +82,7 @@ const ViewUpsertPost = (props: any) => {
         quill.off('text-change', handleChange)
       }
     }
-  }, [quill, form])
+  }, [quill, form, dataUpdate?.status])
 
   const onFinish = async (values: any) => {
     const delta = JSON.parse(values.description)
