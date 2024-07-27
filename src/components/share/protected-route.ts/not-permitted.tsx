@@ -15,7 +15,7 @@ const NotPermitted = () => {
   return (
     <Result
       status="403"
-      title="403"
+      title="403 - Truy cập bị từ chối"
       subTitle="Xin lỗi, bạn không được phép truy cập trang này."
       extra={
         <Button type="primary" onClick={handleGoBack}>

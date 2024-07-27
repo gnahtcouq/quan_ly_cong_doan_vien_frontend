@@ -38,7 +38,7 @@ const Access = (props: IProps) => {
           {hideChildren === false ? (
             <Result
               status="403"
-              title="Truy cập bị từ chối"
+              title="404 - Truy cập bị từ chối"
               subTitle="Xin lỗi, bạn không có quyền hạn truy cập thông tin này."
             />
           ) : (

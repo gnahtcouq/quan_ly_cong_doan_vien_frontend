@@ -1,7 +1,16 @@
 import {useLocation} from 'react-router-dom'
 import {useEffect, useState} from 'react'
 import styles from 'styles/client.module.scss'
-import {Button, Divider, Form, Input, message, notification, Spin} from 'antd'
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  message,
+  notification,
+  Result,
+  Spin
+} from 'antd'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {callConfirmUpdateUserEmail, callFetchUserById} from '@/config/api'
 import {updateUserInfo} from '@/redux/slice/accountSlide'
@@ -22,22 +31,11 @@ const ConfirmChangeEmail = (props: any) => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (userId === user._id) {
-        setIsLoading(true)
-        const res = await callFetchUserById(userId?.toString() || '')
-        if (res && res.data) {
-          setVerificationExpires(
-            res.data.verificationExpires?.toString() || null
-          )
-          if (!res.data.verificationExpires) window.location.href = '/'
-        } else {
-          notification.error({
-            message: 'Có lỗi xảy ra',
-            description: res.message
-          })
-        }
-        setIsLoading(false)
-      } else {
+      if (!user._id) {
+        return
+      }
+
+      if (userId !== user._id) {
         notification.error({
           message: 'Có lỗi xảy ra',
           description: 'Dữ liệu không hợp lệ'
@@ -45,10 +43,37 @@ const ConfirmChangeEmail = (props: any) => {
         setTimeout(() => {
           window.location.href = '/'
         }, 2000)
+        return
+      }
+
+      setIsLoading(true)
+      try {
+        const res = await callFetchUserById(userId?.toString() || '')
+        if (res && res.data) {
+          setVerificationExpires(
+            res.data.verificationExpires?.toString() || null
+          )
+          if (!res.data.verificationExpires) {
+            window.location.href = '/'
+          }
+        } else {
+          notification.error({
+            message: 'Có lỗi xảy ra',
+            description: res.message
+          })
+        }
+      } catch (error) {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: 'Dữ liệu không hợp lệ'
+        })
+      } finally {
+        setIsLoading(false)
       }
     }
+
     fetchUserData()
-  }, [])
+  }, [userId, user._id])
 
   useEffect(() => {
     // Kiểm tra và chuyển hướng nếu verificationExpires không hợp lệ
