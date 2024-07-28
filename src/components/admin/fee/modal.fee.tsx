@@ -239,6 +239,7 @@ const ModalFee = (props: IProps) => {
                     style={{width: '100%'}}
                     min={1000}
                     max={10000000000}
+                    placeholder="Nhập số tiền"
                     formatter={(value) =>
                       `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                     }
