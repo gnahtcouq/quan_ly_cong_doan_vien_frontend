@@ -1,5 +1,5 @@
 import {Button, Col, Form, Row, Select} from 'antd'
-import {EnvironmentOutlined, MonitorOutlined} from '@ant-design/icons'
+import {MonitorOutlined} from '@ant-design/icons'
 import {THREADS_LIST} from '@/config/utils'
 import {ProForm} from '@ant-design/pro-components'
 
@@ -17,9 +17,9 @@ const SearchClient = () => {
         render: () => <></>
       }}
     >
-      {/* <Row gutter={[20, 20]}>
+      <Row gutter={[20, 20]}>
         <Col span={24}>
-          <h2>Tìm kiếm bài đăng</h2>
+          <h1>Tìm kiếm</h1>
         </Col>
         <Col span={24} md={16}>
           <ProForm.Item name="threads">
@@ -30,7 +30,7 @@ const SearchClient = () => {
               style={{width: '100%'}}
               placeholder={
                 <>
-                  <MonitorOutlined /> Tìm theo chủ đề...
+                  <MonitorOutlined /> Tìm kiếm theo chủ đề...
                 </>
               }
               optionLabelProp="label"
@@ -44,7 +44,7 @@ const SearchClient = () => {
             Tìm kiếm
           </Button>
         </Col>
-      </Row> */}
+      </Row>
     </ProForm>
   )
 }

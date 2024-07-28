@@ -176,7 +176,6 @@ const UnionistFees = (props: any) => {
               disabled={searchType === 'all'}
             />
           </Col>
-
           <Col lg={12} md={12} sm={24} xs={24}>
             <ProForm.Item label="Tổng số tiền đã đóng">
               <Tag color="red">{formatCurrency(totalFee)}</Tag>
