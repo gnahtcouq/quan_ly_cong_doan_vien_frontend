@@ -150,7 +150,7 @@ const ModalUnionist = (props: IProps) => {
         unionEntryDate,
         note,
         permissions,
-        departmentId: departmentId.value
+        departmentId
       }
       const res = await callCreateUnionist(unionist)
       if (res.data) {
@@ -314,9 +314,7 @@ const ModalUnionist = (props: IProps) => {
                 <ProForm.Item
                   label="Ngày vào công đoàn"
                   name="unionEntryDate"
-                  rules={[
-                    {required: true, message: 'Vui lòng không để trống!'}
-                  ]}
+                  rules={[{required: false}]}
                 >
                   <DatePicker
                     format="DD/MM/YYYY"
@@ -330,7 +328,7 @@ const ModalUnionist = (props: IProps) => {
                 <ProForm.Item
                   name="departmentId"
                   label="Thuộc đơn vị"
-                  rules={[{required: true, message: 'Vui lòng chọn đơn vị!'}]}
+                  rules={[{required: false}]}
                 >
                   <DebounceSelect
                     showSearch
@@ -365,9 +363,7 @@ const ModalUnionist = (props: IProps) => {
                 <ProForm.Item
                   label="Ngày chuyển đến"
                   name="joiningDate"
-                  rules={[
-                    {required: true, message: 'Vui lòng không để trống!'}
-                  ]}
+                  rules={[{required: false}]}
                 >
                   <DatePicker
                     format="DD/MM/YYYY"
@@ -381,9 +377,7 @@ const ModalUnionist = (props: IProps) => {
                 <ProForm.Item
                   label="Ngày chuyển đi"
                   name="leavingDate"
-                  rules={[
-                    {required: true, message: 'Vui lòng không để trống!'}
-                  ]}
+                  rules={[{required: false}]}
                 >
                   <DatePicker
                     format="DD/MM/YYYY"

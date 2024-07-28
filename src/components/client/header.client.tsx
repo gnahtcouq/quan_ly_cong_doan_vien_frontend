@@ -33,11 +33,6 @@ const Header = (props: any) => {
   const permissions = useAppSelector((state) => state.account.user.permissions)
   const [menuItems, setMenuItems] = useState<MenuProps['items']>([])
 
-  // Assign a value to menuItems before using it
-  if (permissions?.length) {
-    // Your logic to populate menuItems
-  }
-
   const [openMobileMenu, setOpenMobileMenu] = useState<boolean>(false)
 
   const [current, setCurrent] = useState('home')
