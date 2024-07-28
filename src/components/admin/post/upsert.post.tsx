@@ -24,7 +24,7 @@ import {useQuill} from 'react-quilljs'
 import {quillFormats, quillModules} from '@/config/quill'
 import 'quill/dist/quill.snow.css'
 import {EditOutlined, MonitorOutlined} from '@ant-design/icons'
-import en_US from 'antd/lib/locale/en_US'
+import vi_VN from 'antd/lib/locale/vi_VN'
 import {IPost} from '@/types/backend'
 
 const ViewUpsertPost = (props: any) => {
@@ -154,7 +154,7 @@ const ViewUpsertPost = (props: any) => {
         />
       </div>
       <div>
-        <ConfigProvider locale={en_US}>
+        <ConfigProvider locale={vi_VN}>
           <ProForm
             form={form}
             onFinish={onFinish}

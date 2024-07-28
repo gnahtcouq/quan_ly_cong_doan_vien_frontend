@@ -466,6 +466,12 @@ export const callFetchFeeById = (id: string) => {
   return axios.get<IBackendRes<IFee>>(`/api/v1/fees/${id}`)
 }
 
+export const callFetchFeesByUnionist = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IFee>>>(
+    `/api/v1/fees/by-unionist?${query}`
+  )
+}
+
 export const callUploadFeesFile = (file: File) => {
   const formData = new FormData()
   formData.append('file', file)

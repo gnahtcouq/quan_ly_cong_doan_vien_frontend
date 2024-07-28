@@ -26,7 +26,7 @@ import {
 import {IUnionist} from '@/types/backend'
 import {DebounceSelect} from '@/config/debouce.select'
 import dayjs from 'dayjs'
-import en_US from 'antd/lib/locale/en_US'
+import vi_VN from 'antd/lib/locale/vi_VN'
 import {
   disabledDateBirthday,
   disabledDate,
@@ -206,7 +206,7 @@ const ModalUnionist = (props: IProps) => {
 
   return (
     <>
-      <ConfigProvider locale={en_US}>
+      <ConfigProvider locale={vi_VN}>
         <ModalForm
           title={
             <>

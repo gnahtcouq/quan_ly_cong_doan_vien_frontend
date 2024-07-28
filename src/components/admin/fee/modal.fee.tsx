@@ -23,7 +23,7 @@ import {
   callUpdateFee
 } from '@/config/api'
 import {IFee} from '@/types/backend'
-import en_US from 'antd/lib/locale/en_US'
+import vi_VN from 'antd/lib/locale/vi_VN'
 import dayjs from 'dayjs'
 import {useEffect, useState} from 'react'
 import {DebounceSelect} from '@/config/debouce.select'
@@ -149,7 +149,7 @@ const ModalFee = (props: IProps) => {
 
   return (
     <>
-      <ConfigProvider locale={en_US}>
+      <ConfigProvider locale={vi_VN}>
         <ModalForm
           title={
             <>

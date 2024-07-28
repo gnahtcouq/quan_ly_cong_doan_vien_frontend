@@ -7,7 +7,7 @@ import {Col, ConfigProvider, Divider, Row, Skeleton, Tag} from 'antd'
 import {HistoryOutlined} from '@ant-design/icons'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import en_US from 'antd/locale/en_US'
+import vi_VN from 'antd/locale/vi_VN'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 import logo_cd from '@/assets/logo-cd.png'
@@ -44,7 +44,7 @@ const ClientPostDetailPage = (props: any) => {
   }, [id])
 
   return (
-    <ConfigProvider locale={en_US}>
+    <ConfigProvider locale={vi_VN}>
       <div
         className={`${styles['container']} ${styles['detail-post-section']}`}
       >

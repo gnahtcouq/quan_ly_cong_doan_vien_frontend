@@ -16,7 +16,7 @@ import {
 import {isMobile} from 'react-device-detect'
 import {callCreateUser, callUpdateUser} from '@/config/api'
 import {IUser} from '@/types/backend'
-import en_US from 'antd/lib/locale/en_US'
+import vi_VN from 'antd/lib/locale/vi_VN'
 import dayjs from 'dayjs'
 import {disabledDateBirthday, validateDateOfBirth} from '@/config/utils'
 
@@ -113,7 +113,7 @@ const ModalUser = (props: IProps) => {
 
   return (
     <>
-      <ConfigProvider locale={en_US}>
+      <ConfigProvider locale={vi_VN}>
         <ModalForm
           title={
             <>

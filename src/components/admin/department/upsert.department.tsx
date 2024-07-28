@@ -24,7 +24,7 @@ import {useQuill} from 'react-quilljs'
 import {quillFormats, quillModules} from '@/config/quill'
 import 'quill/dist/quill.snow.css'
 import {EditOutlined, LoadingOutlined, PlusOutlined} from '@ant-design/icons'
-import en_US from 'antd/lib/locale/en_US'
+import vi_VN from 'antd/lib/locale/vi_VN'
 import dayjs from 'dayjs'
 import {IDepartment} from '@/types/backend'
 import {v4 as uuidv4} from 'uuid'
@@ -275,7 +275,7 @@ const ViewUpsertDepartment = (props: any) => {
         />
       </div>
       <div>
-        <ConfigProvider locale={en_US}>
+        <ConfigProvider locale={vi_VN}>
           <ProForm
             form={form}
             onFinish={onFinish}
@@ -313,7 +313,7 @@ const ViewUpsertDepartment = (props: any) => {
                     }
                   ]}
                 >
-                  <ConfigProvider locale={en_US}>
+                  <ConfigProvider locale={vi_VN}>
                     <Upload
                       name="logo"
                       listType="picture-card"

@@ -10,7 +10,7 @@ import {
   message,
   notification
 } from 'antd'
-import en_US from 'antd/lib/locale/en_US'
+import vi_VN from 'antd/lib/locale/vi_VN'
 import {UploadOutlined} from '@ant-design/icons'
 import type {UploadProps} from 'antd'
 import {
@@ -115,7 +115,7 @@ const ApplyModal = (props: IProps) => {
 
   return (
     <>
-      <ConfigProvider locale={en_US}>
+      <ConfigProvider locale={vi_VN}>
         <ModalForm
           title={
             <>

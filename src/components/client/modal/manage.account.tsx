@@ -7,7 +7,6 @@ import {
   Modal,
   Row,
   Select,
-  Space,
   Spin,
   Table,
   Tabs,
@@ -17,10 +16,10 @@ import {
 } from 'antd'
 import {isMobile} from 'react-device-detect'
 import type {TabsProps} from 'antd'
-import {IDocument, IUser} from '@/types/backend'
+import {IFee, IUser} from '@/types/backend'
 import {useState, useEffect} from 'react'
 import {
-  callFetchDocumentByUser,
+  callFetchFeesByUnionist,
   callFetchUnionistById,
   callFetchUserById,
   callGetSubscriberThreads,
@@ -34,128 +33,183 @@ import {
 } from '@/config/api'
 import type {ColumnsType} from 'antd/es/table'
 import dayjs from 'dayjs'
-import {CopyOutlined, ExportOutlined, MonitorOutlined} from '@ant-design/icons'
-import {THREADS_LIST} from '@/config/utils'
+import {MonitorOutlined} from '@ant-design/icons'
+import {formatCurrency, THREADS_LIST} from '@/config/utils'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
-import {ProForm, ProFormSelect, ProFormText} from '@ant-design/pro-components'
-import en_US from 'antd/locale/en_US'
+import {ProForm, ProFormText} from '@ant-design/pro-components'
 import {updateUserInfo} from '@/redux/slice/accountSlide'
+import queryString from 'query-string'
+import vi_VN from 'antd/locale/vi_VN'
 
 interface IProps {
   open: boolean
   onClose: (v: boolean) => void
 }
 
-// const UserDocument = (props: any) => {
-//   const [listDoc, setListDoc] = useState<IDocument[]>([])
-//   const [isFetching, setIsFetching] = useState<boolean>(false)
+const user = useAppSelector((state) => state?.account?.user)
+const type = useAppSelector((state) => state?.account?.user?.type)
 
-//   useEffect(() => {
-//     const init = async () => {
-//       setIsFetching(true)
-//       const res = await callFetchDocumentByUser()
-//       if (res && res.data) {
-//         setListDoc(res.data as IDocument[])
-//       }
-//       setIsFetching(false)
-//     }
-//     init()
-//   }, [])
+const UnionistFees = (props: any) => {
+  const [listFee, setListFee] = useState<IFee[]>([])
+  const [isFetching, setIsFetching] = useState<boolean>(false)
+  const [current, setCurrent] = useState<number>(1)
+  const [pageSize, setPageSize] = useState<number>(6)
+  const [total, setTotal] = useState<number>(0)
+  const [monthYear, setMonthYear] = useState<string | null>(null)
+  const [year, setYear] = useState<string | null>(null)
+  const [totalFee, setTotalFee] = useState<number>(0)
+  const [searchType, setSearchType] = useState<'all' | 'year' | 'monthYear'>(
+    'all'
+  )
+  const [datePickerKey, setDatePickerKey] = useState<number>(0) // Thêm state để buộc DatePicker làm mới
+  const {Option} = Select
 
-//   const columns: ColumnsType<IDocument> = [
-//     {
-//       title: 'STT',
-//       key: 'index',
-//       width: 50,
-//       align: 'center',
-//       render: (text, record, index) => {
-//         return <>{index + 1}</>
-//       }
-//     },
-//     {
-//       title: 'Tên văn bản',
-//       dataIndex: 'name'
-//     },
-//     {
-//       title: 'Trạng thái',
-//       dataIndex: 'status',
-//       width: 100,
-//       render(value, record, index) {
-//         return (
-//           <>
-//             <Tag color={record.status === 'ACTIVE' ? 'lime' : 'red'}>
-//               {record.status === 'ACTIVE' ? 'ACTIVE' : 'INACTIVE'}
-//             </Tag>
-//           </>
-//         )
-//       }
-//     },
-//     {
-//       title: 'Ngày tạo',
-//       dataIndex: 'createdAt',
-//       render(value, record, index) {
-//         return <>{dayjs(record.createdAt).format('DD/MM/YYYY - HH:mm:ss')}</>
-//       }
-//     },
-//     {
-//       title: 'Đường dẫn',
-//       dataIndex: '',
-//       width: 120,
-//       render: (value, record, index) => (
-//         <Space>
-//           <CopyOutlined
-//             style={{
-//               fontSize: 20,
-//               color: '#85b970'
-//             }}
-//             type=""
-//             onClick={() => {
-//               navigator.clipboard.writeText(
-//                 `${import.meta.env.VITE_BACKEND_URL}/files/document/${
-//                   record?.url
-//                 }`
-//               )
-//               message.success('Đã lưu đường dẫn vào bảng nhớ tạm!')
-//             }}
-//           />
+  useEffect(() => {
+    const fetchFees = async () => {
+      setIsFetching(true)
+      const query = queryString.stringify({
+        current,
+        pageSize,
+        ...(year ? {year} : {}),
+        ...(monthYear ? {monthYear} : {})
+      })
+      const res = await callFetchFeesByUnionist(query)
+      if (res && res.data) {
+        setListFee(res.data.result)
+        setTotalFee(res.data.meta.totalFee || 0)
+        setTotal(res.data.meta.total || 1) // Đặt total theo kết quả thực tế hoặc mặc định là 1 nếu có monthYear
+      } else {
+        setListFee([])
+        setTotal(0)
+      }
+      setIsFetching(false)
+    }
+    fetchFees()
+  }, [current, pageSize, monthYear, year, searchType])
 
-//           <a
-//             href={`${import.meta.env.VITE_BACKEND_URL}/files/document/${
-//               record?.url
-//             }`}
-//             target="_blank"
-//           >
-//             <ExportOutlined
-//               style={{
-//                 fontSize: 20,
-//                 color: '#ffa500'
-//               }}
-//               type=""
-//             />
-//           </a>
-//         </Space>
-//       )
-//     }
-//   ]
+  // Hàm xử lý khi phân trang thay đổi
+  const handleTableChange = (pagination) => {
+    setCurrent(pagination.current)
+    setPageSize(pagination.pageSize)
+  }
 
-//   return (
-//     <div>
-//       <Table<IDocument>
-//         columns={columns}
-//         dataSource={listDoc}
-//         loading={isFetching}
-//         pagination={false}
-//       />
-//     </div>
-//   )
-// }
+  const handleDateChange = (date) => {
+    if (searchType === 'monthYear') {
+      if (date) {
+        const formattedDate = date.format('YYYY/MM')
+        setMonthYear(formattedDate)
+        setYear(null)
+      } else {
+        setMonthYear(null)
+      }
+    } else if (searchType === 'year') {
+      if (date) {
+        const formattedDate = date.format('YYYY')
+        setYear(formattedDate)
+        setMonthYear(null)
+      } else {
+        setYear(null)
+      }
+    } else {
+      setMonthYear(null)
+      setYear(null)
+    }
+    setCurrent(1) // Reset lại trang hiện tại về trang 1 khi có thay đổi tìm kiếm
+  }
+
+  const handleSearchTypeChange = (value) => {
+    setSearchType(value)
+    setMonthYear(null)
+    setYear(null)
+    setCurrent(1)
+    setDatePickerKey((prev) => prev + 1) // Thay đổi key để buộc DatePicker làm mới
+  }
+
+  const columns: ColumnsType<IFee> = [
+    {
+      title: 'STT',
+      key: 'index',
+      width: 50,
+      align: 'center',
+      render: (text, record, index) => {
+        return <>{index + 1 + (current - 1) * pageSize}</>
+      }
+    },
+    {
+      title: 'Thời gian',
+      dataIndex: 'monthYear'
+    },
+    {
+      title: 'Số tiền',
+      dataIndex: 'fee',
+      render: (text, record) => formatCurrency(record.fee)
+    }
+  ]
+
+  return (
+    <div>
+      <ConfigProvider locale={vi_VN}>
+        <Row gutter={16}>
+          <Col lg={12} md={12} sm={24} xs={24}>
+            <ProForm.Item label="Tìm kiếm">
+              <Select
+                defaultValue="year"
+                style={{width: '100%'}}
+                onChange={handleSearchTypeChange}
+              >
+                <Option value="all">Tất cả</Option>
+                <Option value="year">Năm</Option>
+                <Option value="monthYear">Tháng/Năm</Option>
+              </Select>
+            </ProForm.Item>
+          </Col>
+          <Col lg={12} md={12} sm={24} xs={24}>
+            <DatePicker
+              key={datePickerKey} // Sử dụng key để buộc làm mới DatePicker
+              format={searchType === 'year' ? 'YYYY' : 'YYYY/MM'}
+              placeholder={
+                searchType === 'all'
+                  ? '*'
+                  : searchType === 'year'
+                  ? 'yyyy'
+                  : 'yyyy/mm'
+              }
+              picker={searchType === 'year' ? 'year' : 'month'}
+              onChange={handleDateChange}
+              disabled={searchType === 'all'}
+            />
+          </Col>
+
+          <Col lg={12} md={12} sm={24} xs={24}>
+            <ProForm.Item label="Tổng số tiền đã đóng">
+              <Tag color="red">{formatCurrency(totalFee)}</Tag>
+            </ProForm.Item>
+          </Col>
+        </Row>
+        <Table<IFee>
+          columns={columns}
+          dataSource={listFee.map((item) => ({...item, key: item._id}))}
+          loading={isFetching}
+          pagination={{
+            current: current,
+            pageSize: pageSize,
+            total: total,
+            showSizeChanger: true,
+            onChange: (page, pageSize) =>
+              handleTableChange({current: page, pageSize}),
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} trên ${total} hàng`
+          }}
+        />
+      </ConfigProvider>
+    </div>
+  )
+}
 
 const UserUpdateInfo = (props: any) => {
   const [dataInit, setDataInit] = useState<IUser | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
-  const user = useAppSelector((state) => state?.account?.user) // Lấy thông tin user hiện tại
-  const type = useAppSelector((state) => state?.account?.user?.type) // Lấy loại user hiện tại
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -390,7 +444,6 @@ const UserUpdateInfo = (props: any) => {
 const PostByEmail = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
-  const user = useAppSelector((state) => state.account.user)
 
   useEffect(() => {
     const init = async () => {
@@ -477,8 +530,6 @@ const PostByEmail = (props: any) => {
 const UserUpdatePassword = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
-  const user = useAppSelector((state) => state.account.user)
-  const type = useAppSelector((state) => state?.account?.user?.type) // Lấy loại user hiện tại
 
   const onFinish = async (values: any) => {
     const {currentPassword, newPassword, reNewPassword} = values
@@ -606,12 +657,18 @@ const ManageAccount = (props: IProps) => {
     // console.log(key);
   }
 
+  // if (type === 'unionist')
+
   const items: TabsProps['items'] = [
-    // {
-    //   key: 'user-document',
-    //   label: `Văn bản`,
-    //   children: <UserDocument />
-    // },
+    ...(type === 'unionist'
+      ? [
+          {
+            key: 'unionist-fees',
+            label: `Công đoàn phí`,
+            children: <UnionistFees />
+          }
+        ]
+      : []),
     {
       key: 'email-by-threads',
       label: `Nhận thông báo bài đăng qua Email`,
@@ -638,7 +695,7 @@ const ManageAccount = (props: IProps) => {
         maskClosable={false}
         footer={null}
         destroyOnClose={true}
-        width={isMobile ? '100%' : '600px'}
+        width={isMobile ? '100%' : '700px'}
       >
         <div style={{minHeight: 400}}>
           <Tabs

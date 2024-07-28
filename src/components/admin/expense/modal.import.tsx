@@ -9,7 +9,7 @@ import {
   notification,
   Form
 } from 'antd'
-import en_US from 'antd/lib/locale/en_US'
+import vi_VN from 'antd/lib/locale/vi_VN'
 import {UploadOutlined} from '@ant-design/icons'
 import {callUploadExpensesFile} from '@/config/api'
 import {useState} from 'react'
@@ -53,7 +53,7 @@ const ImportModal = (props: IProps) => {
 
   return (
     <>
-      <ConfigProvider locale={en_US}>
+      <ConfigProvider locale={vi_VN}>
         <ModalForm
           title={'Nhập dữ liệu từ file Excel'}
           open={isModalOpen}

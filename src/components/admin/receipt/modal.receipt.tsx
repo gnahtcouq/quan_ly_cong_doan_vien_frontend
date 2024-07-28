@@ -20,7 +20,7 @@ import {
   callUpdateReceipt
 } from '@/config/api'
 import {IReceipt} from '@/types/backend'
-import en_US from 'antd/lib/locale/en_US'
+import vi_VN from 'antd/lib/locale/vi_VN'
 import dayjs from 'dayjs'
 import {useEffect, useState} from 'react'
 import {DebounceSelect} from '@/config/debouce.select'
@@ -194,7 +194,7 @@ const ModalReceipt = (props: IProps) => {
     : {}
 
   return (
-    <ConfigProvider locale={en_US}>
+    <ConfigProvider locale={vi_VN}>
       <ModalForm
         title={
           <>{dataInit?._id ? 'Cập nhật phiếu thu' : 'Thêm mới phiếu thu'}</>

@@ -5,14 +5,14 @@ import PostCard from '@/components/client/card/post.card'
 import DepartmentCard from '@/components/client/card/department.card'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import en_US from 'antd/locale/en_US'
+import vi_VN from 'antd/locale/vi_VN'
 
 dayjs.extend(relativeTime)
 dayjs.locale('en')
 
 const HomePage = () => {
   return (
-    <ConfigProvider locale={en_US}>
+    <ConfigProvider locale={vi_VN}>
       <div className={`${styles['container']} ${styles['home-section']}`}>
         {/* <div className="search-content" style={{marginTop: 20}}>
           <SearchClient />

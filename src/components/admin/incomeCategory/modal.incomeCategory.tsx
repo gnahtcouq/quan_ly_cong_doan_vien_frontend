@@ -12,7 +12,7 @@ import {
 import {isMobile} from 'react-device-detect'
 import {callCreateIncomeCategory, callUpdateIncomeCategory} from '@/config/api'
 import {IIncomeCategory} from '@/types/backend'
-import en_US from 'antd/lib/locale/en_US'
+import vi_VN from 'antd/lib/locale/vi_VN'
 import dayjs from 'dayjs'
 import {disabledMonthYear} from '@/config/utils'
 
@@ -80,7 +80,7 @@ const ModalInComeCategory = (props: IProps) => {
 
   return (
     <>
-      <ConfigProvider locale={en_US}>
+      <ConfigProvider locale={vi_VN}>
         <ModalForm
           title={
             <>
