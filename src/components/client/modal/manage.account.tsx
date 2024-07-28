@@ -46,9 +46,6 @@ interface IProps {
   onClose: (v: boolean) => void
 }
 
-const user = useAppSelector((state) => state?.account?.user)
-const type = useAppSelector((state) => state?.account?.user?.type)
-
 const UnionistFees = (props: any) => {
   const [listFee, setListFee] = useState<IFee[]>([])
   const [isFetching, setIsFetching] = useState<boolean>(false)
@@ -210,6 +207,8 @@ const UserUpdateInfo = (props: any) => {
   const [dataInit, setDataInit] = useState<IUser | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
+  const user = useAppSelector((state) => state?.account?.user) // Lấy thông tin user hiện tại
+  const type = useAppSelector((state) => state?.account?.user?.type) // Lấy loại user hiện tại
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -444,6 +443,7 @@ const UserUpdateInfo = (props: any) => {
 const PostByEmail = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
+  const user = useAppSelector((state) => state.account.user)
 
   useEffect(() => {
     const init = async () => {
@@ -530,6 +530,8 @@ const PostByEmail = (props: any) => {
 const UserUpdatePassword = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
+  const user = useAppSelector((state) => state?.account?.user)
+  const type = useAppSelector((state) => state?.account?.user?.type) // Lấy loại user hiện tại
 
   const onFinish = async (values: any) => {
     const {currentPassword, newPassword, reNewPassword} = values
@@ -652,6 +654,7 @@ const UserUpdatePassword = (props: any) => {
 
 const ManageAccount = (props: IProps) => {
   const {open, onClose} = props
+  const type = useAppSelector((state) => state?.account?.user?.type) // Lấy loại user hiện tại
 
   const onChange = (key: string) => {
     // console.log(key);
