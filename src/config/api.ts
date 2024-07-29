@@ -509,14 +509,14 @@ export const callFetchReceipt = (query: string) => {
   )
 }
 
-export const callFetchReceiptByMonthAndYear = (query: string) => {
-  return axios.get<IBackendRes<IModelPaginate<IReceipt>>>(
-    `/api/v1/receipts/by-month-year?${query}`
-  )
-}
-
 export const callFetchReceiptById = (id: string) => {
   return axios.get<IBackendRes<IReceipt>>(`/api/v1/receipts/${id}`)
+}
+
+export const callFetchReceiptsByTime = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IReceipt>>>(
+    `/api/v1/receipts/by-time?${query}`
+  )
 }
 
 export const callUploadReceiptsFile = (file: File) => {
@@ -561,6 +561,12 @@ export const callDeleteIncomeCategory = (id: string) => {
 export const callFetchIncomeCategory = (query: string) => {
   return axios.get<IBackendRes<IModelPaginate<IIncomeCategory>>>(
     `/api/v1/income-categories?${query}`
+  )
+}
+
+export const callFetchIncomeCategoriesByTime = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IIncomeCategory>>>(
+    `/api/v1/income-categories/by-time?${query}`
   )
 }
 
@@ -611,14 +617,14 @@ export const callFetchExpense = (query: string) => {
   )
 }
 
-export const callFetchExpenseByMonthAndYear = (query: string) => {
-  return axios.get<IBackendRes<IModelPaginate<IExpense>>>(
-    `/api/v1/expenses/by-month-year?${query}`
-  )
-}
-
 export const callFetchExpenseById = (id: string) => {
   return axios.get<IBackendRes<IExpense>>(`/api/v1/expenses/${id}`)
+}
+
+export const callFetchExpensesByTime = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IExpense>>>(
+    `/api/v1/expenses/by-time?${query}`
+  )
 }
 
 export const callUploadExpensesFile = (file: File) => {

@@ -150,7 +150,7 @@ const UnionistFees = (props: any) => {
           <Col lg={12} md={12} sm={24} xs={24}>
             <ProForm.Item label="Tìm kiếm">
               <Select
-                defaultValue="year"
+                defaultValue="all"
                 style={{width: '100%'}}
                 onChange={handleSearchTypeChange}
               >

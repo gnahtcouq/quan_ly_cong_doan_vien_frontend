@@ -12,6 +12,7 @@ export interface IModelPaginate<T> {
     pages: number
     total: number
     totalFee?: number
+    totalAmount?: number
   }
   result: T[]
 }
