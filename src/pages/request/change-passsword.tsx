@@ -65,9 +65,11 @@ const ConfirmForgotPassword = (props: any) => {
                 label="Mật khẩu mới"
                 name="newPassword"
                 rules={[
+                  {required: true, message: 'Vui lòng không để trống!'},
                   {
-                    required: true,
-                    message: 'Mật khẩu mới không được để trống!'
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                    message:
+                      'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.'
                   }
                 ]}
               >
