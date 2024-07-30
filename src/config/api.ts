@@ -336,6 +336,12 @@ export const callFetchPost = (query: string) => {
   return axios.get<IBackendRes<IModelPaginate<IPost>>>(`/api/v1/posts?${query}`)
 }
 
+export const callFetchPostsByTime = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IPost>>>(
+    `/api/v1/posts/by-time?${query}`
+  )
+}
+
 export const callFetchPostById = (id: string) => {
   return axios.get<IBackendRes<IPost>>(`/api/v1/posts/${id}`)
 }

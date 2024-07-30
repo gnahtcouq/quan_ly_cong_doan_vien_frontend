@@ -65,7 +65,6 @@ const LayoutClient = () => {
 
 export default function App() {
   const dispatch = useAppDispatch()
-  const isLoading = useAppSelector((state) => state.account.isLoading)
 
   useEffect(() => {
     if (

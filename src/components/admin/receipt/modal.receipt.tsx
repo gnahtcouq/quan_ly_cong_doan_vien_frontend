@@ -13,6 +13,8 @@ import {
 import {isMobile} from 'react-device-detect'
 import {
   callCreateReceipt,
+  callFetchDocument,
+  callFetchDocumentById,
   callFetchIncomeCategory,
   callFetchIncomeCategoryById,
   callFetchUser,
@@ -46,12 +48,19 @@ export interface IIncomeCategorySelect {
   key?: string | undefined
 }
 
+export interface IDocumentSelect {
+  label: string | undefined
+  value: string | undefined
+  key?: string | undefined
+}
+
 const ModalReceipt = (props: IProps) => {
   const {openModal, setOpenModal, reloadTable, dataInit, setDataInit} = props
   const [users, setUsers] = useState<IUserSelect[]>([])
   const [incomeCategories, setIncomeCategories] = useState<
     IIncomeCategorySelect[]
   >([])
+  const [documents, setDocuments] = useState<IDocumentSelect[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
 
@@ -86,6 +95,19 @@ const ModalReceipt = (props: IProps) => {
               ])
             }
           }
+          if (dataInit.documentId) {
+            const res = await callFetchDocumentById(dataInit.documentId)
+            console.log(res)
+            if (res && res.data) {
+              setDocuments([
+                {
+                  label: res.data.name,
+                  value: res.data._id,
+                  key: res.data._id
+                }
+              ])
+            }
+          }
         }
       } catch (error) {
         notification.error({
@@ -101,7 +123,15 @@ const ModalReceipt = (props: IProps) => {
   }, [dataInit])
 
   const submitReceipt = async (valuesForm: any) => {
-    const {id, description, time, amount, userId, incomeCategoryId} = valuesForm
+    const {
+      id,
+      description,
+      time,
+      amount,
+      userId,
+      incomeCategoryId,
+      documentId
+    } = valuesForm
     if (dataInit?._id) {
       // Update
       const receipts = {
@@ -113,7 +143,11 @@ const ModalReceipt = (props: IProps) => {
         incomeCategoryId:
           incomeCategoryId && incomeCategoryId.value
             ? incomeCategoryId.value
-            : dataInit.incomeCategoryId
+            : dataInit.incomeCategoryId,
+        documentId:
+          documentId && documentId.value
+            ? documentId.value
+            : dataInit.documentId
       }
       const res = await callUpdateReceipt(receipts, dataInit._id)
       if (res.data) {
@@ -134,7 +168,8 @@ const ModalReceipt = (props: IProps) => {
         time,
         amount,
         userId: userId.value,
-        incomeCategoryId: incomeCategoryId.value
+        incomeCategoryId: incomeCategoryId.value,
+        documentId: documentId.value
       }
       const res = await callCreateReceipt(receipt)
       if (res.data) {
@@ -155,6 +190,7 @@ const ModalReceipt = (props: IProps) => {
     setDataInit(null)
     setUsers([])
     setIncomeCategories([])
+    setDocuments([])
     setOpenModal(false)
   }
 
@@ -181,6 +217,20 @@ const ModalReceipt = (props: IProps) => {
       const temp = list.map((item) => ({
         label: item.description as string,
         value: item.id as string
+      }))
+      return temp
+    } else return []
+  }
+
+  async function fetchDocumentList(name: string): Promise<IDocumentSelect[]> {
+    const res = await callFetchDocument(
+      `current=1&pageSize=100&name=/${name}/i`
+    )
+    if (res && res.data) {
+      const list = res.data.result
+      const temp = list.map((item) => ({
+        label: item.name as string,
+        value: item._id as string
       }))
       return temp
     } else return []
@@ -298,6 +348,27 @@ const ModalReceipt = (props: IProps) => {
                   onChange={(newValue: any) => {
                     if (newValue?.length === 0 || newValue?.length === 1) {
                       setIncomeCategories(newValue as IIncomeCategorySelect[])
+                    }
+                  }}
+                  style={{width: '100%'}}
+                />
+              </ProForm.Item>
+            </Col>
+            <Col lg={24} md={12} sm={24} xs={24}>
+              <ProForm.Item
+                name="documentId"
+                label="Văn bản"
+                rules={[{required: true, message: 'Vui lòng chọn văn bản!'}]}
+              >
+                <DebounceSelect
+                  showSearch
+                  defaultValue={documents}
+                  value={documents}
+                  placeholder="Chọn văn bản"
+                  fetchOptions={fetchDocumentList}
+                  onChange={(newValue: any) => {
+                    if (newValue?.length === 0 || newValue?.length === 1) {
+                      setDocuments(newValue as IDocumentSelect[])
                     }
                   }}
                   style={{width: '100%'}}

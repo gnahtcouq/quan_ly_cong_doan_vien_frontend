@@ -14,10 +14,10 @@ const HomePage = () => {
   return (
     <ConfigProvider locale={vi_VN}>
       <div className={`${styles['container']} ${styles['home-section']}`}>
-        {/* <div className="search-content" style={{paddingTop: 120}}>
+        <div className="search-content" style={{paddingTop: 120}}>
           <SearchClient />
         </div>
-        <Divider /> */}
+        {/* <Divider /> */}
         <PostCard />
         <Divider />
         <DepartmentCard />
