@@ -13,6 +13,7 @@ export interface IModelPaginate<T> {
     total: number
     totalFee?: number
     totalAmount?: number
+    totalBudget?: number
   }
   result: T[]
 }
@@ -77,6 +78,8 @@ export interface IUser {
   permissions?: IPermission[] | string[]
   verificationCode?: string
   verificationExpires?: string
+  verificationCodePassword?: string
+  verificationExpiresPassword?: string
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null

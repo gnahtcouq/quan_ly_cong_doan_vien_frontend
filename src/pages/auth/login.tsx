@@ -77,7 +77,7 @@ const LoginPage = () => {
                   {required: true, message: 'Email không được để trống!'}
                 ]}
               >
-                <Input />
+                <Input type="email" />
               </Form.Item>
 
               <Form.Item

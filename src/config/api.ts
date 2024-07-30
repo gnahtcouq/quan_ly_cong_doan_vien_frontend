@@ -167,6 +167,24 @@ export const callConfirmUpdateUserEmail = (
   )
 }
 
+export const callForgotUserPassword = (email: string) => {
+  return axios.post<IBackendRes<IUser>>(
+    `/api/v1/users/request-forgot-password/`,
+    {email}
+  )
+}
+
+export const callConfirmForgotUserPassword = (
+  id: string,
+  verificationCodePassword: string,
+  newPassword: string
+) => {
+  return axios.post<IBackendRes<IUser>>(
+    `/api/v1/users/confirm-forgot-password/${id}`,
+    {verificationCodePassword, newPassword}
+  )
+}
+
 export const callUpdateUserPassword = (
   id: string,
   currentPassword: string,
@@ -674,6 +692,12 @@ export const callDeleteExpenseCategory = (id: string) => {
 export const callFetchExpenseCategory = (query: string) => {
   return axios.get<IBackendRes<IModelPaginate<IExpenseCategory>>>(
     `/api/v1/expense-categories?${query}`
+  )
+}
+
+export const callFetchExpenseCategoriesByTime = (query: string) => {
+  return axios.get<IBackendRes<IModelPaginate<IExpenseCategory>>>(
+    `/api/v1/expense-categories/by-time?${query}`
   )
 }
 

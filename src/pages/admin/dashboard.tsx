@@ -21,7 +21,9 @@ import {
   callFetchNumberOfPosts,
   callFetchNumberOfDocuments,
   callFetchReceiptsByTime,
-  callFetchExpensesByTime
+  callFetchExpensesByTime,
+  callFetchIncomeCategoriesByTime,
+  callFetchExpenseCategoriesByTime
 } from '@/config/api'
 import {ProForm} from '@ant-design/pro-components'
 import {formatCurrency} from '@/config/utils'
@@ -55,6 +57,8 @@ const DashboardPage = () => {
   const [currentReceipt, setCurrentReceipt] = useState<number>(1)
   const [pageSizeReceipt, setPageSizeReceipt] = useState<number>(6)
   const [totalReceipt, setTotalReceipt] = useState<number>(0)
+  const [totalIncomeCategory, setTotalIncomeCategory] = useState<number>(0)
+  const [totalExpenseCategory, setTotalExpenseCategory] = useState<number>(0)
   const [currentExpense, setCurrentExpense] = useState<number>(1)
   const [pageSizeExpense, setPageSizeExpense] = useState<number>(6)
   const [totalExpense, setTotalExpense] = useState<number>(0)
@@ -68,8 +72,8 @@ const DashboardPage = () => {
   const [totalExpenseAmount, setTotalExpenseAmount] = useState<number>(0)
   const [datePickerKey, setDatePickerKey] = useState<number>(0) // Thêm state để buộc DatePicker làm mới
   const [searchType, setSearchType] = useState<
-    'all' | 'year' | 'monthYear' | 'range'
-  >('all')
+    'year' | 'all' | 'monthYear' | 'range'
+  >('year')
 
   useEffect(() => {
     fetchData()
@@ -96,6 +100,11 @@ const DashboardPage = () => {
     startMonthYear,
     endMonthYear
   ])
+
+  useEffect(() => {
+    fetchIncomeCategories()
+    fetchExpenseCategories()
+  }, [year])
 
   const fetchData = async () => {
     setIsLoading(true)
@@ -174,6 +183,30 @@ const DashboardPage = () => {
     } else {
       setListExpense([])
       setTotalExpense(0)
+    }
+    setIsLoading(false)
+  }
+
+  const fetchIncomeCategories = async () => {
+    setIsLoading(true)
+    const query = queryString.stringify({
+      ...(year ? {year} : {})
+    })
+    const res = await callFetchIncomeCategoriesByTime(query)
+    if (res && res.data) {
+      setTotalIncomeCategory(res.data.meta.totalBudget || 0)
+    }
+    setIsLoading(false)
+  }
+
+  const fetchExpenseCategories = async () => {
+    setIsLoading(true)
+    const query = queryString.stringify({
+      ...(year ? {year} : {})
+    })
+    const res = await callFetchExpenseCategoriesByTime(query)
+    if (res && res.data) {
+      setTotalExpenseCategory(res.data.meta.totalBudget || 0)
     }
     setIsLoading(false)
   }
@@ -477,16 +510,16 @@ const DashboardPage = () => {
         <Access permission={ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_DASHBOARD}>
           <Row gutter={[20, 20]}>
             <Col span={24} md={8}>
-              <ProForm.Item label="Hiển thị">
+              <ProForm.Item label="Lọc">
                 <Select
-                  defaultValue="all"
+                  defaultValue="year"
                   style={{width: '50%', paddingRight: '5px'}}
                   onChange={handleSearchTypeChange}
                 >
-                  <Option value="all">Tất cả</Option>
                   <Option value="year">Năm</Option>
                   <Option value="monthYear">Năm/Tháng</Option>
                   <Option value="range">Khoảng thời gian</Option>
+                  <Option value="all">Tất cả</Option>
                 </Select>
 
                 <DatePicker
@@ -496,8 +529,8 @@ const DashboardPage = () => {
                     searchType === 'all'
                       ? '*'
                       : searchType === 'year'
-                      ? 'năm'
-                      : 'năm/tháng'
+                      ? 'chọn năm'
+                      : 'chọn năm/tháng'
                   }
                   picker={searchType === 'year' ? 'year' : 'month'}
                   onChange={handleDateChange}
@@ -519,12 +552,20 @@ const DashboardPage = () => {
                 </ProForm.Item>
               )}
 
-              <ProForm.Item label="Tiền thu">
-                <Tag color="green">{formatCurrency(totalReceiptAmount)}</Tag>
-              </ProForm.Item>
-              <ProForm.Item label="Tiền chi">
-                <Tag color="red">{formatCurrency(totalExpenseAmount)}</Tag>
-              </ProForm.Item>
+              {searchType === 'year' && (
+                <>
+                  <ProForm.Item label="Dự toán danh mục thu">
+                    <Tag color="green">
+                      {formatCurrency(totalIncomeCategory)}
+                    </Tag>
+                  </ProForm.Item>
+                  <ProForm.Item label="Dự toán danh mục chi">
+                    <Tag color="red">
+                      {formatCurrency(totalExpenseCategory)}
+                    </Tag>
+                  </ProForm.Item>
+                </>
+              )}
             </Col>
             <Col span={24} md={8}>
               <Card title="Tiền thu" bordered={false}>
@@ -548,7 +589,7 @@ const DashboardPage = () => {
               <Table<IReceipt>
                 title={() => (
                   <Tag color="green">
-                    Tổng tiền thu: {formatCurrency(totalReceiptAmount)}
+                    Tổng thu: {formatCurrency(totalReceiptAmount)}
                   </Tag>
                 )}
                 columns={columnsReceipt}
@@ -573,7 +614,7 @@ const DashboardPage = () => {
               <Table<IExpense>
                 title={() => (
                   <Tag color="red">
-                    Tổng tiền chi: {formatCurrency(totalExpenseAmount)}
+                    Tổng chi: {formatCurrency(totalExpenseAmount)}
                   </Tag>
                 )}
                 columns={columnsExpense}
@@ -598,7 +639,7 @@ const DashboardPage = () => {
               <Card title="Biểu đồ tiền thu/chi" bordered={false}>
                 <Form>
                   <Col span={8}>
-                    <ProForm.Item label="Hiển thị">
+                    <ProForm.Item label="Lọc">
                       <Select
                         defaultValue="all"
                         style={{width: '50%', paddingRight: '5px'}}

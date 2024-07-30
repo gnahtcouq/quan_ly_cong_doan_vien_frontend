@@ -38,6 +38,8 @@ import IncomeCategoryPage from '@/pages/admin/incomeCategory'
 import ExpensePage from '@/pages/admin/expense'
 import ExpenseCategoryPage from '@/pages/admin/expenseCategory'
 import IntroPage from '@/pages/admin/intro'
+import ConfirmForgotPassword from '@/pages/request/change-passsword'
+import SendForgotPassword from '@/pages/request/forgot-password'
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -89,7 +91,15 @@ export default function App() {
         {path: 'post/:id', element: <ClientPostDetailPage />},
         {path: 'department', element: <ClientDepartmentPage />},
         {path: 'department/:id', element: <ClientDepartmentDetailPage />},
-        {path: 'confirm-change-email/:id', element: <ConfirmChangeEmail />}
+        {path: 'confirm-change-email/:id', element: <ConfirmChangeEmail />},
+        {
+          path: 'forgot-password',
+          element: <SendForgotPassword />
+        },
+        {
+          path: 'confirm-forgot-password/:id',
+          element: <ConfirmForgotPassword />
+        }
       ]
     },
 
