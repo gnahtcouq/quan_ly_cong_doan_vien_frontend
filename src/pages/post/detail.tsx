@@ -13,7 +13,7 @@ import 'quill/dist/quill.snow.css'
 import logo_cd from '@/assets/logo-cd.png'
 
 dayjs.extend(relativeTime)
-dayjs.locale('en')
+dayjs.locale('vi_VN')
 
 const ClientPostDetailPage = (props: any) => {
   const [postDetail, setPostDetail] = useState<IPost | null>(null)

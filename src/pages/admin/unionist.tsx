@@ -11,12 +11,19 @@ import {
   PlusOutlined
 } from '@ant-design/icons'
 import {ActionType, ProColumns} from '@ant-design/pro-components'
-import {Button, Popconfirm, Space, Spin, message, notification} from 'antd'
+import {
+  Button,
+  Checkbox,
+  Popconfirm,
+  Space,
+  Spin,
+  message,
+  notification
+} from 'antd'
 import {useState, useRef, useEffect} from 'react'
 import dayjs from 'dayjs'
 import {
   callDeleteUnionist,
-  callFetchDepartment,
   callFetchDepartmentWithoutDescription
 } from '@/config/api'
 import queryString from 'query-string'
@@ -37,6 +44,8 @@ const UnionistPage = () => {
   const [dataInit, setDataInit] = useState<IUnionist | null>(null)
   const [openViewDetail, setOpenViewDetail] = useState<boolean>(false)
   const [departments, setDepartments] = useState<IDepartmentSelect[]>([])
+  const [showNotLeft, setShowNotLeft] = useState<boolean>(false)
+  const [showLeft, setShowLeft] = useState<boolean>(false)
 
   const tableRef = useRef<ActionType>()
 
@@ -237,10 +246,16 @@ const UnionistPage = () => {
   ]
 
   const buildQuery = (params: any, sort: any, filter: any) => {
-    const clone = {...params}
+    const clone: any = {...params}
     if (clone.id) clone.id = `/${clone.id}/i`
     if (clone.name) clone.name = `/${clone.name}/i`
     if (clone.email) clone.email = `/${clone.email}/i`
+
+    if (showNotLeft) clone.leaving = 1
+    else if (showLeft) clone.leaving = 2
+    else delete clone.leaving
+
+    console.log(clone.leavingDate instanceof Date) // Đảm bảo là true khi sử dụng Date
 
     let temp = queryString.stringify(clone)
 
@@ -273,9 +288,42 @@ const UnionistPage = () => {
     return temp
   }
 
+  const handleCheckboxChange = (e) => {
+    const {name, checked} = e.target
+
+    if (name === 'showNotLeft') {
+      setShowNotLeft(checked)
+      if (checked) setShowLeft(false)
+    } else if (name === 'showLeft') {
+      setShowLeft(checked)
+      if (checked) setShowNotLeft(false)
+    }
+
+    reloadTable()
+  }
+
   return (
     <div>
       <Access permission={ALL_PERMISSIONS.UNIONISTS.GET_PAGINATE}>
+        <div
+          style={{display: 'flex', flexDirection: 'column', marginBottom: 10}}
+        >
+          <Checkbox
+            name="showNotLeft"
+            checked={showNotLeft}
+            onChange={handleCheckboxChange}
+            style={{marginBottom: 10}}
+          >
+            Công đoàn viên đang hoạt động
+          </Checkbox>
+          <Checkbox
+            name="showLeft"
+            checked={showLeft}
+            onChange={handleCheckboxChange}
+          >
+            Công đoàn viên đã chuyển đi
+          </Checkbox>
+        </div>
         <DataTable<IUnionist>
           actionRef={tableRef}
           headerTitle="Danh sách công đoàn viên"

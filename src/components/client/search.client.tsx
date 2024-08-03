@@ -9,7 +9,6 @@ import styles from 'styles/client.module.scss'
 import logo_cd from '@/assets/logo-cd.png'
 import {convertSlug} from '@/config/utils'
 import {useNavigate} from 'react-router-dom'
-import {set} from 'lodash'
 
 const SearchClient = () => {
   const [form] = Form.useForm()

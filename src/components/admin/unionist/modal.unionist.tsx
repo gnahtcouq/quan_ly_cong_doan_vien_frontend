@@ -150,7 +150,7 @@ const ModalUnionist = (props: IProps) => {
         unionEntryDate,
         note,
         permissions,
-        departmentId
+        departmentId: departmentId.value
       }
       const res = await callCreateUnionist(unionist)
       if (res.data) {
