@@ -544,7 +544,7 @@ const DashboardPage = () => {
                   <DatePicker.RangePicker
                     key={datePickerKey} // Sử dụng key để buộc làm mới DatePicker
                     format="YYYY/MM"
-                    placeholder={['Từ tháng/năm', 'Đến tháng/năm']}
+                    placeholder={['Từ năm/tháng', 'Đến năm/tháng']}
                     picker="month"
                     onChange={handleDateChange}
                     style={{width: '100%'}}
@@ -641,7 +641,7 @@ const DashboardPage = () => {
                   <Col span={8}>
                     <ProForm.Item label="Lọc">
                       <Select
-                        defaultValue="all"
+                        defaultValue="year"
                         style={{width: '50%', paddingRight: '5px'}}
                         onChange={handleSearchTypeChange}
                       >
@@ -658,8 +658,8 @@ const DashboardPage = () => {
                           searchType === 'all'
                             ? '*'
                             : searchType === 'year'
-                            ? 'năm'
-                            : 'năm/tháng'
+                            ? 'chọn năm'
+                            : 'chọn năm/tháng'
                         }
                         picker={searchType === 'year' ? 'year' : 'month'}
                         onChange={handleDateChange}
@@ -677,7 +677,7 @@ const DashboardPage = () => {
                         <DatePicker.RangePicker
                           key={datePickerKey} // Sử dụng key để buộc làm mới DatePicker
                           format="YYYY/MM"
-                          placeholder={['Từ tháng/năm', 'Đến tháng/năm']}
+                          placeholder={['Từ năm/tháng', 'Đến năm/tháng']}
                           picker="month"
                           onChange={handleDateChange}
                           style={{width: '100%'}}
