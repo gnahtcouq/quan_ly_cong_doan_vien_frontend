@@ -192,6 +192,7 @@ export interface IReceipt {
   incomeCategoryId?: string
   incomeCategory?: string
   documentId?: string
+  documentName?: string
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null
@@ -226,6 +227,8 @@ export interface IExpense {
   amount?: string
   expenseCategoryId?: string
   expenseCategory?: string
+  documentId?: string
+  documentName?: string
   createdBy?: string
   isDeleted?: boolean
   deletedAt?: boolean | null

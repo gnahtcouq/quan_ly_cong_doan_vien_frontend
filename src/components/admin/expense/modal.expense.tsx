@@ -13,6 +13,8 @@ import {
 import {isMobile} from 'react-device-detect'
 import {
   callCreateExpense,
+  callFetchDocument,
+  callFetchDocumentById,
   callFetchExpenseCategory,
   callFetchExpenseCategoryById,
   callFetchUser,
@@ -25,6 +27,7 @@ import dayjs from 'dayjs'
 import {useEffect, useState} from 'react'
 import {DebounceSelect} from '@/config/debouce.select'
 import {disabledDate} from '@/config/utils'
+import {IDocumentSelect} from '@/components/admin/receipt/modal.receipt'
 
 interface IProps {
   openModal: boolean
@@ -52,6 +55,7 @@ const ModalExpense = (props: IProps) => {
   const [expenseCategories, setExpenseCategories] = useState<
     IExpenseCategorySelect[]
   >([])
+  const [documents, setDocuments] = useState<IDocumentSelect[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
 
@@ -86,6 +90,19 @@ const ModalExpense = (props: IProps) => {
               ])
             }
           }
+          if (dataInit.documentId) {
+            const res = await callFetchDocumentById(dataInit.documentId)
+            console.log(res)
+            if (res && res.data) {
+              setDocuments([
+                {
+                  label: res.data.name,
+                  value: res.data._id,
+                  key: res.data._id
+                }
+              ])
+            }
+          }
         }
       } catch (error) {
         notification.error({
@@ -101,8 +118,15 @@ const ModalExpense = (props: IProps) => {
   }, [dataInit])
 
   const submitExpense = async (valuesForm: any) => {
-    const {id, description, time, amount, userId, expenseCategoryId} =
-      valuesForm
+    const {
+      id,
+      description,
+      time,
+      amount,
+      userId,
+      expenseCategoryId,
+      documentId
+    } = valuesForm
     if (dataInit?._id) {
       // Update
       const expenses = {
@@ -114,7 +138,8 @@ const ModalExpense = (props: IProps) => {
         expenseCategoryId:
           expenseCategoryId && expenseCategoryId.value
             ? expenseCategoryId.value
-            : dataInit.expenseCategoryId
+            : dataInit.expenseCategoryId,
+        documentId: documentId && documentId.value ? documentId.value : null
       }
       const res = await callUpdateExpense(expenses, dataInit._id)
       if (res.data) {
@@ -135,7 +160,8 @@ const ModalExpense = (props: IProps) => {
         time,
         amount,
         userId: userId.value,
-        expenseCategoryId: expenseCategoryId.value
+        expenseCategoryId: expenseCategoryId.value,
+        documentId: documentId.value ? documentId.value : null
       }
       const res = await callCreateExpense(expenses)
       if (res.data) {
@@ -156,6 +182,7 @@ const ModalExpense = (props: IProps) => {
     setDataInit(null)
     setUsers([])
     setExpenseCategories([])
+    setDocuments([])
     setOpenModal(false)
   }
 
@@ -182,6 +209,20 @@ const ModalExpense = (props: IProps) => {
       const temp = list.map((item) => ({
         label: item.description as string,
         value: item.id as string
+      }))
+      return temp
+    } else return []
+  }
+
+  async function fetchDocumentList(name: string): Promise<IDocumentSelect[]> {
+    const res = await callFetchDocument(
+      `current=1&pageSize=100&name=/${name}/i`
+    )
+    if (res && res.data) {
+      const list = res.data.result
+      const temp = list.map((item) => ({
+        label: item.name as string,
+        value: item._id as string
       }))
       return temp
     } else return []
@@ -299,6 +340,28 @@ const ModalExpense = (props: IProps) => {
                   onChange={(newValue: any) => {
                     if (newValue?.length === 0 || newValue?.length === 1) {
                       setExpenseCategories(newValue as IExpenseCategorySelect[])
+                    }
+                  }}
+                  style={{width: '100%'}}
+                />
+              </ProForm.Item>
+            </Col>
+            <Col lg={24} md={12} sm={24} xs={24}>
+              <ProForm.Item
+                name="documentId"
+                label="Văn bản"
+                rules={[{required: false}]}
+              >
+                <DebounceSelect
+                  allowClear
+                  showSearch
+                  defaultValue={documents}
+                  value={documents}
+                  placeholder="Chọn văn bản"
+                  fetchOptions={fetchDocumentList}
+                  onChange={(newValue: any) => {
+                    if (newValue?.length === 0 || newValue?.length === 1) {
+                      setDocuments(newValue as IDocumentSelect[])
                     }
                   }}
                   style={{width: '100%'}}
