@@ -1,35 +1,50 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import styles from 'styles/client.module.scss'
-import {
-  Button,
-  Divider,
-  Form,
-  Input,
-  message,
-  notification,
-  Result,
-  Spin
-} from 'antd'
-import {callForgotUserPassword} from '@/config/api'
+import {Button, Divider, Form, Input, message, notification} from 'antd'
+import {callForgotUnionistPassword, callForgotUserPassword} from '@/config/api'
+import {useAppDispatch, useAppSelector} from '@/redux/hooks'
+import {fetchAccount} from '@/redux/slice/accountSlide'
+import {useNavigate} from 'react-router-dom'
 const SendForgotPassword = (props: any) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isSubmit, setIsSubmit] = useState(false)
+  const isAuthenticated = useAppSelector(
+    (state) => state.account.isAuthenticated
+  )
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    dispatch(fetchAccount())
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated])
 
   const onFinish = async (values: any) => {
     const {email} = values
     setIsSubmit(true)
     try {
-      const res = await callForgotUserPassword(email)
+      const resUser = await callForgotUserPassword(email)
+      const resUnionist = await callForgotUnionistPassword(email)
 
-      if (res.data) {
-        message.success('Gửi yêu cầu đặt lại mật khẩu thành công!')
+      if (resUser.data) {
+        message.success(
+          'Gửi yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email của bạn!'
+        )
+        setTimeout(() => {
+          window.location.href = '/'
+        }, 4000)
+      } else if (resUnionist.data) {
+        message.success(
+          'Gửi yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email của bạn!'
+        )
         setTimeout(() => {
           window.location.href = '/'
         }, 4000)
       } else {
         notification.error({
           message: 'Có lỗi xảy ra',
-          description: res.message
+          description: resUser.message || resUnionist.message
         })
       }
     } catch (error) {
@@ -43,42 +58,40 @@ const SendForgotPassword = (props: any) => {
   }
 
   return (
-    <Spin spinning={isLoading}>
-      <div className={`${styles['change-email-pane']} ${styles['container']}`}>
-        <main className={styles.main}>
-          <div className={styles.container}>
-            <section className={styles.wrapper}>
-              <Form name="basic" onFinish={onFinish} autoComplete="off">
-                <Form.Item
-                  labelCol={{span: 24}} //whole column
-                  label="Email của bạn"
-                  name="email"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Email không được để trống!'
-                    }
-                  ]}
+    <div className={`${styles['change-email-pane']} ${styles['container']}`}>
+      <main className={styles.main}>
+        <div className={styles.container}>
+          <section className={styles.wrapper}>
+            <Form name="basic" onFinish={onFinish} autoComplete="off">
+              <Form.Item
+                labelCol={{span: 24}} //whole column
+                label="Email của bạn"
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Email không được để trống!'
+                  }
+                ]}
+              >
+                <Input type="email" />
+              </Form.Item>
+              <Divider></Divider>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={isSubmit}
+                  style={{width: '100%'}}
                 >
-                  <Input type="email" />
-                </Form.Item>
-                <Divider></Divider>
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    loading={isSubmit}
-                    style={{width: '100%'}}
-                  >
-                    Gửi
-                  </Button>
-                </Form.Item>
-              </Form>
-            </section>
-          </div>
-        </main>
-      </div>
-    </Spin>
+                  Gửi
+                </Button>
+              </Form.Item>
+            </Form>
+          </section>
+        </div>
+      </main>
+    </div>
   )
 }
 export default SendForgotPassword

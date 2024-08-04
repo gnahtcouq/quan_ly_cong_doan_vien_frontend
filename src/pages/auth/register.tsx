@@ -144,16 +144,6 @@ const RegisterPage = () => {
                   </Form.Item>
                 </Col>
               </Row>
-              <Form.Item
-                labelCol={{span: 24}} //whole column
-                label="Địa chỉ"
-                name="address"
-                rules={[
-                  {required: true, message: 'Địa chỉ không được để trống!'}
-                ]}
-              >
-                <Input />
-              </Form.Item>
 
               <Form.Item
               // wrapperCol={{ offset: 6, span: 16 }}

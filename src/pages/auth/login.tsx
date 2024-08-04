@@ -19,6 +19,9 @@ const LoginPage = () => {
   let params = new URLSearchParams(location.search)
   const callback = params?.get('callback')
 
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
   useEffect(() => {
     dispatch(fetchAccount())
     if (isAuthenticated) {
@@ -27,9 +30,9 @@ const LoginPage = () => {
   }, [isAuthenticated])
 
   const onFinish = async (values: any) => {
-    const {username, password} = values
+    const {email, password} = values
     setIsSubmit(true)
-    const res = await callLogin(username, password)
+    const res = await callLogin(email, password)
     setIsSubmit(false)
     if (res?.data) {
       localStorage.setItem('access_token', res.data.access_token)
@@ -72,12 +75,15 @@ const LoginPage = () => {
               <Form.Item
                 labelCol={{span: 24}} //whole column
                 label="Email"
-                name="username"
+                name="email"
                 rules={[
                   {required: true, message: 'Email không được để trống!'}
                 ]}
               >
-                <Input type="email" />
+                <Input
+                  type="email"
+                  onChange={(event) => setEmail(event?.target.value)}
+                />
               </Form.Item>
 
               <Form.Item
@@ -88,7 +94,9 @@ const LoginPage = () => {
                   {required: true, message: 'Mật khẩu không được để trống!'}
                 ]}
               >
-                <Input.Password />
+                <Input.Password
+                  onChange={(event) => setPassword(event?.target.value)}
+                />
               </Form.Item>
 
               <Form.Item
@@ -99,6 +107,7 @@ const LoginPage = () => {
                   htmlType="submit"
                   loading={isSubmit}
                   style={{width: '100%'}}
+                  disabled={email && password ? false : true}
                 >
                   Đăng nhập
                 </Button>

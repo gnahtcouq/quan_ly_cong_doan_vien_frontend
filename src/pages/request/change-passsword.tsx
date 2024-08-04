@@ -2,25 +2,38 @@ import {useLocation} from 'react-router-dom'
 import {useEffect, useState} from 'react'
 import styles from 'styles/client.module.scss'
 import {Button, Divider, Form, Input, message, notification} from 'antd'
-import {callConfirmForgotUserPassword} from '@/config/api'
+import {
+  callConfirmForgotUnionistPassword,
+  callConfirmForgotUserPassword
+} from '@/config/api'
 
 const ConfirmForgotPassword = (props: any) => {
   const [isSubmit, setIsSubmit] = useState(false)
 
   let location = useLocation()
-  const userId = location.pathname.split('/').pop()
+  const id = location.pathname.split('/').pop()
 
   const onFinish = async (values: any) => {
     const {verificationCodePassword, newPassword} = values
     setIsSubmit(true)
     try {
-      const res = await callConfirmForgotUserPassword(
-        userId || '',
+      const resUser = await callConfirmForgotUserPassword(
+        id || '',
+        verificationCodePassword,
+        newPassword
+      )
+      const resUnionist = await callConfirmForgotUnionistPassword(
+        id || '',
         verificationCodePassword,
         newPassword
       )
 
-      if (res.data) {
+      if (resUser.data) {
+        message.success('Cập nhật thông tin thành công!')
+        setTimeout(() => {
+          window.location.href = '/login'
+        }, 2000)
+      } else if (resUnionist.data) {
         message.success('Cập nhật thông tin thành công!')
         setTimeout(() => {
           window.location.href = '/login'
@@ -28,7 +41,7 @@ const ConfirmForgotPassword = (props: any) => {
       } else {
         notification.error({
           message: 'Có lỗi xảy ra',
-          description: res.message
+          description: resUser.message || resUnionist.message
         })
       }
     } catch (error) {

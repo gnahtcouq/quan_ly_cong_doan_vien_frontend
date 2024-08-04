@@ -229,7 +229,7 @@ const ModalUser = (props: IProps) => {
               <ProFormText
                 label="Địa chỉ"
                 name="address"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                rules={[{required: false, message: 'Vui lòng không để trống!'}]}
                 placeholder="Nhập địa chỉ"
               />
             </Col>

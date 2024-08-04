@@ -263,6 +263,24 @@ export const callConfirmUpdateUnionistEmail = (
   )
 }
 
+export const callForgotUnionistPassword = (email: string) => {
+  return axios.post<IBackendRes<IUnionist>>(
+    `/api/v1/unionists/request-forgot-password/`,
+    {email}
+  )
+}
+
+export const callConfirmForgotUnionistPassword = (
+  id: string,
+  verificationCodePassword: string,
+  newPassword: string
+) => {
+  return axios.post<IBackendRes<IUnionist>>(
+    `/api/v1/unionists/confirm-forgot-password/${id}`,
+    {verificationCodePassword, newPassword}
+  )
+}
+
 export const callUpdateUnionistPassword = (
   id: string,
   currentPassword: string,
