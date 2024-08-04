@@ -144,10 +144,7 @@ const ModalReceipt = (props: IProps) => {
           incomeCategoryId && incomeCategoryId.value
             ? incomeCategoryId.value
             : dataInit.incomeCategoryId,
-        documentId:
-          documentId && documentId.value
-            ? documentId.value
-            : dataInit.documentId
+        documentId: documentId && documentId.value ? documentId.value : null
       }
       const res = await callUpdateReceipt(receipts, dataInit._id)
       if (res.data) {
@@ -169,7 +166,7 @@ const ModalReceipt = (props: IProps) => {
         amount,
         userId: userId.value,
         incomeCategoryId: incomeCategoryId.value,
-        documentId: documentId.value
+        documentId: documentId.value ? documentId.value : null
       }
       const res = await callCreateReceipt(receipt)
       if (res.data) {
@@ -358,9 +355,10 @@ const ModalReceipt = (props: IProps) => {
               <ProForm.Item
                 name="documentId"
                 label="Văn bản"
-                rules={[{required: true, message: 'Vui lòng chọn văn bản!'}]}
+                rules={[{required: false}]}
               >
                 <DebounceSelect
+                  allowClear
                   showSearch
                   defaultValue={documents}
                   value={documents}
