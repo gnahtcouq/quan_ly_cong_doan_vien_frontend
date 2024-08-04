@@ -1,7 +1,11 @@
+import styles from '@/styles/client.module.scss'
+
 const Footer = () => {
   return (
-    <footer style={{padding: 15, textAlign: 'center'}}>
-      {/* Made by Saigon Technology University */}
+    <footer className={styles['footer-section']}>
+      <span className={styles['footer-content']}>
+        Powered by <span className={styles['highlight']}> stu.id.vn</span>
+      </span>
     </footer>
   )
 }

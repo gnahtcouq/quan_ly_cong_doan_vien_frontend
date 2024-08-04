@@ -21,6 +21,7 @@ const HomePage = () => {
         <PostCard />
         <Divider />
         <DepartmentCard />
+        <Divider />
       </div>
     </ConfigProvider>
   )

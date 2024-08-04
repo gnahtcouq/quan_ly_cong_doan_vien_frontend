@@ -158,6 +158,30 @@ $shadow:0 2px 8px rgba(0, 0, 0, 0.15);
     }
 }
 
+.footer-section {
+    position        : fixed; // Fixes the footer at the bottom
+    width           : 100%;
+    height          : 40px;
+    left            : 0;
+    right           : 0;
+    bottom          : 0;
+    background-color: #0c4da1;
+    padding-top     : 10px;
+    text-align      : center;
+    color           : white;
+    justify-content : center; // Centers the text horizontally
+    box-sizing      : border-box; // Ensures padding is included in height calculation
+
+    .footer-content {
+        font-weight: 600;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+        .highlight {
+            color: #ffcc00;
+        }
+    }
+}
+
 .card-post-section {
     .empty {
         display        : flex;

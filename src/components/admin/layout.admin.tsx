@@ -349,9 +349,6 @@ const LayoutAdmin = () => {
           <Content className={styles['admin-content']}>
             <Outlet />
           </Content>
-          {/* <Footer style={{padding: 10, textAlign: 'center'}}>
-            Made by Saigon Technology University <HeartTwoTone />
-          </Footer> */}
         </Layout>
       </Layout>
     </>
