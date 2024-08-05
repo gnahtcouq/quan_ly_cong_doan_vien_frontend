@@ -33,7 +33,7 @@ const ViewDetailDocument = (props: IProps) => {
     const status = form.getFieldValue('status') // Access form field value
     const res = await callUpdateDocumentStatus(dataInit?._id, status)
     if (res.data) {
-      message.success('Cập nhật trạng thái văn bản thành công!')
+      message.success('Cập nhật trạng thái CV/VB thành công!')
       setDataInit(null)
       onClose(false)
       reloadTable()
@@ -56,7 +56,7 @@ const ViewDetailDocument = (props: IProps) => {
   return (
     <>
       <Drawer
-        title="Thông tin văn bản"
+        title="Thông tin CV/VB"
         placement="right"
         onClose={() => {
           onClose(false)
@@ -81,7 +81,7 @@ const ViewDetailDocument = (props: IProps) => {
           initialValues={{status: dataInit?.status}} // Set initial values
         >
           <Descriptions title="" bordered column={2} layout="vertical">
-            <Descriptions.Item label="Tên văn bản">
+            <Descriptions.Item label="Tên CV/VB">
               {dataInit?.name}
             </Descriptions.Item>
             <Descriptions.Item label="Trạng thái">
@@ -92,11 +92,14 @@ const ViewDetailDocument = (props: IProps) => {
                 </Select>
               </Form.Item>
             </Descriptions.Item>
-            <Descriptions.Item label="Tên file">
-              {dataInit?.url}
+            <Descriptions.Item label="Số CV/VB">
+              {dataInit?.id}
             </Descriptions.Item>
             <Descriptions.Item label="Người tạo">
               {dataInit?.email ?? ''}
+            </Descriptions.Item>
+            <Descriptions.Item label="Tên file" span={2}>
+              {dataInit?.url}
             </Descriptions.Item>
             <Descriptions.Item label="Ngày tạo">
               {dataInit && dataInit.createdAt

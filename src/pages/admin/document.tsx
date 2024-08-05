@@ -58,27 +58,8 @@ const DocumentPage = () => {
       },
       hideInSearch: true
     },
-    // {
-    //   title: 'ID',
-    //   dataIndex: '_id',
-    //   width: 200,
-    //   render: (text, record, index, action) => {
-    //     return (
-    //       <a
-    //         href="#"
-    //         onClick={() => {
-    //           setOpenViewDetail(true)
-    //           setDataInit(record)
-    //         }}
-    //       >
-    //         {record._id}
-    //       </a>
-    //     )
-    //   },
-    //   hideInSearch: true
-    // },
     {
-      title: 'Tên văn bản',
+      title: 'Tên CV/VB',
       dataIndex: ['name'],
       hideInSearch: false,
       render: (text, record, index, action) => {
@@ -94,6 +75,11 @@ const DocumentPage = () => {
           </a>
         )
       }
+    },
+    {
+      title: 'Số CV/VB',
+      dataIndex: 'id',
+      render: (text, record) => record.id
     },
     {
       title: 'Trạng thái',
@@ -247,7 +233,7 @@ const DocumentPage = () => {
       <Access permission={ALL_PERMISSIONS.DOCUMENTS.GET_PAGINATE}>
         <DataTable<IDocument>
           actionRef={tableRef}
-          headerTitle="Danh sách văn bản"
+          headerTitle="Danh sách CV/VB"
           rowKey="_id"
           loading={isFetching}
           columns={columns}

@@ -335,7 +335,7 @@ const DashboardPage = () => {
             'Công đoàn viên',
             'Đơn vị',
             'Bài đăng',
-            'Văn bản'
+            'CV/VB'
           ],
           datasets: [
             {

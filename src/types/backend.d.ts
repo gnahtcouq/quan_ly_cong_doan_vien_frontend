@@ -127,6 +127,7 @@ export interface IPost {
 
 export interface IDocument {
   _id?: string
+  id?: string
   name: string
   email: string
   userId: string

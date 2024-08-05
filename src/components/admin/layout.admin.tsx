@@ -240,7 +240,7 @@ const LayoutAdmin = () => {
         ...(viewDocument
           ? [
               {
-                label: <Link to="/admin/document">Văn bản</Link>,
+                label: <Link to="/admin/document">CV/VB</Link>,
                 key: '/admin/document',
                 icon: <FileTextOutlined />
               }

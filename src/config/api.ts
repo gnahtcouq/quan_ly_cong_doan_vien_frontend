@@ -372,19 +372,22 @@ export const callFetchNumberOfPosts = () => {
  * 
 Module Document
  */
-export const callCreateDocument = (url: string, name: string) => {
+export const callCreateDocument = (url: string, name: string, id: string) => {
   return axios.post<IBackendRes<IDocument>>('/api/v1/documents', {
     url,
-    name
+    name,
+    id
   })
 }
 
 export const callUpdateDocumentName = (
-  id: any,
+  _id: any,
+  id: string,
   name: string,
   status: string
 ) => {
-  return axios.put<IBackendRes<IDocument>>(`/api/v1/documents/${id}`, {
+  return axios.put<IBackendRes<IDocument>>(`/api/v1/documents/${_id}`, {
+    id,
     name,
     status
   })

@@ -349,7 +349,7 @@ const ModalExpense = (props: IProps) => {
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProForm.Item
                 name="documentId"
-                label="Văn bản"
+                label="CV/VB"
                 rules={[{required: false}]}
               >
                 <DebounceSelect
@@ -357,7 +357,7 @@ const ModalExpense = (props: IProps) => {
                   showSearch
                   defaultValue={documents}
                   value={documents}
-                  placeholder="Chọn văn bản"
+                  placeholder="Chọn CV/VB"
                   fetchOptions={fetchDocumentList}
                   onChange={(newValue: any) => {
                     if (newValue?.length === 0 || newValue?.length === 1) {

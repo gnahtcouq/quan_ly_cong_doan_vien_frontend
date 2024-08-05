@@ -37,19 +37,26 @@ const ApplyModal = (props: IProps) => {
 
   const handleOkButton = async (valuesForm: any) => {
     if (!urlDoc && !dataInit) {
-      message.error('Vui lòng upload file văn bản!')
+      message.error('Vui lòng upload file CV/VB!')
       return
     }
 
-    const {name} = valuesForm
+    const {id, name} = valuesForm
     const status = dataInit?.status || ''
+    const currentId = dataInit?.id || ''
     const currentName = dataInit?.name || ''
 
     if (dataInit?._id) {
+      const newId = id !== currentId ? id : currentId
       const newName = name !== currentName ? name : currentName
-      const res = await callUpdateDocumentName(dataInit._id, newName, status)
+      const res = await callUpdateDocumentName(
+        dataInit._id,
+        newId,
+        newName,
+        status
+      )
       if (res.data) {
-        message.success('Cập nhật thông tin văn bản thành công!')
+        message.success('Cập nhật thông tin CV/VB thành công!')
         handleReset()
         reloadTable()
       } else {
@@ -59,9 +66,9 @@ const ApplyModal = (props: IProps) => {
         })
       }
     } else {
-      const res = await callCreateDocument(urlDoc, name)
+      const res = await callCreateDocument(urlDoc, name, id)
       if (res.data) {
-        message.success('Upload file văn bản thành công!')
+        message.success('Upload file CV/VB thành công!')
         handleReset()
         reloadTable()
       } else {
@@ -95,11 +102,11 @@ const ApplyModal = (props: IProps) => {
         // console.log(info.file, info.fileList);
       }
       if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`)
+        message.success(`Upload file ${info.file.name} thành công`)
       } else if (info.file.status === 'error') {
         message.error(
           info?.file?.error?.event?.message ??
-            'Đã có lỗi xảy ra khi upload file văn bản'
+            'Đã có lỗi xảy ra khi upload file CV/VB'
         )
       }
     }
@@ -118,11 +125,7 @@ const ApplyModal = (props: IProps) => {
       <ConfigProvider locale={vi_VN}>
         <ModalForm
           title={
-            <>
-              {dataInit?._id
-                ? 'Cập nhật thông tin văn bản'
-                : 'Thêm mới văn bản'}
-            </>
+            <>{dataInit?._id ? 'Cập nhật thông tin CV/VB' : 'Thêm mới CV/VB'}</>
           }
           open={isModalOpen}
           modalProps={{
@@ -146,20 +149,28 @@ const ApplyModal = (props: IProps) => {
           <Row gutter={[10, 10]}>
             <Col span={24}>
               <ProFormText
-                label="Tên văn bản"
+                label="Tên CV/VB"
                 name="name"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="Nhập tên văn bản"
+                placeholder="Nhập tên CV/VB"
+              />
+            </Col>
+            <Col span={24}>
+              <ProFormText
+                label="Số CV/VB"
+                name="id"
+                rules={[{required: false}]}
+                placeholder="Nhập số CV/VB"
               />
             </Col>
             {!dataInit?._id && (
               <Col span={24}>
                 <ProForm.Item
-                  label={'Upload file văn bản'}
+                  label={'Upload file CV/VB'}
                   rules={[
                     {
                       required: dataInit?._id ? true : false,
-                      message: 'Vui lòng upload file văn bản!'
+                      message: 'Vui lòng upload file CV/VB!'
                     }
                   ]}
                 >

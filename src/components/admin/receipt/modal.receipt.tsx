@@ -166,7 +166,7 @@ const ModalReceipt = (props: IProps) => {
         amount,
         userId: userId.value,
         incomeCategoryId: incomeCategoryId.value,
-        documentId: documentId.value ? documentId.value : null
+        documentId: documentId && documentId.value ? documentId.value : null
       }
       const res = await callCreateReceipt(receipt)
       if (res.data) {
@@ -354,7 +354,7 @@ const ModalReceipt = (props: IProps) => {
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProForm.Item
                 name="documentId"
-                label="Văn bản"
+                label="CV/VB"
                 rules={[{required: false}]}
               >
                 <DebounceSelect
@@ -362,7 +362,7 @@ const ModalReceipt = (props: IProps) => {
                   showSearch
                   defaultValue={documents}
                   value={documents}
-                  placeholder="Chọn văn bản"
+                  placeholder="Chọn CV/VB"
                   fetchOptions={fetchDocumentList}
                   onChange={(newValue: any) => {
                     if (newValue?.length === 0 || newValue?.length === 1) {

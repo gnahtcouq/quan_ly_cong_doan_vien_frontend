@@ -416,7 +416,7 @@ const UserUpdateInfo = (props: any) => {
               <ProFormText
                 label="Địa chỉ"
                 name="address"
-                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
+                rules={[{required: false}]}
                 placeholder="Nhập địa chỉ"
                 style={{width: '100%'}}
               />
