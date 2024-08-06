@@ -55,7 +55,7 @@ const ModalExpense = (props: IProps) => {
   const [expenseCategories, setExpenseCategories] = useState<
     IExpenseCategorySelect[]
   >([])
-  const [documents, setDocuments] = useState<IDocumentSelect[]>([])
+  // const [documents, setDocuments] = useState<IDocumentSelect[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
 
@@ -90,19 +90,19 @@ const ModalExpense = (props: IProps) => {
               ])
             }
           }
-          if (dataInit.documentId) {
-            const res = await callFetchDocumentById(dataInit.documentId)
-            console.log(res)
-            if (res && res.data) {
-              setDocuments([
-                {
-                  label: res.data.name,
-                  value: res.data._id,
-                  key: res.data._id
-                }
-              ])
-            }
-          }
+          // if (dataInit.documentId) {
+          //   const res = await callFetchDocumentById(dataInit.documentId)
+          //   console.log(res)
+          //   if (res && res.data) {
+          //     setDocuments([
+          //       {
+          //         label: res.data.name,
+          //         value: res.data._id,
+          //         key: res.data._id
+          //       }
+          //     ])
+          //   }
+          // }
         }
       } catch (error) {
         notification.error({
@@ -124,8 +124,8 @@ const ModalExpense = (props: IProps) => {
       time,
       amount,
       userId,
-      expenseCategoryId,
-      documentId
+      expenseCategoryId
+      // documentId
     } = valuesForm
     if (dataInit?._id) {
       // Update
@@ -138,8 +138,8 @@ const ModalExpense = (props: IProps) => {
         expenseCategoryId:
           expenseCategoryId && expenseCategoryId.value
             ? expenseCategoryId.value
-            : dataInit.expenseCategoryId,
-        documentId: documentId && documentId.value ? documentId.value : null
+            : dataInit.expenseCategoryId
+        // documentId: documentId && documentId.value ? documentId.value : null
       }
       const res = await callUpdateExpense(expenses, dataInit._id)
       if (res.data) {
@@ -160,8 +160,8 @@ const ModalExpense = (props: IProps) => {
         time,
         amount,
         userId: userId.value,
-        expenseCategoryId: expenseCategoryId.value,
-        documentId: documentId.value ? documentId.value : null
+        expenseCategoryId: expenseCategoryId.value
+        // documentId: documentId.value ? documentId.value : null
       }
       const res = await callCreateExpense(expenses)
       if (res.data) {
@@ -182,7 +182,7 @@ const ModalExpense = (props: IProps) => {
     setDataInit(null)
     setUsers([])
     setExpenseCategories([])
-    setDocuments([])
+    // setDocuments([])
     setOpenModal(false)
   }
 
@@ -214,19 +214,19 @@ const ModalExpense = (props: IProps) => {
     } else return []
   }
 
-  async function fetchDocumentList(name: string): Promise<IDocumentSelect[]> {
-    const res = await callFetchDocument(
-      `current=1&pageSize=100&name=/${name}/i`
-    )
-    if (res && res.data) {
-      const list = res.data.result
-      const temp = list.map((item) => ({
-        label: item.name as string,
-        value: item._id as string
-      }))
-      return temp
-    } else return []
-  }
+  // async function fetchDocumentList(name: string): Promise<IDocumentSelect[]> {
+  //   const res = await callFetchDocument(
+  //     `current=1&pageSize=100&name=/${name}/i`
+  //   )
+  //   if (res && res.data) {
+  //     const list = res.data.result
+  //     const temp = list.map((item) => ({
+  //       label: item.name as string,
+  //       value: item._id as string
+  //     }))
+  //     return temp
+  //   } else return []
+  // }
 
   const initialValues = dataInit
     ? {
@@ -346,7 +346,7 @@ const ModalExpense = (props: IProps) => {
                 />
               </ProForm.Item>
             </Col>
-            <Col lg={24} md={12} sm={24} xs={24}>
+            {/* <Col lg={24} md={12} sm={24} xs={24}>
               <ProForm.Item
                 name="documentId"
                 label="CV/VB"
@@ -367,7 +367,7 @@ const ModalExpense = (props: IProps) => {
                   style={{width: '100%'}}
                 />
               </ProForm.Item>
-            </Col>
+            </Col> */}
             <Col lg={24} md={12} sm={24} xs={24}>
               <ProForm.Item
                 label="Số tiền (Từ 1.000đ - 10 tỷ)"
