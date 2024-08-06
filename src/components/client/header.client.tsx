@@ -9,7 +9,7 @@ import {
   HomeOutlined,
   MenuOutlined
 } from '@ant-design/icons'
-import {Avatar, Drawer, Dropdown, MenuProps, Space, message} from 'antd'
+import {Avatar, Badge, Drawer, Dropdown, MenuProps, Space, message} from 'antd'
 import {Menu, ConfigProvider} from 'antd'
 import styles from '@/styles/client.module.scss'
 import {isMobile} from 'react-device-detect'
@@ -175,9 +175,6 @@ const Header = (props: any) => {
                   <div className={styles['text-2']}>
                     CÔNG ĐOÀN TRƯỜNG ĐẠI HỌC CÔNG NGHỆ SÀI GÒN
                   </div>
-                  <div className={styles['text-3']}>
-                    SAIGON TECHNOLOGY UNIVERSITY FEDERATION OF LABOUR
-                  </div>
                 </div>
                 <div className={styles['extra']}>
                   {isAuthenticated === false ? (
@@ -186,8 +183,16 @@ const Header = (props: any) => {
                     </Link>
                   ) : (
                     <Dropdown menu={{items: menuItems}} trigger={['click']}>
-                      <Space>
-                        <MenuOutlined className={styles['icon-menu']} />
+                      <Space style={{cursor: 'pointer'}}>
+                        <Badge status="processing" />
+                        Xin chào,{user?.name?.split(' ').pop()}
+                        <Avatar>
+                          {user?.name
+                            ?.split(' ')
+                            .pop()
+                            ?.substring(0, 2)
+                            ?.toUpperCase()}{' '}
+                        </Avatar>
                       </Space>
                     </Dropdown>
                   )}

@@ -19,7 +19,7 @@ import {
   HddOutlined,
   ContainerOutlined
 } from '@ant-design/icons'
-import {Layout, Menu, Dropdown, Space, message, Button} from 'antd'
+import {Layout, Menu, Dropdown, Space, message, Button, Badge, Avatar} from 'antd'
 import styles from '@/styles/admin.module.scss'
 import {Outlet, useLocation, useNavigate} from 'react-router-dom'
 import {Link} from 'react-router-dom'
@@ -340,8 +340,16 @@ const LayoutAdmin = () => {
               />
 
               <Dropdown menu={{items: itemsDropdown}} trigger={['click']}>
-                <Space>
-                  <MenuOutlined className={styles['icon-menu']} />
+                <Space style={{cursor: 'pointer'}}>
+                  <Badge status="processing" />
+                  Xin chào,{user?.name?.split(' ').pop()}
+                  <Avatar>
+                    {user?.name
+                      ?.split(' ')
+                      .pop()
+                      ?.substring(0, 2)
+                      ?.toUpperCase()}{' '}
+                  </Avatar>
                 </Space>
               </Dropdown>
             </div>

@@ -30,11 +30,27 @@
     display        : flex;
     justify-content: space-between;
     margin         : 20px;
+    font-weight    : 600;
 
     .btn-collapse {
         font-size: 16px;
         width    : 32px;
         height   : 32px;
+    }
+
+    a,
+    span {
+        cursor         : pointer;
+        display        : block;
+        color          : #000;
+        text-decoration: none;
+        font-family    : "Roboto", sans-serif;
+        font-size      : 14px;
+
+
+        &:hover {
+            color: #a7a7a7;
+        }
     }
 
     .icon-menu {
@@ -72,12 +88,6 @@
         font-size  : 30px;
         font-weight: bold;
         color      : #005995;
-    }
-
-    .text-3 {
-        margin-top: 5px;
-        font-size : 25px;
-        color     : #950000;
     }
 
     .logo {
