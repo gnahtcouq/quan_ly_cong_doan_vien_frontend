@@ -575,6 +575,12 @@ export const callUploadReceiptsFile = (file: File) => {
   })
 }
 
+export const callExportReceiptToPdf = (id: string) => {
+  return axios.get<IBackendRes<any>>(`/api/v1/receipts/pdf/${id}`, {
+    responseType: 'blob'
+  })
+}
+
 /**
  * 
 Module Income Categories
@@ -680,6 +686,12 @@ export const callUploadExpensesFile = (file: File) => {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
+  })
+}
+
+export const callExportExpenseToPdf = (id: string) => {
+  return axios.get<IBackendRes<any>>(`/api/v1/expenses/pdf/${id}`, {
+    responseType: 'blob'
   })
 }
 

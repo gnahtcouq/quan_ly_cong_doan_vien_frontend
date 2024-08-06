@@ -1,7 +1,11 @@
 import {formatCurrency} from '@/config/utils'
 import {IExpense} from '@/types/backend'
-import {Badge, Descriptions, Drawer} from 'antd'
+import {Badge, Button, Descriptions, Drawer} from 'antd'
 import dayjs from 'dayjs'
+import {useState} from 'react'
+import {message, notification} from 'antd'
+import {saveAs} from 'file-saver'
+import {callExportExpenseToPdf} from '@/config/api'
 
 interface IProps {
   onClose: (v: boolean) => void
@@ -11,6 +15,32 @@ interface IProps {
 }
 const ViewDetailExpense = (props: IProps) => {
   const {onClose, open, dataInit, setDataInit} = props
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const handleExportPdf = async () => {
+    if (dataInit && dataInit.id) {
+      setIsLoading(true)
+      try {
+        const res = await callExportExpenseToPdf(dataInit.id)
+        if (res) {
+          saveAs(res, `expense-${dataInit.id}.pdf`)
+          message.success('Tải file PDF phiếu chi thành công!')
+        } else {
+          notification.error({
+            message: 'Có lỗi xảy ra',
+            description: 'Không thể tải file PDF phiếu chi!'
+          })
+        }
+      } catch (error) {
+        notification.error({
+          message: 'Có lỗi xảy ra',
+          description: 'Không thể tải file PDF phiếu chi!'
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  }
 
   return (
     <>
@@ -24,6 +54,11 @@ const ViewDetailExpense = (props: IProps) => {
         open={open}
         width={'40vw'}
         maskClosable={true}
+        extra={
+          <Button type="primary" onClick={handleExportPdf} loading={isLoading}>
+            Xuất PDF
+          </Button>
+        }
       >
         <Descriptions title="" bordered column={2} layout="vertical">
           <Descriptions.Item label="Mã phiếu chi">
