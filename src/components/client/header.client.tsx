@@ -19,7 +19,7 @@ import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {callLogout} from '@/config/api'
 import {setLogoutAction} from '@/redux/slice/accountSlide'
 import ManageAccount from './modal/manage.account'
-import logo from '@/assets/logo.webp'
+import logo from '@/assets/logo.png'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 
 const Header = (props: any) => {

@@ -5,7 +5,7 @@ import {useState, useEffect} from 'react'
 import {fetchAccount, setUserLoginInfo} from '@/redux/slice/accountSlide'
 import styles from 'styles/auth.module.scss'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
-import logo from '@/assets/logo.webp'
+import logo from '@/assets/logo.png'
 
 const LoginPage = () => {
   const navigate = useNavigate()

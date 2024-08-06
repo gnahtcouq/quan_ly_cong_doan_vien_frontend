@@ -15,7 +15,7 @@ import {callRegister} from 'config/api'
 import styles from 'styles/auth.module.scss'
 import {IUser} from '@/types/backend'
 import {DatePicker} from 'antd'
-import logo from '@/assets/logo.webp'
+import logo from '@/assets/logo.png'
 import {disabledDateBirthday, validateDateOfBirth} from '@/config/utils'
 
 const {Option} = Select

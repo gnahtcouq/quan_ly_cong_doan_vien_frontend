@@ -19,7 +19,16 @@ import {
   HddOutlined,
   ContainerOutlined
 } from '@ant-design/icons'
-import {Layout, Menu, Dropdown, Space, message, Button, Badge, Avatar} from 'antd'
+import {
+  Layout,
+  Menu,
+  Dropdown,
+  Space,
+  message,
+  Button,
+  Badge,
+  Avatar
+} from 'antd'
 import styles from '@/styles/admin.module.scss'
 import {Outlet, useLocation, useNavigate} from 'react-router-dom'
 import {Link} from 'react-router-dom'
@@ -29,7 +38,7 @@ import {isMobile} from 'react-device-detect'
 import type {MenuProps} from 'antd'
 import {setLogoutAction} from '@/redux/slice/accountSlide'
 import {ALL_PERMISSIONS} from '@/config/permissions'
-import logo from '@/assets/logo.webp'
+import logo from '@/assets/logo.png'
 
 const {Content, Footer, Sider} = Layout
 
