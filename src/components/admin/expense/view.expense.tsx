@@ -22,13 +22,14 @@ const ViewDetailExpense = (props: IProps) => {
       setIsLoading(true)
       try {
         const res = await callExportExpenseToPdf(dataInit.id)
-        if (res) {
+        if (res.data) {
           saveAs(res, `expense-${dataInit.id}.pdf`)
           message.success('Tải file PDF phiếu chi thành công!')
         } else {
           notification.error({
             message: 'Có lỗi xảy ra',
-            description: 'Không thể tải file PDF phiếu chi!'
+            description:
+              'Bạn không có quyền tải xuống truy cập endpoint. Hãy liên hệ với quản trị viên của bạn!'
           })
         }
       } catch (error) {

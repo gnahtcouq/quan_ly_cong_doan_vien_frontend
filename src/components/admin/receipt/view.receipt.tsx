@@ -22,13 +22,14 @@ const ViewDetailReceipt = (props: IProps) => {
       setIsLoading(true)
       try {
         const res = await callExportReceiptToPdf(dataInit.id)
-        if (res) {
+        if (res.data) {
           saveAs(res, `receipt-${dataInit.id}.pdf`)
           message.success('Tải file PDF phiếu thu thành công!')
         } else {
           notification.error({
             message: 'Có lỗi xảy ra',
-            description: 'Không thể tải file PDF phiếu thu!'
+            description:
+              'Bạn không có quyền tải xuống truy cập endpoint. Hãy liên hệ với quản trị viên của bạn!'
           })
         }
       } catch (error) {
