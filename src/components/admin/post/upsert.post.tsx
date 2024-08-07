@@ -254,7 +254,7 @@ const ViewUpsertPost = (props: any) => {
                     style={{
                       minHeight: 200,
                       position: 'relative',
-                      filter: isUploading ? 'blur(4px)' : 'none' // Apply blur effect during loading
+                      filter: isUploading ? 'blur(4px)' : 'none'
                     }}
                   >
                     {isUploading && (

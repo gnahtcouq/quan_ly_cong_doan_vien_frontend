@@ -6,6 +6,7 @@ import {
   Form,
   Modal,
   Row,
+  Spin,
   Upload,
   message,
   notification
@@ -33,6 +34,7 @@ const ViewUpsertDepartment = (props: any) => {
   const navigate = useNavigate()
   const [value, setValue] = useState<string>('')
   const [loadingUpload, setLoadingUpload] = useState<boolean>(false)
+  const [isUploading, setIsUploading] = useState<boolean>(false)
 
   let location = useLocation()
   let params = new URLSearchParams(location.search)
@@ -57,7 +59,9 @@ const ViewUpsertDepartment = (props: any) => {
     input.onchange = async () => {
       if (input !== null && input.files !== null) {
         const file = input.files[0]
+        setIsUploading(true)
         const url = await uploadToCloudinary(file, 'Department')
+        setIsUploading(false)
         if (quill) {
           const range = quill.getSelection()
           range && quill.insertEmbed(range.index, 'image', url)
@@ -379,7 +383,32 @@ const ViewUpsertDepartment = (props: any) => {
                     {required: true, message: 'Vui lòng nhập mô tả đơn vị!'}
                   ]}
                 >
-                  <div ref={quillRef} style={{minHeight: 200}} />
+                  <div
+                    ref={quillRef}
+                    style={{
+                      minHeight: 200,
+                      position: 'relative',
+                      filter: isUploading ? 'blur(4px)' : 'none'
+                    }}
+                  >
+                    {isUploading && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          backgroundColor: 'rgba(0,0,0,0.00001)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <Spin />
+                      </div>
+                    )}
+                  </div>
                 </ProForm.Item>
               </Col>
             </Row>
