@@ -13,7 +13,7 @@ import {
 import {Link, useLocation, useNavigate} from 'react-router-dom'
 import {FooterToolbar, ProForm, ProFormText} from '@ant-design/pro-components'
 import styles from 'styles/admin.module.scss'
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 import {
   callFetchDepartmentById,
   callUpdateDepartment,
@@ -21,7 +21,7 @@ import {
   callUploadSingleFile
 } from '@/config/api'
 import {useQuill} from 'react-quilljs'
-import {quillFormats, quillModules} from '@/config/quill'
+import {quillFormats, quillModules, uploadToCloudinary} from '@/config/quill'
 import 'quill/dist/quill.snow.css'
 import {EditOutlined, LoadingOutlined, PlusOutlined} from '@ant-design/icons'
 import vi_VN from 'antd/lib/locale/vi_VN'
@@ -43,10 +43,34 @@ const ViewUpsertDepartment = (props: any) => {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
   const [previewTitle, setPreviewTitle] = useState('')
+
   const {quill, quillRef} = useQuill({
     modules: quillModules,
     formats: quillFormats
-  })
+  }) as any
+
+  const imageHandler = useCallback(() => {
+    const input = document.createElement('input')
+    input.setAttribute('type', 'file')
+    input.setAttribute('accept', 'image/*')
+    input.click()
+    input.onchange = async () => {
+      if (input !== null && input.files !== null) {
+        const file = input.files[0]
+        const url = await uploadToCloudinary(file, 'Department')
+        if (quill) {
+          const range = quill.getSelection()
+          range && quill.insertEmbed(range.index, 'image', url)
+        }
+      }
+    }
+  }, [quill])
+
+  useEffect(() => {
+    if (quill) {
+      quill.getModule('toolbar').addHandler('image', imageHandler)
+    }
+  }, [quill, imageHandler])
 
   useEffect(() => {
     const init = async () => {

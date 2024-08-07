@@ -1,8 +1,29 @@
-// quillSetup.ts
-import Quill from 'quill'
-import ImageResize from 'quill-image-resize-module-react'
+import axios from 'axios'
 
-Quill.register('modules/imageResize', ImageResize)
+export const uploadToCloudinary = async (
+  file: File,
+  department: string
+): Promise<string> => {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_PRESET)
+  formData.append('folder', department)
+
+  const res = await axios.post(
+    `https://api.cloudinary.com/v1_1/${
+      import.meta.env.VITE_CLOUDINARY_NAME
+    }/image/upload`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      withCredentials: false
+    }
+  )
+  const url = res.data.secure_url
+  return url
+}
 
 export const quillModules = {
   toolbar: [

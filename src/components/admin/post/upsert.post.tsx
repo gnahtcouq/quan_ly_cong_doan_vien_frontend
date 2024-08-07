@@ -2,30 +2,28 @@ import {
   Breadcrumb,
   Col,
   ConfigProvider,
-  Divider,
   Form,
   Row,
   Select,
+  Spin,
   message,
   notification
 } from 'antd'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
-import {
-  FooterToolbar,
-  ProForm,
-  ProFormSwitch,
-  ProFormText
-} from '@ant-design/pro-components'
+import {FooterToolbar, ProForm, ProFormText} from '@ant-design/pro-components'
 import styles from 'styles/admin.module.scss'
 import {THREADS_LIST} from '@/config/utils'
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback, useRef} from 'react'
 import {callCreatePost, callFetchPostById, callUpdatePost} from '@/config/api'
 import {useQuill} from 'react-quilljs'
-import {quillFormats, quillModules} from '@/config/quill'
+import {quillFormats, quillModules, uploadToCloudinary} from '@/config/quill'
 import 'quill/dist/quill.snow.css'
 import {EditOutlined, MonitorOutlined} from '@ant-design/icons'
 import vi_VN from 'antd/lib/locale/vi_VN'
 import {IPost} from '@/types/backend'
+import Quill from 'quill'
+import ImageResize from 'quill-image-resize-module-react'
+Quill.register('modules/imageResize', ImageResize)
 
 const ViewUpsertPost = (props: any) => {
   const navigate = useNavigate()
@@ -36,11 +34,37 @@ const ViewUpsertPost = (props: any) => {
   const id = params?.get('id') // post id
   const [dataUpdate, setDataUpdate] = useState<IPost | null>(null)
   const [form] = Form.useForm()
+  const [isUploading, setIsUploading] = useState<boolean>(false)
 
   const {quill, quillRef} = useQuill({
     modules: quillModules,
     formats: quillFormats
-  })
+  }) as any
+
+  const imageHandler = useCallback(() => {
+    const input = document.createElement('input')
+    input.setAttribute('type', 'file')
+    input.setAttribute('accept', 'image/*')
+    input.click()
+    input.onchange = async () => {
+      if (input !== null && input.files !== null) {
+        const file = input.files[0]
+        setIsUploading(true)
+        const url = await uploadToCloudinary(file, 'Post')
+        setIsUploading(false)
+        if (quill) {
+          const range = quill.getSelection()
+          range && quill.insertEmbed(range.index, 'image', url)
+        }
+      }
+    }
+  }, [quill])
+
+  useEffect(() => {
+    if (quill) {
+      quill.getModule('toolbar').addHandler('image', imageHandler)
+    }
+  }, [quill, imageHandler])
 
   useEffect(() => {
     const init = async () => {
@@ -57,7 +81,7 @@ const ViewUpsertPost = (props: any) => {
     }
     init()
     return () => form.resetFields()
-  }, [id])
+  }, [id, form])
 
   useEffect(() => {
     if (quill && dataUpdate?.description) {
@@ -106,7 +130,7 @@ const ViewUpsertPost = (props: any) => {
       const res = await callUpdatePost(post, dataUpdate._id)
       if (res.data) {
         message.success('Cập nhật bài đăng thành công!')
-        navigate('/admin/post')
+        // navigate('/admin/post')
       } else {
         notification.error({
           message: 'Có lỗi xảy ra',
@@ -227,8 +251,29 @@ const ViewUpsertPost = (props: any) => {
                 >
                   <div
                     ref={quillRef}
-                    style={{minHeight: 200, position: 'relative'}}
+                    style={{
+                      minHeight: 200,
+                      position: 'relative',
+                      filter: isUploading ? 'blur(4px)' : 'none' // Apply blur effect during loading
+                    }}
                   >
+                    {isUploading && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          backgroundColor: 'rgba(0,0,0,0.00001)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <Spin />
+                      </div>
+                    )}
                     {dataUpdate?.status === 'ACTIVE' && (
                       <div
                         style={{
