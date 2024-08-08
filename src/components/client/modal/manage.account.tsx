@@ -23,6 +23,8 @@ import {
   callFetchUnionistById,
   callFetchUserById,
   callGetSubscriberThreads,
+  callUpdateInfoUnionist,
+  callUpdateInfoUser,
   callUpdateSubscriber,
   callUpdateUnionist,
   callUpdateUnionistEmail,
@@ -232,7 +234,29 @@ const UserUpdateInfo = (props: any) => {
             ...res.data,
             dateOfBirth: res.data.dateOfBirth
               ? dayjs(res.data.dateOfBirth)
-              : null
+              : null,
+            joiningDate:
+              res.data.joiningDate && dayjs(res.data.joiningDate).isValid()
+                ? dayjs(res.data.joiningDate).isSame(dayjs('1970-01-01'), 'day')
+                  ? null
+                  : dayjs(res.data.joiningDate)
+                : null,
+            leavingDate:
+              res.data.leavingDate && dayjs(res.data.leavingDate).isValid()
+                ? dayjs(res.data.leavingDate).isSame(dayjs('1970-01-01'), 'day')
+                  ? null
+                  : dayjs(res.data.leavingDate)
+                : null,
+            unionEntryDate:
+              res.data.unionEntryDate &&
+              dayjs(res.data.unionEntryDate).isValid()
+                ? dayjs(res.data.unionEntryDate).isSame(
+                    dayjs('1970-01-01'),
+                    'day'
+                  )
+                  ? null
+                  : dayjs(res.data.unionEntryDate)
+                : null
           })
         }
       }
@@ -242,7 +266,7 @@ const UserUpdateInfo = (props: any) => {
   }, [user._id])
 
   const onFinish = async (values: any) => {
-    const {name, email, password, dateOfBirth, gender, address, CCCD} = values
+    const {name, email, password, dateOfBirth, gender, address} = values
 
     if (dataInit?._id) {
       // Nếu có thay đổi email, gửi yêu cầu thay đổi email qua API trước
@@ -288,13 +312,12 @@ const UserUpdateInfo = (props: any) => {
         password,
         dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : null,
         gender,
-        address,
-        CCCD: CCCD ? CCCD : null
+        address
       }
 
       // Gửi yêu cầu cập nhật thông tin người dùng
       if (type === 'user') {
-        const resUpdateUser = await callUpdateUser(user, dataInit._id)
+        const resUpdateUser = await callUpdateInfoUser(user, dataInit._id)
         const resSubscriber = await callGetSubscriberThreads()
         const resUpdateSubscriber = await callUpdateSubscriber({
           email: dataInit.email,
@@ -313,7 +336,10 @@ const UserUpdateInfo = (props: any) => {
           })
         }
       } else {
-        const resUpdateUnionist = await callUpdateUnionist(user, dataInit._id)
+        const resUpdateUnionist = await callUpdateInfoUnionist(
+          user,
+          dataInit._id
+        )
         const resSubscriber = await callGetSubscriberThreads()
         const resUpdateSubscriber = await callUpdateSubscriber({
           email: dataInit.email,
@@ -367,12 +393,10 @@ const UserUpdateInfo = (props: any) => {
               <ProFormText
                 label="Email"
                 name="email"
-                rules={[
-                  {required: true, message: 'Vui lòng không để trống!'},
-                  {type: 'email', message: 'Vui lòng nhập email hợp lệ!'}
-                ]}
+                rules={[{required: false}, {type: 'email'}]}
                 placeholder="Nhập email"
                 style={{width: '100%'}}
+                disabled={true}
               />
             </Col>
             <Col span={12}>
@@ -404,15 +428,64 @@ const UserUpdateInfo = (props: any) => {
               </ProForm.Item>
             </Col>
             <Col span={12}>
+              <ProForm.Item
+                label="Ngày chuyển đến"
+                name="joiningDate"
+                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
+                rules={[{required: false}]}
+                style={{width: '100%'}}
+              >
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  placeholder="dd/mm/yyyy"
+                  style={{width: '100%'}}
+                  disabled={true}
+                />
+              </ProForm.Item>
+            </Col>
+            <Col span={12}>
+              <ProForm.Item
+                label="Ngày chuyển đi"
+                name="leavingDate"
+                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
+                rules={[{required: false}]}
+                style={{width: '100%'}}
+              >
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  placeholder="dd/mm/yyyy"
+                  style={{width: '100%'}}
+                  disabled={true}
+                />
+              </ProForm.Item>
+            </Col>
+            <Col span={12}>
+              <ProForm.Item
+                label="Ngày vào công đoàn"
+                name="unionEntryDate"
+                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
+                rules={[{required: false}]}
+                style={{width: '100%'}}
+              >
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  placeholder="dd/mm/yyyy"
+                  style={{width: '100%'}}
+                  disabled={true}
+                />
+              </ProForm.Item>
+            </Col>
+            <Col span={12}>
               <ProFormText
                 label="Căn cước công dân"
                 name="CCCD"
                 rules={[{required: false}]}
                 placeholder="Nhập căn cước công dân"
                 style={{width: '100%'}}
+                disabled={true}
               />
             </Col>
-            <Col span={12}>
+            <Col span={24}>
               <ProFormText
                 label="Địa chỉ"
                 name="address"
@@ -442,7 +515,7 @@ const UserUpdateInfo = (props: any) => {
 const PostByEmail = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [form] = Form.useForm()
-  const user = useAppSelector((state) => state.account.user)
+  const user = useAppSelector((state) => state?.account?.user)
 
   useEffect(() => {
     const init = async () => {

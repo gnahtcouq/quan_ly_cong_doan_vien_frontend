@@ -145,6 +145,12 @@ export const callUpdateUser = (user: IUser, id: string) => {
   return axios.patch<IBackendRes<IUser>>(`/api/v1/users/${id}`, {...user})
 }
 
+export const callUpdateInfoUser = (user: IUser, id: string) => {
+  return axios.patch<IBackendRes<IUser>>(`/api/v1/users/info/${id}`, {
+    ...user
+  })
+}
+
 export const callUpdateUserPermissions = (user: IUser, id: string) => {
   return axios.put<IBackendRes<IUser>>(`/api/v1/users/${id}`, {...user})
 }
@@ -237,6 +243,12 @@ export const callCreateUnionist = (unionist: IUnionist) => {
 
 export const callUpdateUnionist = (unionist: IUnionist, id: string) => {
   return axios.patch<IBackendRes<IUnionist>>(`/api/v1/unionists/${id}`, {
+    ...unionist
+  })
+}
+
+export const callUpdateInfoUnionist = (unionist: IUnionist, id: string) => {
+  return axios.patch<IBackendRes<IUnionist>>(`/api/v1/unionists/info/${id}`, {
     ...unionist
   })
 }
