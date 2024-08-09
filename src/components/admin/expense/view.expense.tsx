@@ -2,10 +2,12 @@ import {formatCurrency} from '@/config/utils'
 import {IExpense} from '@/types/backend'
 import {Badge, Button, Descriptions, Drawer} from 'antd'
 import dayjs from 'dayjs'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {message, notification} from 'antd'
 import {saveAs} from 'file-saver'
 import {callExportExpenseToPdf} from '@/config/api'
+import {useAppSelector} from '@/redux/hooks'
+import {ALL_PERMISSIONS} from '@/config/permissions'
 
 interface IProps {
   onClose: (v: boolean) => void
@@ -14,23 +16,32 @@ interface IProps {
   setDataInit: (v: any) => void
 }
 const ViewDetailExpense = (props: IProps) => {
-  const {onClose, open, dataInit, setDataInit} = props
+  const user = useAppSelector((state) => state?.account?.user)
+  const [canExportPdf, setCanExportPdf] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const {onClose, open, dataInit, setDataInit} = props
+
+  useEffect(() => {
+    if (
+      user.permissions?.length &&
+      user.permissions.some(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.EXPENSES.EXPORT_PDF.apiPath &&
+          item.method === ALL_PERMISSIONS.EXPENSES.EXPORT_PDF.method
+      )
+    ) {
+      setCanExportPdf(true)
+    }
+  }, [])
 
   const handleExportPdf = async () => {
     if (dataInit && dataInit.id) {
       setIsLoading(true)
       try {
         const res = await callExportExpenseToPdf(dataInit.id)
-        if (res.data) {
+        if (res) {
           saveAs(res, `expense-${dataInit.id}.pdf`)
           message.success('Tải file PDF phiếu chi thành công!')
-        } else {
-          notification.error({
-            message: 'Có lỗi xảy ra',
-            description:
-              'Bạn không có quyền tải xuống truy cập endpoint. Hãy liên hệ với quản trị viên của bạn!'
-          })
         }
       } catch (error) {
         notification.error({
@@ -56,7 +67,12 @@ const ViewDetailExpense = (props: IProps) => {
         width={'40vw'}
         maskClosable={true}
         extra={
-          <Button type="primary" onClick={handleExportPdf} loading={isLoading}>
+          <Button
+            type="primary"
+            onClick={handleExportPdf}
+            loading={isLoading}
+            disabled={!canExportPdf || isLoading}
+          >
             Xuất PDF
           </Button>
         }

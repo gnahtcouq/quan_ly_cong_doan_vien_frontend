@@ -166,6 +166,11 @@ export const ALL_PERMISSIONS = {
       apiPath: '/api/v1/receipts/:id',
       module: 'RECEIPTS'
     },
+    EXPORT_PDF: {
+      method: 'GET',
+      apiPath: '/api/v1/receipts/pdf/:id',
+      module: 'RECEIPTS'
+    },
     DELETE: {
       method: 'DELETE',
       apiPath: '/api/v1/receipts/:id',
@@ -214,6 +219,11 @@ export const ALL_PERMISSIONS = {
     UPDATE: {
       method: 'PATCH',
       apiPath: '/api/v1/expenses/:id',
+      module: 'EXPENSES'
+    },
+    EXPORT_PDF: {
+      method: 'GET',
+      apiPath: '/api/v1/expenses/pdf/:id',
       module: 'EXPENSES'
     },
     DELETE: {

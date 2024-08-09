@@ -198,6 +198,7 @@ const DocumentPage = () => {
 
   const buildQuery = (params: any, sort: any, filter: any) => {
     const clone = {...params}
+    if (clone.id) clone.id = `/${clone.id}/i`
     if (clone.name) clone.name = `/${clone.name}/i`
     if (clone?.status?.length) {
       clone.status = clone.status.join(',')
