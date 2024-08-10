@@ -10,11 +10,13 @@ import {
   FileExcelOutlined,
   PlusOutlined
 } from '@ant-design/icons'
-import {ActionType, ProColumns} from '@ant-design/pro-components'
+import {ActionType, ProColumns, ProForm} from '@ant-design/pro-components'
 import {
   Button,
   Checkbox,
+  DatePicker,
   Popconfirm,
+  Select,
   Space,
   Spin,
   message,
@@ -35,6 +37,8 @@ import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 import ModalPermission from '@/components/admin/unionist/modal.permission'
 import ImportModal from '@/components/admin/unionist/modal.import'
+import {set} from 'lodash'
+import {disabledMonthYear} from '@/config/utils'
 
 const UnionistPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false)
@@ -46,6 +50,7 @@ const UnionistPage = () => {
   const [departments, setDepartments] = useState<IDepartmentSelect[]>([])
   const [showNotLeft, setShowNotLeft] = useState<boolean>(false)
   const [showLeft, setShowLeft] = useState<boolean>(false)
+  const [showJoining, setShowJoining] = useState<boolean>(false)
 
   const tableRef = useRef<ActionType>()
 
@@ -53,6 +58,26 @@ const UnionistPage = () => {
   const meta = useAppSelector((state) => state.unionist.meta)
   const unionists = useAppSelector((state) => state.unionist.result)
   const dispatch = useAppDispatch()
+
+  const {Option} = Select
+  const [year, setYear] = useState<string | null>(null)
+  const [joiningStartMonthYear, setJoiningStartMonthYear] = useState<
+    string | null
+  >(null)
+  const [joiningEndMonthYear, setJoiningEndMonthYear] = useState<string | null>(
+    null
+  )
+  const [leavingStartMonthYear, setLeavingStartMonthYear] = useState<
+    string | null
+  >(null)
+  const [leavingEndMonthYear, setLeavingEndMonthYear] = useState<string | null>(
+    null
+  )
+  const [datePickerKey, setDatePickerKey] = useState<number>(0) // Thêm state để buộc DatePicker làm mới
+
+  const [searchType, setSearchType] = useState<'all' | 'year' | 'range'>('all')
+  const [current, setCurrent] = useState<number>(1)
+  const [pageSize, setPageSize] = useState<number>(10)
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -160,6 +185,26 @@ const UnionistPage = () => {
       }
     },
     {
+      title: 'Ngày chuyển đến',
+      dataIndex: 'joiningDate',
+      width: 200,
+      sorter: true,
+      render: (text, record, index, action) => {
+        return <>{dayjs(record.joiningDate).format('DD/MM/YYYY')}</>
+      },
+      hideInSearch: true
+    },
+    {
+      title: 'Ngày chuyển đi',
+      dataIndex: 'leavingDate',
+      width: 200,
+      sorter: true,
+      render: (text, record, index, action) => {
+        return <>{dayjs(record.leavingDate).format('DD/MM/YYYY')}</>
+      },
+      hideInSearch: true
+    },
+    {
       title: 'Ngày vào công đoàn',
       dataIndex: 'unionEntryDate',
       width: 200,
@@ -255,6 +300,23 @@ const UnionistPage = () => {
     else if (showLeft) clone.leaving = 2
     else delete clone.leaving
 
+    // Thêm điều kiện năm hoặc khoảng thời gian
+    if (searchType === 'year' && year) {
+      clone.year = year
+    } else if (searchType === 'range') {
+      if (showNotLeft) {
+        if (joiningStartMonthYear && joiningEndMonthYear) {
+          clone.joiningStartMonthYear = joiningStartMonthYear
+          clone.joiningEndMonthYear = joiningEndMonthYear
+        }
+      } else if (showLeft) {
+        if (leavingStartMonthYear && leavingEndMonthYear) {
+          clone.leavingStartMonthYear = leavingStartMonthYear
+          clone.leavingEndMonthYear = leavingEndMonthYear
+        }
+      }
+    }
+
     let temp = queryString.stringify(clone)
 
     let sortBy = ''
@@ -286,25 +348,124 @@ const UnionistPage = () => {
     return temp
   }
 
+  const handleTableChange = (pagination) => {
+    setCurrent(pagination.current)
+    setPageSize(pagination.pageSize)
+  }
+
   const handleCheckboxChange = (e) => {
     const {name, checked} = e.target
 
     if (name === 'showNotLeft') {
       setShowNotLeft(checked)
-      if (checked) setShowLeft(false)
+      if (checked) {
+        setShowLeft(false)
+        setShowJoining(false)
+      }
     } else if (name === 'showLeft') {
       setShowLeft(checked)
-      if (checked) setShowNotLeft(false)
+      if (checked) {
+        setShowNotLeft(false)
+        setShowJoining(false)
+      }
+    } else if (name === 'showJoining') {
+      setShowJoining(checked)
+      if (checked) {
+        setShowLeft(false)
+        setShowNotLeft(false)
+      }
     }
 
+    // Kiểm tra nếu không có checkbox nào được chọn, đặt searchType là 'all'
+    if (
+      name !== 'showNotLeft' &&
+      name !== 'showLeft' &&
+      name !== 'showJoining'
+    ) {
+      setSearchType('all')
+    } else if (name === 'showJoining') {
+      setSearchType('year') // Nếu chọn showJoining, mặc định chọn year
+    } else {
+      setSearchType('range') // Nếu có checkbox khác, chọn range
+    }
+
+    // Reset các giá trị ngày khi checkbox thay đổi
+    setYear(null)
+    setJoiningStartMonthYear(null)
+    setJoiningEndMonthYear(null)
+    setLeavingStartMonthYear(null)
+    setLeavingEndMonthYear(null)
+
+    setCurrent(1)
+    setDatePickerKey((prev) => prev + 1) // Thay đổi key để buộc DatePicker làm mới
     reloadTable()
+  }
+
+  const handleDateChange = (date, dateStrings) => {
+    if (searchType === 'year') {
+      if (date) {
+        const formattedDate = date.format('YYYY')
+        setYear(formattedDate)
+        setJoiningEndMonthYear(null)
+        setJoiningStartMonthYear(null)
+        setLeavingEndMonthYear(null)
+        setLeavingStartMonthYear(null)
+      } else {
+        setYear(null)
+      }
+    } else if (searchType === 'range') {
+      if (date && date.length === 2) {
+        if (showNotLeft) {
+          setJoiningStartMonthYear(date[0].format('YYYY/MM'))
+          setJoiningEndMonthYear(date[1].format('YYYY/MM'))
+        } else if (showLeft) {
+          setLeavingStartMonthYear(date[0].format('YYYY/MM'))
+          setLeavingEndMonthYear(date[1].format('YYYY/MM'))
+        }
+      } else {
+        // Reset nếu khoảng thời gian không đầy đủ
+        setJoiningStartMonthYear(null)
+        setJoiningEndMonthYear(null)
+        setLeavingStartMonthYear(null)
+        setLeavingEndMonthYear(null)
+      }
+    }
+    setCurrent(1)
+    reloadTable()
+  }
+
+  const handleSearchTypeChange = (value) => {
+    setSearchType(value)
+    if (value === 'year') {
+      setYear(dayjs().format('YYYY')) // Mặc định năm hiện tại khi chọn year
+      setJoiningStartMonthYear(null)
+      setJoiningEndMonthYear(null)
+      setLeavingStartMonthYear(null)
+      setLeavingEndMonthYear(null)
+    } else if (value === 'range') {
+      setYear(null)
+    } else {
+      setYear(null)
+      setJoiningStartMonthYear(null)
+      setJoiningEndMonthYear(null)
+      setLeavingStartMonthYear(null)
+      setLeavingEndMonthYear(null)
+    }
+
+    setCurrent(1)
+    setDatePickerKey((prev) => prev + 1) // Thay đổi key để buộc DatePicker làm mới
   }
 
   return (
     <div>
       <Access permission={ALL_PERMISSIONS.UNIONISTS.GET_PAGINATE}>
         <div
-          style={{display: 'flex', flexDirection: 'column', marginBottom: 10}}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            marginBottom: 10,
+            width: '50%'
+          }}
         >
           <Checkbox
             name="showNotLeft"
@@ -318,9 +479,62 @@ const UnionistPage = () => {
             name="showLeft"
             checked={showLeft}
             onChange={handleCheckboxChange}
+            style={{marginBottom: 10}}
           >
             Công đoàn viên đã chuyển đi
           </Checkbox>
+          <Checkbox
+            name="showJoining"
+            checked={showJoining}
+            onChange={handleCheckboxChange}
+          >
+            Công đoàn viên chuyển đến trong năm
+          </Checkbox>
+          <ProForm.Item label="Lọc" style={{marginTop: 10}}>
+            <Select
+              value={searchType} // Đặt giá trị của Select
+              style={{width: '50%', paddingRight: '5px'}}
+              onChange={handleSearchTypeChange}
+            >
+              <Option value="all">Tất cả</Option>
+              <Option value="year">Năm</Option>
+              <Option value="range">Khoảng thời gian</Option>
+            </Select>
+
+            <DatePicker
+              key={datePickerKey} // Sử dụng key để buộc làm mới DatePicker
+              format="YYYY"
+              placeholder={
+                searchType === 'all'
+                  ? '*'
+                  : searchType === 'year'
+                  ? 'chọn năm'
+                  : 'chọn năm/tháng'
+              }
+              picker={searchType === 'year' ? 'year' : 'month'}
+              onChange={handleDateChange}
+              disabled={
+                searchType === 'all' || searchType === 'range' || !showJoining
+              } // Disabled nếu không chọn checkbox
+              disabledDate={disabledMonthYear}
+              style={{width: '50%'}}
+            />
+          </ProForm.Item>
+
+          {searchType === 'range' && (
+            <ProForm.Item label="Với">
+              <DatePicker.RangePicker
+                key={datePickerKey} // Sử dụng key để buộc làm mới DatePicker
+                format="YYYY/MM"
+                placeholder={['Từ năm/tháng', 'Đến năm/tháng']}
+                picker="month"
+                onChange={handleDateChange}
+                disabled={!showNotLeft && !showLeft} // Disabled nếu không chọn checkbox
+                disabledDate={disabledMonthYear}
+                style={{width: '100%'}}
+              />
+            </ProForm.Item>
+          )}
         </div>
         <DataTable<IUnionist>
           actionRef={tableRef}
@@ -335,18 +549,14 @@ const UnionistPage = () => {
           }}
           scroll={{x: true}}
           pagination={{
-            current: meta.current,
-            pageSize: meta.pageSize,
+            current: current,
+            pageSize: pageSize,
             showSizeChanger: true,
             total: meta.total,
-            showTotal: (total, range) => {
-              return (
-                <div>
-                  {' '}
-                  {range[0]}-{range[1]} trên {total} hàng
-                </div>
-              )
-            }
+            onChange: (page, pageSize) =>
+              handleTableChange({current: page, pageSize}),
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} trên ${total} hàng`
           }}
           rowSelection={false}
           toolBarRender={(_action, _rows): any => {

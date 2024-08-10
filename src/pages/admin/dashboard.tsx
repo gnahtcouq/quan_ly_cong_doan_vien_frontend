@@ -26,7 +26,7 @@ import {
   callFetchExpenseCategoriesByTime
 } from '@/config/api'
 import {ProForm} from '@ant-design/pro-components'
-import {formatCurrency} from '@/config/utils'
+import {disabledMonthYear, formatCurrency} from '@/config/utils'
 import Access from '@/components/share/access'
 import {ALL_PERMISSIONS} from '@/config/permissions'
 import CountUp from 'react-countup'
@@ -535,6 +535,7 @@ const DashboardPage = () => {
                   picker={searchType === 'year' ? 'year' : 'month'}
                   onChange={handleDateChange}
                   disabled={searchType === 'all' || searchType === 'range'}
+                  disabledDate={disabledMonthYear}
                   style={{width: '50%'}}
                 />
               </ProForm.Item>
@@ -547,6 +548,7 @@ const DashboardPage = () => {
                     placeholder={['Từ năm/tháng', 'Đến năm/tháng']}
                     picker="month"
                     onChange={handleDateChange}
+                    disabledDate={disabledMonthYear}
                     style={{width: '100%'}}
                   />
                 </ProForm.Item>
