@@ -59,7 +59,7 @@ const DocumentPage = () => {
       hideInSearch: true
     },
     {
-      title: 'Tên CV/VB',
+      title: 'CV/VB',
       dataIndex: ['name'],
       hideInSearch: false,
       render: (text, record, index, action) => {

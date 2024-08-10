@@ -81,7 +81,7 @@ const ViewDetailDocument = (props: IProps) => {
           initialValues={{status: dataInit?.status}} // Set initial values
         >
           <Descriptions title="" bordered column={2} layout="vertical">
-            <Descriptions.Item label="Tên CV/VB">
+            <Descriptions.Item label="Tiêu đề CV/VB">
               {dataInit?.name}
             </Descriptions.Item>
             <Descriptions.Item label="Trạng thái">

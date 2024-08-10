@@ -149,10 +149,10 @@ const ApplyModal = (props: IProps) => {
           <Row gutter={[10, 10]}>
             <Col span={24}>
               <ProFormText
-                label="Tên CV/VB"
+                label="Tiêu đề CV/VB"
                 name="name"
                 rules={[{required: true, message: 'Vui lòng không để trống!'}]}
-                placeholder="Nhập tên CV/VB"
+                placeholder="Nhập tiêu đề CV/VB"
               />
             </Col>
             <Col span={24}>
