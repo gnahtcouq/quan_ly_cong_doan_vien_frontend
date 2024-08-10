@@ -255,8 +255,6 @@ const UnionistPage = () => {
     else if (showLeft) clone.leaving = 2
     else delete clone.leaving
 
-    console.log(clone.leavingDate instanceof Date) // Đảm bảo là true khi sử dụng Date
-
     let temp = queryString.stringify(clone)
 
     let sortBy = ''

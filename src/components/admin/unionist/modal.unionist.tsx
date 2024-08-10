@@ -150,7 +150,7 @@ const ModalUnionist = (props: IProps) => {
         unionEntryDate,
         note,
         permissions,
-        departmentId: departmentId.value
+        departmentId: departmentId ? departmentId.value : null
       }
       const res = await callCreateUnionist(unionist)
       if (res.data) {
@@ -332,6 +332,7 @@ const ModalUnionist = (props: IProps) => {
                 >
                   <DebounceSelect
                     showSearch
+                    allowClear
                     defaultValue={departments}
                     value={departments}
                     placeholder="Chọn đơn vị"
