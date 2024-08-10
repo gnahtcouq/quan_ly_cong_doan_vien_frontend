@@ -54,7 +54,11 @@ const ViewDetailUser = (props: IProps) => {
             })()}
           </Descriptions.Item>
 
-          <Descriptions.Item label="Địa chỉ">
+          <Descriptions.Item label="Số điện thoại">
+            {dataInit?.phoneNumber ?? ''}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Địa chỉ" span={2}>
             {dataInit?.address ?? ''}
           </Descriptions.Item>
 

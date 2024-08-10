@@ -39,6 +39,7 @@ const ModalUser = (props: IProps) => {
       password,
       dateOfBirth,
       gender,
+      phoneNumber,
       address,
       CCCD,
       note,
@@ -54,6 +55,7 @@ const ModalUser = (props: IProps) => {
         password,
         dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : null,
         gender,
+        phoneNumber: phoneNumber ? phoneNumber : null,
         address,
         CCCD: CCCD ? CCCD : null,
         note,
@@ -79,6 +81,7 @@ const ModalUser = (props: IProps) => {
         password,
         dateOfBirth,
         gender,
+        phoneNumber,
         address,
         CCCD,
         note,
@@ -225,20 +228,34 @@ const ModalUser = (props: IProps) => {
                 placeholder="Nhập căn cước công dân"
               />
             </Col>
-            <Col lg={12} md={12} sm={24} xs={24}>
+            <Col lg={6} md={6} sm={24} xs={24}>
               <ProFormText
-                label="Địa chỉ"
-                name="address"
-                rules={[{required: false, message: 'Vui lòng không để trống!'}]}
-                placeholder="Nhập địa chỉ"
+                label="Số điện thoại"
+                name="phoneNumber"
+                rules={[
+                  {
+                    required: false,
+                    pattern: /^(03|05|07|08|09)[0-9]{8}$/,
+                    message: 'Vui lòng nhập số điện thoại hợp lệ!'
+                  }
+                ]}
+                placeholder="Nhập số điện thoại"
               />
             </Col>
-            <Col lg={12} md={24} sm={24} xs={24}>
+            <Col lg={18} md={24} sm={24} xs={24}>
               <ProFormText
                 label="Ghi chú"
                 name="note"
                 rules={[{required: false}]}
                 placeholder="Nhập ghi chú"
+              />
+            </Col>
+            <Col lg={24} md={12} sm={24} xs={24}>
+              <ProFormText
+                label="Địa chỉ"
+                name="address"
+                rules={[{required: false, message: 'Vui lòng không để trống!'}]}
+                placeholder="Nhập địa chỉ"
               />
             </Col>
           </Row>

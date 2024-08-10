@@ -26,10 +26,8 @@ import {
   callUpdateInfoUnionist,
   callUpdateInfoUser,
   callUpdateSubscriber,
-  callUpdateUnionist,
   callUpdateUnionistEmail,
   callUpdateUnionistPassword,
-  callUpdateUser,
   callUpdateUserEmail,
   callUpdateUserPassword
 } from '@/config/api'
@@ -266,7 +264,8 @@ const UserUpdateInfo = (props: any) => {
   }, [user._id])
 
   const onFinish = async (values: any) => {
-    const {name, email, password, dateOfBirth, gender, address} = values
+    const {name, email, password, dateOfBirth, gender, phoneNumber, address} =
+      values
 
     if (dataInit?._id) {
       // Nếu có thay đổi email, gửi yêu cầu thay đổi email qua API trước
@@ -312,6 +311,7 @@ const UserUpdateInfo = (props: any) => {
         password,
         dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : null,
         gender,
+        phoneNumber: phoneNumber ? phoneNumber : null,
         address
       }
 
@@ -427,54 +427,58 @@ const UserUpdateInfo = (props: any) => {
                 </Select>
               </ProForm.Item>
             </Col>
-            <Col span={12}>
-              <ProForm.Item
-                label="Ngày chuyển đến"
-                name="joiningDate"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                rules={[{required: false}]}
-                style={{width: '100%'}}
-              >
-                <DatePicker
-                  format="DD/MM/YYYY"
-                  placeholder="dd/mm/yyyy"
-                  style={{width: '100%'}}
-                  disabled={true}
-                />
-              </ProForm.Item>
-            </Col>
-            <Col span={12}>
-              <ProForm.Item
-                label="Ngày chuyển đi"
-                name="leavingDate"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                rules={[{required: false}]}
-                style={{width: '100%'}}
-              >
-                <DatePicker
-                  format="DD/MM/YYYY"
-                  placeholder="dd/mm/yyyy"
-                  style={{width: '100%'}}
-                  disabled={true}
-                />
-              </ProForm.Item>
-            </Col>
-            <Col span={12}>
-              <ProForm.Item
-                label="Ngày vào công đoàn"
-                name="unionEntryDate"
-                normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
-                rules={[{required: false}]}
-                style={{width: '100%'}}
-              >
-                <DatePicker
-                  format="DD/MM/YYYY"
-                  placeholder="dd/mm/yyyy"
-                  style={{width: '100%'}}
-                  disabled={true}
-                />
-              </ProForm.Item>
-            </Col>
+            {type === 'unionist' && (
+              <>
+                <Col span={12}>
+                  <ProForm.Item
+                    label="Ngày chuyển đến"
+                    name="joiningDate"
+                    normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
+                    rules={[{required: false}]}
+                    style={{width: '100%'}}
+                  >
+                    <DatePicker
+                      format="DD/MM/YYYY"
+                      placeholder="dd/mm/yyyy"
+                      style={{width: '100%'}}
+                      disabled={true}
+                    />
+                  </ProForm.Item>
+                </Col>
+                <Col span={12}>
+                  <ProForm.Item
+                    label="Ngày chuyển đi"
+                    name="leavingDate"
+                    normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
+                    rules={[{required: false}]}
+                    style={{width: '100%'}}
+                  >
+                    <DatePicker
+                      format="DD/MM/YYYY"
+                      placeholder="dd/mm/yyyy"
+                      style={{width: '100%'}}
+                      disabled={true}
+                    />
+                  </ProForm.Item>
+                </Col>
+                <Col span={12}>
+                  <ProForm.Item
+                    label="Ngày vào công đoàn"
+                    name="unionEntryDate"
+                    normalize={(value) => value && dayjs(value, 'DD/MM/YYYY')}
+                    rules={[{required: false}]}
+                    style={{width: '100%'}}
+                  >
+                    <DatePicker
+                      format="DD/MM/YYYY"
+                      placeholder="dd/mm/yyyy"
+                      style={{width: '100%'}}
+                      disabled={true}
+                    />
+                  </ProForm.Item>
+                </Col>
+              </>
+            )}
             <Col span={12}>
               <ProFormText
                 label="Căn cước công dân"
@@ -485,16 +489,48 @@ const UserUpdateInfo = (props: any) => {
                 disabled={true}
               />
             </Col>
-            <Col span={24}>
+            <Col span={12}>
               <ProFormText
-                label="Địa chỉ"
-                name="address"
-                rules={[{required: false}]}
-                placeholder="Nhập địa chỉ"
+                label="Số điện thoại"
+                name="phoneNumber"
+                rules={[
+                  {
+                    required: false,
+                    pattern: /^(03|05|07|08|09)[0-9]{8}$/,
+                    message: 'Vui lòng nhập số điện thoại hợp lệ!'
+                  }
+                ]}
+                placeholder="Nhập số điện thoại"
                 style={{width: '100%'}}
               />
             </Col>
+            {type === 'unionist' && (
+              <>
+                <Col span={12}>
+                  <ProFormText
+                    label="Địa chỉ"
+                    name="address"
+                    rules={[{required: false}]}
+                    placeholder="Nhập địa chỉ"
+                    style={{width: '100%'}}
+                  />
+                </Col>
+              </>
+            )}
           </Row>
+          {type === 'user' && (
+            <>
+              <Col span={24}>
+                <ProFormText
+                  label="Địa chỉ"
+                  name="address"
+                  rules={[{required: false}]}
+                  placeholder="Nhập địa chỉ"
+                  style={{width: '100%'}}
+                />
+              </Col>
+            </>
+          )}
           <Row>
             <Col span={24} style={{textAlign: 'center'}}>
               <Button

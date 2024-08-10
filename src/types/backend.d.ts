@@ -72,7 +72,8 @@ export interface IUser {
   password?: string
   dateOfBirth: string
   gender: string
-  address: string
+  phoneNumber?: string
+  address?: string
   CCCD?: string
   note?: string
   permissions?: IPermission[] | string[]
@@ -95,7 +96,8 @@ export interface IUnionist {
   password?: string
   dateOfBirth: string
   gender: string
-  address: string
+  phoneNumber?: string
+  address?: string
   CCCD?: string
   joiningDate?: string
   leavingDate?: string
