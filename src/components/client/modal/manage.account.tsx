@@ -7,6 +7,7 @@ import {
   Modal,
   Row,
   Select,
+  Space,
   Spin,
   Table,
   Tabs,
@@ -16,9 +17,10 @@ import {
 } from 'antd'
 import {isMobile} from 'react-device-detect'
 import type {TabsProps} from 'antd'
-import {IFee, IUser} from '@/types/backend'
+import {IDocument, IFee, IUser} from '@/types/backend'
 import {useState, useEffect} from 'react'
 import {
+  callFetchDocument,
   callFetchFeesByUnionist,
   callFetchUnionistById,
   callFetchUserById,
@@ -33,7 +35,7 @@ import {
 } from '@/config/api'
 import type {ColumnsType} from 'antd/es/table'
 import dayjs from 'dayjs'
-import {MonitorOutlined} from '@ant-design/icons'
+import {CopyOutlined, ExportOutlined, MonitorOutlined} from '@ant-design/icons'
 import {formatCurrency, THREADS_LIST} from '@/config/utils'
 import {useAppDispatch, useAppSelector} from '@/redux/hooks'
 import {ProForm, ProFormText} from '@ant-design/pro-components'
@@ -760,6 +762,128 @@ const UserUpdatePassword = (props: any) => {
   )
 }
 
+const UserDocument = (props: any) => {
+  const [listDoc, setListDoc] = useState<IDocument[]>([])
+  const [isFetching, setIsFetching] = useState<boolean>(false)
+  const [current, setCurrent] = useState<number>(1)
+  const [pageSize, setPageSize] = useState<number>(6)
+  const [total, setTotal] = useState<number>(0)
+  const isActive = 1
+
+  useEffect(() => {
+    const init = async () => {
+      setIsFetching(true)
+      const query = queryString.stringify({
+        current,
+        pageSize,
+        isActive
+      })
+      const res = await callFetchDocument(query)
+      if (res && res.data) {
+        setListDoc(res.data.result)
+        setTotal(res.data.meta.total || 1) // Đặt total theo kết quả thực tế hoặc mặc định là 1
+      } else {
+        setListDoc([])
+        setTotal(0)
+      }
+      setIsFetching(false)
+    }
+    init()
+  }, [current, pageSize])
+
+  // Hàm xử lý khi phân trang thay đổi
+  const handleTableChange = (pagination) => {
+    setCurrent(pagination.current)
+    setPageSize(pagination.pageSize)
+  }
+
+  const columns: ColumnsType<IDocument> = [
+    {
+      title: 'STT',
+      key: 'index',
+      width: 50,
+      align: 'center',
+      render: (text, record, index) => {
+        return <>{index + 1}</>
+      }
+    },
+    {
+      title: 'CV/VB',
+      dataIndex: 'name'
+    },
+    {
+      title: 'Số',
+      dataIndex: 'id'
+    },
+    {
+      title: 'Thời gian',
+      dataIndex: 'createdAt',
+      render(value, record, index) {
+        return <>{dayjs(record.createdAt).format('DD/MM/YYYY')}</>
+      }
+    },
+    {
+      title: 'Đường dẫn',
+      dataIndex: '',
+      width: 120,
+      render: (value, record, index) => (
+        <Space>
+          <CopyOutlined
+            style={{
+              fontSize: 20,
+              color: '#85b970'
+            }}
+            type=""
+            onClick={() => {
+              navigator.clipboard.writeText(
+                `${import.meta.env.VITE_BACKEND_URL}/files/document/${
+                  record?.url
+                }`
+              )
+              message.success('Đã lưu đường dẫn vào bảng nhớ tạm!')
+            }}
+          />
+
+          <a
+            href={`${import.meta.env.VITE_BACKEND_URL}/files/document/${
+              record?.url
+            }`}
+            target="_blank"
+          >
+            <ExportOutlined
+              style={{
+                fontSize: 20,
+                color: '#ffa500'
+              }}
+              type=""
+            />
+          </a>
+        </Space>
+      )
+    }
+  ]
+
+  return (
+    <div>
+      <Table<IDocument>
+        columns={columns}
+        dataSource={listDoc.map((item) => ({...item, key: item._id}))}
+        loading={isFetching}
+        pagination={{
+          current: current,
+          pageSize: pageSize,
+          total: total,
+          showSizeChanger: true,
+          onChange: (page, pageSize) =>
+            handleTableChange({current: page, pageSize}),
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} trên ${total} hàng`
+        }}
+      />
+    </div>
+  )
+}
+
 const ManageAccount = (props: IProps) => {
   const {open, onClose} = props
   const type = useAppSelector((state) => state?.account?.user?.type) // Lấy loại user hiện tại
@@ -794,6 +918,11 @@ const ManageAccount = (props: IProps) => {
       key: 'user-password',
       label: `Thay đổi mật khẩu`,
       children: <UserUpdatePassword />
+    },
+    {
+      key: 'user-document',
+      label: `CV/VB`,
+      children: <UserDocument />
     }
   ]
 
@@ -806,11 +935,11 @@ const ManageAccount = (props: IProps) => {
         maskClosable={false}
         footer={null}
         destroyOnClose={true}
-        width={isMobile ? '100%' : '700px'}
+        width={isMobile ? '100%' : '900px'}
       >
         <div style={{minHeight: 400}}>
           <Tabs
-            defaultActiveKey="user-document"
+            defaultActiveKey="unionist-fees"
             items={items}
             onChange={onChange}
           />

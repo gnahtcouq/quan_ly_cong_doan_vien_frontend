@@ -32,6 +32,7 @@ import {
   disabledDate,
   validateDateOfBirth
 } from '@/config/utils'
+import {union} from 'lodash'
 
 interface IProps {
   openModal: boolean
@@ -199,11 +200,24 @@ const ModalUnionist = (props: IProps) => {
     ? {
         ...dataInit,
         dateOfBirth: dataInit.dateOfBirth ? dayjs(dataInit.dateOfBirth) : null,
-        joiningDate: dataInit.joiningDate ? dayjs(dataInit.joiningDate) : null,
-        leavingDate: dataInit.leavingDate ? dayjs(dataInit.leavingDate) : null,
-        unionEntryDate: dataInit.unionEntryDate
-          ? dayjs(dataInit.unionEntryDate)
-          : null
+        joiningDate:
+          dataInit.joiningDate && dayjs(dataInit.joiningDate).isValid()
+            ? dayjs(dataInit.joiningDate).isSame(dayjs('1970-01-01'), 'day')
+              ? null
+              : dayjs(dataInit.joiningDate)
+            : null,
+        leavingDate:
+          dataInit.leavingDate && dayjs(dataInit.leavingDate).isValid()
+            ? dayjs(dataInit.leavingDate).isSame(dayjs('1970-01-01'), 'day')
+              ? null
+              : dayjs(dataInit.leavingDate)
+            : null,
+        unionEntryDate:
+          dataInit.unionEntryDate && dayjs(dataInit.unionEntryDate).isValid()
+            ? dayjs(dataInit.unionEntryDate).isSame(dayjs('1970-01-01'), 'day')
+              ? null
+              : dayjs(dataInit.unionEntryDate)
+            : null
       }
     : {}
 
