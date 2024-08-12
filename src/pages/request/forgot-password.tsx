@@ -26,21 +26,20 @@ const SendForgotPassword = (props: any) => {
     try {
       const resUser = await callForgotUserPassword(email)
       const resUnionist = await callForgotUnionistPassword(email)
-
       if (resUser.data) {
         message.success(
-          'Gửi yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email của bạn!'
+          'Gửi yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email và tin nhắn zalo của bạn!'
         )
         setTimeout(() => {
-          window.location.href = '/'
-        }, 4000)
+          window.location.href = `/confirm-forgot-password/${resUser.data?._id}`
+        }, 2000)
       } else if (resUnionist.data) {
         message.success(
-          'Gửi yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email của bạn!'
+          'Gửi yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email và tin nhắn zalo của bạn!'
         )
         setTimeout(() => {
-          window.location.href = '/'
-        }, 4000)
+          window.location.href = `/confirm-forgot-password/${resUnionist.data?._id}`
+        }, 2000)
       } else {
         notification.error({
           message: 'Có lỗi xảy ra',
@@ -50,7 +49,7 @@ const SendForgotPassword = (props: any) => {
     } catch (error) {
       notification.error({
         message: 'Có lỗi xảy ra',
-        description: 'Gửi yêu cầu đặt lại mật khẩu không thành công!'
+        description: 'Vui lòng liên hệ với quản trị viên của bạn!'
       })
     } finally {
       setIsSubmit(false)
