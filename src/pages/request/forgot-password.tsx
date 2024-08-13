@@ -28,14 +28,14 @@ const SendForgotPassword = (props: any) => {
       const resUnionist = await callForgotUnionistPassword(email)
       if (resUser.data) {
         message.success(
-          'Gửi yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email và tin nhắn zalo của bạn!'
+          'Gửi yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email hoặc tin nhắn zalo của bạn!'
         )
         setTimeout(() => {
           window.location.href = `/confirm-forgot-password/${resUser.data?._id}`
         }, 2000)
       } else if (resUnionist.data) {
         message.success(
-          'Gửi yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email và tin nhắn zalo của bạn!'
+          'Gửi yêu cầu đặt lại mật khẩu thành công. Vui lòng kiểm tra email hoặc tin nhắn zalo của bạn!'
         )
         setTimeout(() => {
           window.location.href = `/confirm-forgot-password/${resUnionist.data?._id}`
