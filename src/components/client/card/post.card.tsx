@@ -12,22 +12,23 @@ import logo_cd from '@/assets/logo-cd.png'
 
 dayjs.extend(relativeTime)
 
-interface IProps {
+interface PostCardProps {
+  filter: string
   showPagination?: boolean
 }
 
-const PostCard = (props: IProps) => {
-  const {showPagination = false} = props
+const PostCard: React.FC<PostCardProps> = ({
+  filter,
+  showPagination = false
+}) => {
+  const navigate = useNavigate()
 
   const [displayPost, setDisplayPost] = useState<IPost[] | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-
   const [current, setCurrent] = useState(1)
   const [pageSize, setPageSize] = useState(6)
   const [total, setTotal] = useState(0)
-  const [filter, setFilter] = useState('')
   const [sortQuery, setSortQuery] = useState('sort=-createdAt')
-  const navigate = useNavigate()
 
   useEffect(() => {
     fetchPost()
@@ -38,7 +39,7 @@ const PostCard = (props: IProps) => {
     let accumulatedPosts: IPost[] = []
     let queryPage = current
     let shouldFetchMore = true
-    let res: any // Declare the 'res' variable
+    let res: any
 
     while (shouldFetchMore) {
       let query = `current=${queryPage}&pageSize=${pageSize}`
@@ -49,7 +50,7 @@ const PostCard = (props: IProps) => {
         query += `&${sortQuery}`
       }
 
-      res = await callFetchPost(query) // Assign the value to 'res'
+      res = await callFetchPost(query)
       if (res && res.data) {
         const activePosts = res.data.result.filter(
           (post: IPost) => post.status === 'ACTIVE'

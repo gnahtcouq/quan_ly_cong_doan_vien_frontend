@@ -1,3 +1,4 @@
+import React, {useState} from 'react'
 import SearchClient from '@/components/client/search.client'
 import {Col, ConfigProvider, Divider, Row} from 'antd'
 import styles from 'styles/client.module.scss'
@@ -10,18 +11,25 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 dayjs.locale('en')
 
-const ClientPostPage = (props: any) => {
+const ClientPostPage = () => {
+  const [filter, setFilter] = useState<string>('')
+
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter)
+  }
+
   return (
     <ConfigProvider locale={vi_VN}>
-      <div className={styles['container']} style={{marginTop: 20}}>
-        <Row gutter={[20, 20]}>
-          {/* <Col span={24}>
-            <SearchClient />
-          </Col>
-          <Divider /> */}
-
+      <div
+        className={`${styles['container']} ${styles['post-search']}`}
+        style={{minHeight: '150vh', paddingTop: 120}}
+      >
+        <Row gutter={[10, 10]}>
           <Col span={24}>
-            <PostCard showPagination={true} />
+            <SearchClient onFilterChange={handleFilterChange} />
+          </Col>
+          <Col span={24}>
+            <PostCard filter={filter} showPagination={true} />
           </Col>
         </Row>
       </div>

@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {
   AppstoreOutlined,
-  ExceptionOutlined,
   ApiOutlined,
   UserOutlined,
   BankOutlined,
@@ -13,7 +12,6 @@ import {
   ScheduleOutlined,
   TeamOutlined,
   HomeOutlined,
-  MenuOutlined,
   DollarOutlined,
   DatabaseOutlined,
   HddOutlined,
@@ -156,7 +154,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewDepartment
+        ...(viewDepartment && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/department">Đơn vị</Link>,
@@ -166,7 +164,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewUser
+        ...(viewUser && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/user">Thành viên</Link>,
@@ -176,7 +174,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewUnionist
+        ...(viewUnionist && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/unionist">Công đoàn viên</Link>,
@@ -186,7 +184,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewFee
+        ...(viewFee && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/fee">Công đoàn phí</Link>,
@@ -196,7 +194,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewReceipt
+        ...(viewReceipt && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/receipt">Phiếu thu</Link>,
@@ -206,7 +204,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewIncomeCategory
+        ...(viewIncomeCategory && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/income-category">Danh mục thu</Link>,
@@ -216,7 +214,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewExpense
+        ...(viewExpense && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/expense">Phiếu chi</Link>,
@@ -226,7 +224,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewExpenseCategory
+        ...(viewExpenseCategory && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/expense-category">Danh mục chi</Link>,
@@ -236,7 +234,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewPost
+        ...(viewPost && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/post">Bài đăng</Link>,
@@ -246,7 +244,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewDocument
+        ...(viewDocument && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/document">CV/VB</Link>,
@@ -256,7 +254,7 @@ const LayoutAdmin = () => {
             ]
           : []),
 
-        ...(viewPermission
+        ...(viewPermission && hasAccessToAdminPage
           ? [
               {
                 label: <Link to="/admin/permission">Quyền hạn</Link>,

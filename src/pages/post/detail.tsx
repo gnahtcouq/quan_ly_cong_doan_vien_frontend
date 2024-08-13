@@ -88,7 +88,8 @@ const ClientPostDetailPage = (props: any) => {
                         style={{
                           height: 250,
                           width: '100%',
-                          objectFit: 'cover'
+                          objectFit: 'cover',
+                          paddingTop: 10
                         }}
                       />
                     </div>
