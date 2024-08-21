@@ -537,6 +537,7 @@ const DashboardPage = () => {
                   disabled={searchType === 'all' || searchType === 'range'}
                   disabledDate={disabledMonthYear}
                   style={{width: '50%'}}
+                  defaultValue={dayjs().startOf('year') as any}
                 />
               </ProForm.Item>
 
@@ -669,6 +670,7 @@ const DashboardPage = () => {
                           searchType === 'all' || searchType === 'range'
                         }
                         style={{width: '50%'}}
+                        defaultValue={dayjs().startOf('year') as any}
                       />
                     </ProForm.Item>
                   </Col>
