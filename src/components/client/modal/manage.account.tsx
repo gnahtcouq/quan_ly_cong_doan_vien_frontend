@@ -865,21 +865,23 @@ const UserDocument = (props: any) => {
 
   return (
     <div>
-      <Table<IDocument>
-        columns={columns}
-        dataSource={listDoc.map((item) => ({...item, key: item._id}))}
-        loading={isFetching}
-        pagination={{
-          current: current,
-          pageSize: pageSize,
-          total: total,
-          showSizeChanger: true,
-          onChange: (page, pageSize) =>
-            handleTableChange({current: page, pageSize}),
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} trên ${total} hàng`
-        }}
-      />
+      <ConfigProvider locale={vi_VN}>
+        <Table<IDocument>
+          columns={columns}
+          dataSource={listDoc.map((item) => ({...item, key: item._id}))}
+          loading={isFetching}
+          pagination={{
+            current: current,
+            pageSize: pageSize,
+            total: total,
+            showSizeChanger: true,
+            onChange: (page, pageSize) =>
+              handleTableChange({current: page, pageSize}),
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} trên ${total} hàng`
+          }}
+        />
+      </ConfigProvider>
     </div>
   )
 }
