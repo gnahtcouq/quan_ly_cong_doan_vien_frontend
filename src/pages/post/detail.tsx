@@ -11,6 +11,7 @@ import vi_VN from 'antd/locale/vi_VN'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 import logo_cd from '@/assets/logo-cd.png'
+import {isMobile} from 'react-device-detect'
 
 dayjs.extend(relativeTime)
 dayjs.locale('en')
@@ -78,24 +79,25 @@ const ClientPostDetailPage = (props: any) => {
                     dangerouslySetInnerHTML={{__html: postDetail.description}}
                   ></div>
                 </Col>
-
-                <Col span={24} md={8}>
-                  <div className={styles['department']}>
-                    <div>
-                      <img
-                        alt="logo_cd"
-                        src={logo_cd}
-                        style={{
-                          height: 250,
-                          width: '100%',
-                          objectFit: 'cover',
-                          paddingTop: 10
-                        }}
-                      />
+                {!isMobile ? (
+                  <Col span={24} md={8}>
+                    <div className={styles['department']}>
+                      <div>
+                        <img
+                          alt="logo_cd"
+                          src={logo_cd}
+                          style={{
+                            height: 250,
+                            width: '100%',
+                            objectFit: 'cover',
+                            paddingTop: 10
+                          }}
+                        />
+                      </div>
+                      {/* <div>{postDetail.department?.name}</div> */}
                     </div>
-                    {/* <div>{postDetail.department?.name}</div> */}
-                  </div>
-                </Col>
+                  </Col>
+                ) : null}
               </>
             )}
           </Row>

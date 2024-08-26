@@ -264,13 +264,13 @@ const ExpenseCategoryPage = () => {
                 >
                   Thêm mới
                 </Button>
-                <Button
+                {/* <Button
                   icon={<FileExcelOutlined />}
                   type="dashed"
                   onClick={() => setIsModalOpen(true)}
                 >
                   Nhập Excel
-                </Button>
+                </Button> */}
               </>
             )
           }}
@@ -290,11 +290,11 @@ const ExpenseCategoryPage = () => {
         setDataInit={setDataInit}
         reloadTable={reloadTable}
       />
-      <ImportModal
+      {/* <ImportModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         reloadTable={reloadTable}
-      />
+      /> */}
     </div>
   )
 }

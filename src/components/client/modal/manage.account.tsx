@@ -398,7 +398,7 @@ const UserUpdateInfo = (props: any) => {
                 rules={[{required: false}, {type: 'email'}]}
                 placeholder="Nhập email"
                 style={{width: '100%'}}
-                disabled={true}
+                disabled={type === 'unionist' ? true : false}
               />
             </Col>
             <Col span={12}>
@@ -488,7 +488,7 @@ const UserUpdateInfo = (props: any) => {
                 rules={[{required: false}]}
                 placeholder="Nhập căn cước công dân"
                 style={{width: '100%'}}
-                disabled={true}
+                disabled={type === 'unionist' ? true : false}
               />
             </Col>
             <Col span={12}>

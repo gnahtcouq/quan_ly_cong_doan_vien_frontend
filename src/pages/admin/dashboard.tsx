@@ -35,6 +35,7 @@ import {IExpense, IReceipt} from '@/types/backend'
 import {ColumnsType} from 'antd/es/table'
 import vi_VN from 'antd/locale/vi_VN'
 import dayjs from 'dayjs'
+import {isMobile} from 'react-device-detect'
 
 const DashboardPage = () => {
   const formatter = (value: number | string) => {
@@ -235,10 +236,6 @@ const DashboardPage = () => {
 
     const ctx = document.getElementById('myChart') as HTMLCanvasElement
     if (!ctx) {
-      notification.error({
-        message: 'Có lỗi xảy ra',
-        description: 'Đã xảy ra lỗi khi tìm nạp dữ liệu'
-      })
       return
     }
 
@@ -312,10 +309,6 @@ const DashboardPage = () => {
   const renderPolarChart = () => {
     const ctx = document.getElementById('polarChart') as HTMLCanvasElement
     if (!ctx) {
-      notification.error({
-        message: 'Có lỗi xảy ra',
-        description: 'Đã xảy ra lỗi khi tìm nạp dữ liệu'
-      })
       return
     }
 
@@ -588,116 +581,120 @@ const DashboardPage = () => {
                 />
               </Card>
             </Col>
-            <Col span={12} md={12} style={{height: '400px', overflow: 'auto'}}>
-              <Table<IReceipt>
-                title={() => (
-                  <Tag color="green">
-                    Tổng thu: {formatCurrency(totalReceiptAmount)}
-                  </Tag>
-                )}
-                columns={columnsReceipt}
-                dataSource={listReceipt.map((item) => ({
-                  ...item,
-                  key: item._id
-                }))}
-                // loading={loadingReceipt}
-                pagination={{
-                  current: currentReceipt,
-                  pageSize: pageSizeReceipt,
-                  total: totalReceipt,
-                  showSizeChanger: true,
-                  onChange: (page, pageSize) =>
-                    handleTableChangeReceipt({current: page, pageSize}),
-                  showTotal: (total, range) =>
-                    `${range[0]}-${range[1]} trên ${total} hàng`
-                }}
-              />
-            </Col>
-            <Col span={12} md={12} style={{height: '400px', overflow: 'auto'}}>
-              <Table<IExpense>
-                title={() => (
-                  <Tag color="red">
-                    Tổng chi: {formatCurrency(totalExpenseAmount)}
-                  </Tag>
-                )}
-                columns={columnsExpense}
-                dataSource={listExpense.map((item) => ({
-                  ...item,
-                  key: item._id
-                }))}
-                // loading={loadingExpense}
-                pagination={{
-                  current: currentExpense,
-                  pageSize: pageSizeExpense,
-                  total: totalExpense,
-                  showSizeChanger: true,
-                  onChange: (page, pageSize) =>
-                    handleTableChangeExpense({current: page, pageSize}),
-                  showTotal: (total, range) =>
-                    `${range[0]}-${range[1]} trên ${total} hàng`
-                }}
-              />
-            </Col>
-            <Col span={24}>
-              <Card title="Biểu đồ tiền thu/chi" bordered={false}>
-                <Form>
-                  <Col span={8}>
-                    <ProForm.Item label="Lọc">
-                      <Select
-                        defaultValue="year"
-                        style={{width: '50%', paddingRight: '5px'}}
-                        onChange={handleSearchTypeChange}
-                      >
-                        <Option value="all">Tất cả</Option>
-                        <Option value="year">Năm</Option>
-                        <Option value="monthYear">Năm/Tháng</Option>
-                        <Option value="range">Khoảng thời gian</Option>
-                      </Select>
+            {!isMobile ? (
+              <>
+                <Col
+                  span={12}
+                  md={12}
+                  style={{height: '400px', overflow: 'auto'}}
+                >
+                  <Table<IReceipt>
+                    title={() => <Tag color="green">Phiếu thu</Tag>}
+                    columns={columnsReceipt}
+                    dataSource={listReceipt.map((item) => ({
+                      ...item,
+                      key: item._id
+                    }))}
+                    // loading={loadingReceipt}
+                    pagination={{
+                      current: currentReceipt,
+                      pageSize: pageSizeReceipt,
+                      total: totalReceipt,
+                      showSizeChanger: true,
+                      onChange: (page, pageSize) =>
+                        handleTableChangeReceipt({current: page, pageSize}),
+                      showTotal: (total, range) =>
+                        `${range[0]}-${range[1]} trên ${total} hàng`
+                    }}
+                  />
+                </Col>
+                <Col
+                  span={12}
+                  md={12}
+                  style={{height: '400px', overflow: 'auto'}}
+                >
+                  <Table<IExpense>
+                    title={() => <Tag color="red">Phiếu chi</Tag>}
+                    columns={columnsExpense}
+                    dataSource={listExpense.map((item) => ({
+                      ...item,
+                      key: item._id
+                    }))}
+                    // loading={loadingExpense}
+                    pagination={{
+                      current: currentExpense,
+                      pageSize: pageSizeExpense,
+                      total: totalExpense,
+                      showSizeChanger: true,
+                      onChange: (page, pageSize) =>
+                        handleTableChangeExpense({current: page, pageSize}),
+                      showTotal: (total, range) =>
+                        `${range[0]}-${range[1]} trên ${total} hàng`
+                    }}
+                  />
+                </Col>
+                <Col span={24}>
+                  <Card title="Biểu đồ tiền thu/chi" bordered={false}>
+                    <Form>
+                      <Col span={8}>
+                        <ProForm.Item label="Lọc">
+                          <Select
+                            defaultValue="year"
+                            style={{width: '50%', paddingRight: '5px'}}
+                            onChange={handleSearchTypeChange}
+                          >
+                            <Option value="all">Tất cả</Option>
+                            <Option value="year">Năm</Option>
+                            <Option value="monthYear">Năm/Tháng</Option>
+                            <Option value="range">Khoảng thời gian</Option>
+                          </Select>
 
-                      <DatePicker
-                        key={datePickerKey} // Sử dụng key để buộc làm mới DatePicker
-                        format={searchType === 'year' ? 'YYYY' : 'YYYY/MM'}
-                        placeholder={
-                          searchType === 'all'
-                            ? '*'
-                            : searchType === 'year'
-                            ? 'chọn năm'
-                            : 'chọn năm/tháng'
-                        }
-                        picker={searchType === 'year' ? 'year' : 'month'}
-                        onChange={handleDateChange}
-                        disabled={
-                          searchType === 'all' || searchType === 'range'
-                        }
-                        style={{width: '50%'}}
-                        defaultValue={dayjs().startOf('year') as any}
-                      />
-                    </ProForm.Item>
-                  </Col>
+                          <DatePicker
+                            key={datePickerKey} // Sử dụng key để buộc làm mới DatePicker
+                            format={searchType === 'year' ? 'YYYY' : 'YYYY/MM'}
+                            placeholder={
+                              searchType === 'all'
+                                ? '*'
+                                : searchType === 'year'
+                                ? 'chọn năm'
+                                : 'chọn năm/tháng'
+                            }
+                            picker={searchType === 'year' ? 'year' : 'month'}
+                            onChange={handleDateChange}
+                            disabled={
+                              searchType === 'all' || searchType === 'range'
+                            }
+                            style={{width: '50%'}}
+                            defaultValue={dayjs().startOf('year') as any}
+                          />
+                        </ProForm.Item>
+                      </Col>
 
-                  {searchType === 'range' && (
-                    <Col span={8}>
-                      <ProForm.Item label="Chọn">
-                        <DatePicker.RangePicker
-                          key={datePickerKey} // Sử dụng key để buộc làm mới DatePicker
-                          format="YYYY/MM"
-                          placeholder={['Từ năm/tháng', 'Đến năm/tháng']}
-                          picker="month"
-                          onChange={handleDateChange}
-                          style={{width: '100%'}}
-                        />
-                      </ProForm.Item>
-                    </Col>
-                  )}
-                </Form>
-                <canvas id="myChart"></canvas>
-              </Card>
-            </Col>
-            <Col span={24}>
-              <Card title="Thống kê số lượng" bordered={false}>
-                <canvas id="polarChart"></canvas>
-              </Card>
-            </Col>
+                      {searchType === 'range' && (
+                        <Col span={8}>
+                          <ProForm.Item label="Chọn">
+                            <DatePicker.RangePicker
+                              key={datePickerKey} // Sử dụng key để buộc làm mới DatePicker
+                              format="YYYY/MM"
+                              placeholder={['Từ năm/tháng', 'Đến năm/tháng']}
+                              picker="month"
+                              onChange={handleDateChange}
+                              style={{width: '100%'}}
+                            />
+                          </ProForm.Item>
+                        </Col>
+                      )}
+                    </Form>
+                    <canvas id="myChart"></canvas>
+                  </Card>
+                </Col>
+                <Col span={24}>
+                  <Card title="Thống kê số lượng" bordered={false}>
+                    <canvas id="polarChart"></canvas>
+                  </Card>
+                </Col>
+              </>
+            ) : null}
           </Row>
         </Access>
       </Spin>

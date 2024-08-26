@@ -67,7 +67,7 @@ const ConfirmForgotPassword = (props: any) => {
                 rules={[
                   {
                     required: true,
-                    message: 'Mã xác nhận không được để trống!'
+                    message: 'Vui lòng không để trống!'
                   }
                 ]}
               >
@@ -77,14 +77,7 @@ const ConfirmForgotPassword = (props: any) => {
                 labelCol={{span: 24}} //whole column
                 label="Mật khẩu mới"
                 name="newPassword"
-                rules={[
-                  {required: true, message: 'Vui lòng không để trống!'},
-                  {
-                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-                    message:
-                      'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.'
-                  }
-                ]}
+                rules={[{required: true, message: 'Vui lòng không để trống!'}]}
               >
                 <Input.Password />
               </Form.Item>

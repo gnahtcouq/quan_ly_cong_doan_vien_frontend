@@ -94,10 +94,8 @@ const DepartmentCard = (props: IProps) => {
                     cover={
                       <div className={styles['card-customize']}>
                         <img
-                          alt="example"
-                          src={`${
-                            import.meta.env.VITE_BACKEND_URL
-                          }/files/department/${item?.logo}`}
+                          alt="Logo"
+                          src={item.logo}
                           style={{
                             height: 250,
                             width: '100%',

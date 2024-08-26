@@ -7,7 +7,8 @@ import {
   MenuFoldOutlined,
   BankOutlined,
   HomeOutlined,
-  MenuOutlined
+  MenuOutlined,
+  LoginOutlined
 } from '@ant-design/icons'
 import {Avatar, Badge, Drawer, Dropdown, MenuProps, Space, message} from 'antd'
 import {Menu, ConfigProvider} from 'antd'
@@ -42,50 +43,52 @@ const Header = (props: any) => {
 
   useEffect(() => {
     setCurrent(location.pathname)
-    if (permissions?.length) {
-      const accessToAdminPage = permissions.find(
-        (item) =>
-          item.apiPath ===
-            ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_ADMIN_PAGE.apiPath &&
-          item.method ===
-            ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_ADMIN_PAGE.method
-      )
+    if (isAuthenticated) {
+      if (permissions?.length) {
+        const accessToAdminPage = permissions.find(
+          (item) =>
+            item.apiPath ===
+              ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_ADMIN_PAGE.apiPath &&
+            item.method ===
+              ALL_PERMISSIONS.PERMISSIONS.ACCESS_TO_ADMIN_PAGE.method
+        )
 
-      const full = [
-        {
-          label: (
-            <label
-              style={{cursor: 'pointer'}}
-              onClick={() => setOpenManageAccount(true)}
-            >
-              Quản lý tài khoản
-            </label>
-          ),
-          key: 'manage-account',
-          icon: <UserOutlined onClick={() => setOpenManageAccount(true)} />
-        },
-        ...(accessToAdminPage
-          ? [
-              {
-                label: <Link to={'/admin'}>Trang quản trị</Link>,
-                key: 'admin',
-                icon: <SettingOutlined />
-              }
-            ]
-          : []),
-        {
-          label: (
-            <label style={{cursor: 'pointer'}} onClick={() => handleLogout()}>
-              Đăng xuất
-            </label>
-          ),
-          key: 'logout',
-          icon: <LogoutOutlined onClick={() => handleLogout()} />
-        }
-      ]
-      setMenuItems(full)
+        const full = [
+          {
+            label: (
+              <label
+                style={{cursor: 'pointer'}}
+                onClick={() => setOpenManageAccount(true)}
+              >
+                Quản lý tài khoản
+              </label>
+            ),
+            key: 'manage-account',
+            icon: <UserOutlined onClick={() => setOpenManageAccount(true)} />
+          },
+          ...(accessToAdminPage
+            ? [
+                {
+                  label: <Link to={'/admin'}>Trang quản trị</Link>,
+                  key: 'admin',
+                  icon: <SettingOutlined />
+                }
+              ]
+            : []),
+          {
+            label: (
+              <label style={{cursor: 'pointer'}} onClick={() => handleLogout()}>
+                Đăng xuất
+              </label>
+            ),
+            key: 'logout',
+            icon: <LogoutOutlined onClick={() => handleLogout()} />
+          }
+        ]
+        setMenuItems(full)
+      }
     }
-  }, [location, permissions])
+  }, [location, permissions, isAuthenticated])
 
   const items: MenuProps['items'] = [
     {
@@ -117,7 +120,14 @@ const Header = (props: any) => {
       label: <Link to={'/department'}>Đơn Vị</Link>,
       key: '/department',
       icon: <BankOutlined />
-    }
+    },
+    !isAuthenticated
+      ? {
+          label: <Link to={'/login'}>Đăng Nhập</Link>,
+          key: '/login',
+          icon: <LoginOutlined />
+        }
+      : null
   ]
 
   const onClick: MenuProps['onClick'] = (e) => {
@@ -129,6 +139,7 @@ const Header = (props: any) => {
     if (res && res.data) {
       dispatch(setLogoutAction({}))
       message.success('Đăng xuất thành công!')
+      setMenuItems([])
       navigate('/')
     }
   }
@@ -207,11 +218,14 @@ const Header = (props: any) => {
                   alt="Logo"
                   onClick={() => navigate('/')}
                   title="Saigon Technology University"
-                  style={{cursor: 'pointer', maxHeight: 32}}
+                  style={{cursor: 'pointer', maxHeight: 64}}
                 />
               </div>
 
-              <MenuFoldOutlined onClick={() => setOpenMobileMenu(true)} />
+              <MenuFoldOutlined
+                onClick={() => setOpenMobileMenu(true)}
+                style={{marginRight: 22}}
+              />
             </div>
           )}
         </div>

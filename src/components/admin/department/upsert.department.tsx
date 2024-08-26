@@ -44,7 +44,6 @@ const ViewUpsertDepartment = (props: any) => {
   const [fileList, setFileList] = useState<any[]>([])
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
-  const [previewTitle, setPreviewTitle] = useState('')
 
   const {quill, quillRef} = useQuill({
     modules: quillModules,
@@ -93,9 +92,7 @@ const ViewUpsertDepartment = (props: any) => {
                 uid: uuidv4(),
                 name: res.data.logo,
                 status: 'done',
-                url: `${import.meta.env.VITE_BACKEND_URL}/files/department/${
-                  res.data.logo
-                }`
+                url: res.data.logo
               }
             ])
           } else {
@@ -210,17 +207,11 @@ const ViewUpsertDepartment = (props: any) => {
     if (!file.originFileObj) {
       setPreviewImage(file.url)
       setPreviewOpen(true)
-      setPreviewTitle(
-        file.name || file.url.substring(file.url.lastIndexOf('/') + 1)
-      )
       return
     }
     getBase64(file.originFileObj, (url: string) => {
       setPreviewImage(url)
       setPreviewOpen(true)
-      setPreviewTitle(
-        file.name || file.url.substring(file.url.lastIndexOf('/') + 1)
-      )
     })
   }
 
@@ -261,22 +252,21 @@ const ViewUpsertDepartment = (props: any) => {
 
   const handleUploadFileLogo = async ({file, onSuccess, onError}: any) => {
     try {
-      const res = await callUploadSingleFile(file, 'department')
-      if (res && res.data) {
+      const res = await uploadToCloudinary(file, 'Logo-Department')
+      console.log(res)
+      if (res) {
         setFileList([
           {
             uid: uuidv4(),
-            name: res.data.fileName,
+            name: res,
             status: 'done',
-            url: `${import.meta.env.VITE_BACKEND_URL}/files/department/${
-              res.data.fileName
-            }`
+            url: res
           }
         ])
         setLoadingUpload(false)
         if (onSuccess) onSuccess('ok')
       } else {
-        throw new Error(res.message)
+        throw new Error('Upload failed!')
       }
     } catch (error) {
       setLoadingUpload(false)
@@ -416,7 +406,7 @@ const ViewUpsertDepartment = (props: any) => {
           </ProForm>
           <Modal
             open={previewOpen}
-            title={previewTitle}
+            title={'Logo'}
             footer={null}
             onCancel={() => setPreviewOpen(false)}
             style={{zIndex: 1500}}

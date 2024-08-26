@@ -27,16 +27,14 @@ export const callRegister = (
   email: string,
   password: string,
   dateOfBirth: string,
-  gender: string,
-  address: string
+  gender: string
 ) => {
   return axios.post<IBackendRes<IUser>>('/api/v1/auth/register', {
     name,
     email,
     password,
     dateOfBirth,
-    gender,
-    address
+    gender
   })
 }
 

@@ -6,6 +6,7 @@ import styles from 'styles/client.module.scss'
 import {Col, Divider, Row, Skeleton} from 'antd'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
+import {isMobile} from 'react-device-detect'
 
 const ClientDepartmentDetailPage = (props: any) => {
   const [departmentDetail, setDepartmentDetail] = useState<IDepartment | null>(
@@ -60,26 +61,25 @@ const ClientDepartmentDetailPage = (props: any) => {
                   }}
                 ></div>
               </Col>
-
-              <Col span={24} md={8}>
-                <div className={styles['department']}>
-                  <div>
-                    <img
-                      alt="example"
-                      src={`${
-                        import.meta.env.VITE_BACKEND_URL
-                      }/files/department/${departmentDetail?.logo}`}
-                      style={{
-                        height: 250,
-                        width: '100%',
-                        objectFit: 'cover',
-                        paddingTop: 10
-                      }}
-                    />
+              {!isMobile ? (
+                <Col span={24} md={8}>
+                  <div className={styles['department']}>
+                    <div>
+                      <img
+                        alt="Logo"
+                        src={departmentDetail?.logo}
+                        style={{
+                          height: 250,
+                          width: '100%',
+                          objectFit: 'cover',
+                          paddingTop: 10
+                        }}
+                      />
+                    </div>
+                    <div>{departmentDetail?.name}</div>
                   </div>
-                  <div>{departmentDetail?.name}</div>
-                </div>
-              </Col>
+                </Col>
+              ) : null}
             </>
           )}
         </Row>

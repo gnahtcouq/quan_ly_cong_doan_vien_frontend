@@ -8,7 +8,7 @@ import {useNavigate} from 'react-router-dom'
 const SendForgotPassword = (props: any) => {
   const [isSubmit, setIsSubmit] = useState(false)
   const isAuthenticated = useAppSelector(
-    (state) => state.account.isAuthenticated
+    (state) => state?.account?.isAuthenticated
   )
   const dispatch = useAppDispatch()
   const navigate = useNavigate()

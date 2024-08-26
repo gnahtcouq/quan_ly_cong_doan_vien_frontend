@@ -43,7 +43,7 @@ const {Content, Footer, Sider} = Layout
 const LayoutAdmin = () => {
   const location = useLocation()
 
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(isMobile)
   const [activeMenu, setActiveMenu] = useState('')
   const user = useAppSelector((state) => state?.account?.user)
 

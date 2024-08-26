@@ -25,15 +25,14 @@ const RegisterPage = () => {
   const [isSubmit, setIsSubmit] = useState(false)
 
   const onFinish = async (values: IUser) => {
-    const {name, email, password, dateOfBirth, gender, address} = values
+    const {name, email, password, dateOfBirth, gender} = values
     setIsSubmit(true)
     const res = await callRegister(
       name,
       email,
       password as string,
       dateOfBirth,
-      gender,
-      address
+      gender
     )
     setIsSubmit(false)
     if (res?.data?._id) {
