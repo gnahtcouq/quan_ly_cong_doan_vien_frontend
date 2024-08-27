@@ -1,16 +1,22 @@
-### FRONTEND QUẢN LÝ CÔNG ĐOÀN VIÊN
+# FRONTEND QUẢN LÝ CÔNG ĐOÀN VIÊN
 
-Các bước cài đặt: (chế độ development)
+## Đăng nhập
+
+- Email: `admin@stu.id.vn`
+- Mật khẩu: `123456`
+
+
+Các bước cài đặt (chế độ development):
 1. Clone code
-2. Cài đặt thư viện: npm i
+2. Cài đặt thư viện: `npm i`
 3. Update file .env (nếu cần thiết)
-4. Chạy dự án: npm run dev
+4. Chạy dự án: `npm run dev`
 
 ===
 
 Cách chạy tại chế độ production:
 1. Clone code
-2. Cài đặt thư viện: npm i
+2. Cài đặt thư viện: `npm i`
 3. Update file .env (nếu cần thiết)
-4. Build dự án: npm run build
-5. Chạy dự án: npm run preview
+4. Build dự án: `npm run build`
+5. Chạy dự án: `npm run preview`
